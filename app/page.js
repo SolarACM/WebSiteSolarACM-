@@ -42,9 +42,9 @@ const content = {
     nav: ["Home", "Calculator", "Partners", "Support"],
     resTitle: "Residential",
     indTitle: "Industrial / Commercial",
-    line: "@lineid",
-    phone: "+66 x-xxx-xxxx",
-    email: "email@example.com",
+    line: "Monarrattana",
+    phone: "+095-309-5196",
+    email: "mon-attention@hotmail.com",
     contactTitle: "Contact Us",
     contactDesc: "Our consultants are ready to manage your project every step of the way."
   }
@@ -754,9 +754,10 @@ function FloatingSupport() {
         }}>
           <div style={{ color: C.text, fontWeight: 600, marginBottom: 16, fontSize: 14 }}>Contact Us</div>
           {[
-            { label: "LINE Chat", color: "#06C755", href: "https://line.me/" },
-            { label: "WhatsApp", color: "#25D366", href: "https://wa.me/" },
-            { label: "Call Us", color: C.orangeLight, href: "tel:+66" },
+            // แก้บรรทัด 757-759 ให้เป็นแบบนี้ค่ะ:
+{ label: "LINE Chat", color: "#06C755", href: `https://line.me/ti/p/~${content[lang].line.replace('@', '')}` },
+{ label: "WhatsApp", color: "#25D366", href: `https://wa.me/${content[lang].phone.replace(/[^0-9]/g, '')}` },
+{ label: "Call Us", color: C.orangeLight, href: `tel:${content[lang].phone}` },
           ].map(({ label, color, href }) => (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{
               display: "flex", alignItems: "center", gap: 10,
