@@ -683,10 +683,10 @@ function Trust() {
 /* ─── SUPPORT WIDGET ────────────────────────────────────────── */
 function Support() {
   const channels = [
-    { name: "LINE Official", handle: "@solaracm", color: "#06C755", icon: "💬", desc: "Fastest response · 24/7 Bot + Agent" },
-    { name: "WhatsApp", handle: "+66 8X-XXX-XXXX", color: "#25D366", icon: "📱", desc: "Chat with our solar consultants" },
-    { name: "Phone", handle: "+66 2X-XXX-XXXX", color: C.orangeLight, icon: "📞", desc: "Mon–Sat 8am–8pm" },
-    { name: "Email", handle: "info@solaracm.co.th", color: C.greenLight, icon: "✉️", desc: "Detailed quotes & proposals" },
+    { name: "LINE Official", handle: "content[lang].line", color: "#06C755", icon: "💬", desc: "Fastest response · 24/7 Bot + Agent" },
+    { name: "WhatsApp", handle: "content[lang].phone", color: "#25D366", icon: "📱", desc: "Chat with our solar consultants" },
+    { name: "Phone", handle: "content[lang].phone", color: C.orangeLight, icon: "📞", desc: "Mon–Sat 8am–8pm" },
+    { name: "Email", handle: "content[lang].email", color: C.greenLight, icon: "✉️", desc: "Detailed quotes & proposals" },
   ];
 
   return (
