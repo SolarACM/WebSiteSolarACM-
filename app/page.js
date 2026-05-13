@@ -683,10 +683,10 @@ function Trust() {
 /* ─── SUPPORT WIDGET ────────────────────────────────────────── */
 function Support() {
   const channels = [
-    { name: "LINE Official", handle: "content[lang].line", color: "#06C755", icon: "💬", desc: "Fastest response · 24/7 Bot + Agent" },
-    { name: "WhatsApp", handle: "content[lang].phone", color: "#25D366", icon: "📱", desc: "Chat with our solar consultants" },
-    { name: "Phone", handle: "content[lang].phone", color: C.orangeLight, icon: "📞", desc: "Mon–Sat 8am–8pm" },
-    { name: "Email", handle: "content[lang].email", color: C.greenLight, icon: "✉️", desc: "Detailed quotes & proposals" },
+    { name: "LINE Official", handle: content[lang].line, color: "#06C755", icon: "...", desc: "Fastest response" },
+{ name: "WhatsApp", handle: content[lang].phone, color: "#25D366", icon: "...", desc: "Chat with us" },
+{ name: "Phone", handle: content[lang].phone, color: C.orangeLight, icon: "...", desc: "Mon-Sat 8am-8pm" },
+{ name: "Email", handle: content[lang].email, color: C.greenLight, icon: "...", desc: "Detailed quotes" },
   ];
 
   return (
@@ -696,10 +696,10 @@ function Support() {
           <div>
             <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>24/7 Support</div>
             <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 2.8rem)", color: C.text, margin: "0 0 20px" }}>
-              We're Here,<br />Always
+              {content[lang].contactTitle}
             </h2>
             <p style={{ color: C.textMuted, fontSize: 17, lineHeight: 1.7, marginBottom: 36 }}>
-              Our friendly team of solar consultants is available across multiple channels. Get a free quote, technical advice, or after-sales support — whenever you need it.
+              {content[lang].contactDesc}
             </p>
             <div style={{ display: "flex", gap: 16 }}>
               <div style={{ textAlign: "center", background: C.darkCard, border: `1px solid ${C.border}`, borderRadius: 12, padding: "16px 24px" }}>
