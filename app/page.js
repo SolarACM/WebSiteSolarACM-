@@ -23,7 +23,13 @@ const content = {
     btnCalc: "คำนวณจุดคุ้มทุน",
     nav: ["หน้าหลัก", "เครื่องคำนวณ", "พันธมิตร", "ติดต่อเรา"],
     resTitle: "สำหรับที่พักอาศัย",
-    indTitle: "สำหรับธุรกิจและอุตสาหกรรม"
+    indTitle: "สำหรับธุรกิจและอุตสาหกรรม",
+    // ข้อมูลติดต่อจริงของพวกเราค่ะ
+    line: "Monarrattana", 
+    phone: "095-309-5196",
+    email: "mon-attention@hotmail.com",
+    contactTitle: "ช่องทางการติดต่อ",
+    contactDesc: "ทีมที่ปรึกษาของพวกเราพร้อมดูแลบริหารจัดการโครงการให้ทุกขั้นตอนค่ะ"
   },
   en: {
     heroTitle: "Power Your Future Smarter with Solar",
@@ -35,7 +41,12 @@ const content = {
     btnCalc: "Calculate ROI",
     nav: ["Home", "Calculator", "Partners", "Support"],
     resTitle: "Residential",
-    indTitle: "Industrial / Commercial"
+    indTitle: "Industrial / Commercial",
+    line: "@lineid",
+    phone: "+66 x-xxx-xxxx",
+    email: "email@example.com",
+    contactTitle: "Contact Us",
+    contactDesc: "Our consultants are ready to manage your project every step of the way."
   }
 };
 const C = {
