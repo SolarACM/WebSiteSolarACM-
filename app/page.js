@@ -682,6 +682,7 @@ function Trust() {
 
 /* ─── SUPPORT WIDGET ────────────────────────────────────────── */
 function Support() {
+  const lang = 'th'; 
   const channels = [
     { name: "LINE Official", handle: content[lang].line, color: "#06C755", icon: "...", desc: "Fastest response" },
 { name: "WhatsApp", handle: content[lang].phone, color: "#25D366", icon: "...", desc: "Chat with us" },
@@ -742,6 +743,7 @@ function Support() {
 
 /* ─── FLOATING SUPPORT BUTTON ───────────────────────────────── */
 function FloatingSupport() {
+  const lang = 'th';
   const [open, setOpen] = useState(false);
   return (
     <div style={{ position: "fixed", bottom: 32, right: 32, zIndex: 200 }}>
