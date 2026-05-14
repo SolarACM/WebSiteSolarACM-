@@ -44,6 +44,16 @@ const content = {
     epcTitle: "เครือข่ายผู้รับเหมา EPC",
     epcDesc: "เข้าถึงเครือข่ายผู้รับเหมาที่ผ่านการคัดเกรดมาตรฐาน โดยที่เราไม่ต้องเสียเวลาหาและตรวจสอบประวัติเอง",
     epcBadge: "พิเศษเฉพาะเรา",
+    partnerTag: "พันธมิตรแบรนด์ชั้นนำ",
+    partnerTitle: "แบรนด์ระดับโลกที่เราไว้วางใจ",
+    partnerDesc: "เราร่วมมือกับผู้ผลิตชั้นนำระดับโลก พร้อมเครือข่ายผู้ติดตั้งที่ผ่านการรับรอง เพื่อส่งมอบงานที่มีคุณภาพสม่ำเสมอในราคาที่คุ้มค่าที่สุดค่ะ",
+    huaweiDesc: "ระบบอินเวอร์เตอร์อัจฉริยะและการจัดการพลังงาน",
+    longiDesc: "แผงโซลาร์เซลล์ชนิดโมโนคริสตัลไลน์ประสิทธิภาพสูง",
+    deyeDesc: "ระบบไฮบริดอินเวอร์เตอร์และแบตเตอรี่",
+    risenDesc: "แผงโซลาร์เซลล์สำหรับอาคารพาณิชย์และ BIPV",
+    sungrowDesc: "โซลูชันอินเวอร์เตอร์สำหรับโครงการขนาดใหญ่",
+    bydDesc: "ระบบกักเก็บพลังงานด้วยแบตเตอรี่",
+    btnQuote: "ขอรับใบเสนอราคาฟรี",
   },
   en: {
     heroTitle: "Power Your Future Smarter with Solar",
@@ -60,7 +70,17 @@ const content = {
     phone: "+095-309-5196",
     email: "mon-attention@hotmail.com",
     contactTitle: "Contact Us",
-    contactDesc: "Our consultants are ready to manage your project every step of the way."
+    contactDesc: "Our consultants are ready to manage your project every step of the way." ,
+    partnerTag: "EQUIPMENT PARTNERS",
+    partnerTitle: "Top-Tier Global Brands",
+    partnerDesc: "We partner with world-class manufacturers while our certified installer network remains carefully curated — ensuring consistent quality and competitive pricing.",
+    huaweiDesc: "Smart Inverters & Energy Management",
+    longiDesc: "High-Efficiency Monocrystalline Panels",
+    deyeDesc: "Hybrid Inverters & Battery Systems",
+    risenDesc: "BIPV & Commercial Solar Panels",
+    sungrowDesc: "Utility-Scale Inverter Solutions",
+    bydDesc: "Battery Energy Storage Systems",
+    btnQuote: "Get a Free Quote",
   }
 };
 const C = {
@@ -581,7 +601,7 @@ function Calculator_({ lang }) {
               <div style={{ display: "flex", gap: 12 }}>
                 <button onClick={() => { setStep(1); setResult(null); setType(null); }} style={{ flex: 1, background: "transparent", border: `1px solid ${C.border}`, borderRadius: 10, padding: 14, color: C.textMuted, cursor: "pointer", fontSize: 14 }}>Recalculate</button>
                 <a href="#support" style={{ flex: 2, background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`, border: "none", borderRadius: 10, padding: 14, color: "white", cursor: "pointer", fontSize: 15, fontWeight: 600, textAlign: "center", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                  <MessageCircle size={18} /> Get a Free Quote Now
+                  <MessageCircle size={18} /> {content[lang].btnQuote}
                 </a>
               </div>
             </div>
@@ -593,24 +613,24 @@ function Calculator_({ lang }) {
 }
 
 /* ─── PARTNERS ──────────────────────────────────────────────── */
-function Partners() {
+function Partners({ lang }) {
   const brands = [
-    { name: "Huawei", role: "Smart Inverters & Energy Management", tier: "Platinum", color: "#E8630A" },
-    { name: "LONGi Solar", role: "High-Efficiency Monocrystalline Panels", tier: "Platinum", color: "#2D7D46" },
-    { name: "Deye", role: "Hybrid Inverters & Battery Systems", tier: "Gold", color: "#FF8C3A" },
-    { name: "Risen Energy", role: "BIPV & Commercial Solar Panels", tier: "Gold", color: "#4CAF72" },
-    { name: "Sungrow", role: "Utility-Scale Inverter Solutions", tier: "Gold", color: "#2D7D46" },
-    { name: "BYD Energy", role: "Battery Energy Storage Systems", tier: "Silver", color: "#E8630A" },
-  ];
+  { name: "Huawei", role: content[lang].huaweiDesc, tier: "Platinum", color: "#E8630A" },
+  { name: "LONGi Solar", role: content[lang].longiDesc, tier: "Platinum", color: "#2D7D46" },
+  { name: "Deye", role: content[lang].deyeDesc, tier: "Gold", color: "#FF8C3A" },
+  { name: "Risen Energy", role: content[lang].risenDesc, tier: "Gold", color: "#4CAF72" },
+  { name: "Sungrow", role: content[lang].sungrowDesc, tier: "Gold", color: "#2D7D46" },
+  { name: "BYD Energy", role: content[lang].bydDesc, tier: "Silver", color: "#E8630A" },
+];
 
   return (
     <section id="partners" style={{ padding: "100px 2rem", background: C.dark }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>Equipment Partners</div>
-          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: C.text, margin: 0 }}>Top-Tier Global Brands</h2>
+          <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>{content[lang].partnerTag}</div>
+          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: C.text, margin: 0 }}>{content[lang].partnerTitle}</h2>
           <p style={{ color: C.textMuted, fontSize: 17, marginTop: 16, maxWidth: 540, margin: "16px auto 0" }}>
-            We partner with world-class manufacturers while our certified installer network remains carefully curated — ensuring consistent quality and competitive pricing.
+            {content[lang].partnerDesc}
           </p>
         </div>
 
