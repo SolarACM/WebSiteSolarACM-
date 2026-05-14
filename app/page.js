@@ -29,7 +29,21 @@ const content = {
     phone: "095-309-5196",
     email: "mon-attention@hotmail.com",
     contactTitle: "ช่องทางการติดต่อ",
-    contactDesc: "ทีมที่ปรึกษาของพวกเราพร้อมดูแลบริหารจัดการโครงการให้ทุกขั้นตอนค่ะ"
+    contactDesc: "ทีมที่ปรึกษาของพวกเราพร้อมดูแลบริหารจัดการโครงการให้ทุกขั้นตอนค่ะ" ,
+    offerTag: "บริการของเรา",
+    learnMore: "รายละเอียดเพิ่มเติม",
+    resTitle: "โซลาร์สำหรับบ้านพักอาศัย",
+    resDesc: "เปลี่ยนหลังคาบ้านให้เป็นแหล่งผลิตไฟฟ้าส่วนตัว เราคัดสรรผู้ติดตั้งมืออาชีพและแผงเกรดพรีเมียมที่เหมาะกับบ้านเราที่สุดค่ะ",
+    resBadge: "ยอดนิยม",
+    indTitle: "ธุรกิจและอุตสาหกรรม",
+    indDesc: "ระบบโซลาร์ขนาดใหญ่สำหรับโรงงานและอาคารพาณิชย์ ด้วยอุปกรณ์เกรดอุตสาหกรรม พร้อมการรับประกันประสิทธิภาพในระยะยาว",
+    indBadge: "คืนทุนไว",
+    bessTitle: "ระบบกักเก็บพลังงาน (BESS)",
+    bessDesc: "เก็บไฟฟ้าส่วนเกินไว้ใช้ด้วยระบบแบตเตอรี่อัจฉริยะ เพื่อความอิสระในการใช้พลังงานตลอด 24 ชั่วโมง",
+    bessBadge: "พร้อมรับอนาคต",
+    epcTitle: "เครือข่ายผู้รับเหมา EPC",
+    epcDesc: "เข้าถึงเครือข่ายผู้รับเหมาที่ผ่านการคัดเกรดมาตรฐาน โดยที่เราไม่ต้องเสียเวลาหาและตรวจสอบประวัติเองค่ะ",
+    epcBadge: "พิเศษเฉพาะเรา",
   },
   en: {
     heroTitle: "Power Your Future Smarter with Solar",
@@ -305,17 +319,17 @@ function Hero({ lang }) {
 
 function Solutions({ lang }) {
   const items = [
-    { icon: Home, title: "Residential Solar", desc: "Turn your rooftop into a personal power plant. We match you with the best installers and premium panels.", badge: "Most Popular", color: C.green },
-    { icon: Building2, title: "Industrial & Commercial", desc: "Large-scale installations with industrial-grade components and performance guarantees.", badge: "High ROI", color: C.orange },
-    { icon: Battery, title: "Energy Storage (BESS)", desc: "Store excess energy with cutting-edge battery systems for 24/7 independence from the grid.", badge: "Future-Ready", color: C.greenLight },
-    { icon: Globe, title: "EPC Vendor Aggregation", desc: "Access our curated network of certified installers without revealing individual contractors.", badge: "Exclusive", color: C.orangeLight },
-  ];
+  { icon: Home, title: content[lang].resTitle, desc: content[lang].resDesc, badge: content[lang].resBadge, color: "#2D7D46" },
+  { icon: Building2, title: content[lang].indTitle, desc: content[lang].indDesc, badge: content[lang].indBadge, color: "#E8630A" },
+  { icon: Battery, title: content[lang].bessTitle, desc: content[lang].bessDesc, badge: content[lang].bessBadge, color: "#4CAF72" },
+  { icon: Globe, title: content[lang].epcTitle, desc: content[lang].epcDesc, badge: content[lang].epcBadge, color: "#FF8C3A" },
+];
 
   return (
     <section id="solutions" style={{ padding: "100px 2rem", background: C.dark }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 60 }}>
-          <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>What We Offer</div>
+          <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>{content[lang].offerTag}</div>
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: C.text, margin: 0 }}>{content[lang].solutionsTitle}</h2>
           <p style={{ color: C.textMuted, fontSize: 17, marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>{content[lang].solutionsDesc}</p>
         </div>
