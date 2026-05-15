@@ -383,7 +383,7 @@ function Solutions({ lang }) {
               <h3 style={{ color: C.text, fontWeight: 600, fontSize: 18, margin: "0 0 12px" }}>{title}</h3>
               <p style={{ color: C.textMuted, fontSize: 14, lineHeight: 1.7, margin: 0 }}>{desc}</p>
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 20, color: color, fontSize: 13, fontWeight: 600 }}>
-                Learn more <ArrowRight size={14} />
+                <a href={`/${title === content[lang].resTitle ? "residential" : title === content[lang].indTitle ? "industrial" : title === content[lang].bessTitle ? "bess" : "epc"}`} style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: 6 }}>Learn more <ArrowRight size={14} /></a>
               </div>
             </div>
           ))}
