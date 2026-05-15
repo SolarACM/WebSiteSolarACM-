@@ -120,7 +120,7 @@ function NavBar({ lang, setLang }) {
             style={{ padding: "6px 12px", borderRadius: 15, border: `1px solid ${C.orange}`, color: C.orange, fontWeight: "bold", cursor: "pointer", fontSize: 12, background: "transparent" }}>
             {lang === "th" ? "EN" : "TH"}
           </button>
-          <a href={`https://wa.me/${CONTACT.phone}`} target="_blank" rel="noreferrer"
+          <a href={`https://line.me/ti/p/~Monarrattana`} target="_blank" rel="noreferrer"
             style={{ background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, color: "white", padding: "10px 20px", borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: "none" }}>
             {lang === "th" ? "ขอใบเสนอราคา" : "Get Free Quote"}
           </a>
@@ -139,7 +139,7 @@ function FloatingSupport({ lang }) {
           <div style={{ color: C.text, fontWeight: 600, marginBottom: 16, fontSize: 14 }}>{lang === "th" ? "ติดต่อเรา" : "Contact Us"}</div>
           {[
             { label: "LINE Chat", color: "#06C755", href: `https://line.me/ti/p/~${CONTACT.line}` },
-            { label: "WhatsApp", color: "#25D366", href: `https://wa.me/${CONTACT.phone}` },
+            { label: "WhatsApp", color: "#25D366", href: `https://line.me/ti/p/~Monarrattana` },
             { label: lang === "th" ? "โทรหาเรา" : "Call Us", color: C.orangeLight, href: `tel:${CONTACT.phone}` },
           ].map(({ label, color, href }) => (
             <a key={label} href={href} target="_blank" rel="noreferrer"
@@ -246,7 +246,7 @@ export default function ResidentialPage() {
           </h1>
           <p style={{ color: C.textMuted, fontSize: 18, lineHeight: 1.8, maxWidth: 580, marginBottom: 36 }}>{t.heroDesc}</p>
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            <a href={`https://wa.me/${CONTACT.phone}`} target="_blank" rel="noreferrer"
+            <a href={`https://line.me/ti/p/~Monarrattana`} target="_blank" rel="noreferrer"
               style={{ display: "flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`, color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: `0 8px 32px ${C.orange}44` }}>
               {t.btnQuote} <ArrowRight size={18} />
             </a>
@@ -343,7 +343,7 @@ export default function ResidentialPage() {
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", color: "white", marginBottom: 20 }}>{t.ctaTitle}</h2>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.9)", marginBottom: 40, lineHeight: 1.8 }}>{t.ctaDesc}</p>
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href={`https://wa.me/${CONTACT.phone}`} target="_blank" rel="noreferrer"
+            <a href={`https://line.me/ti/p/~Monarrattana`} target="_blank" rel="noreferrer"
               style={{ display: "flex", alignItems: "center", gap: 8, background: "white", color: C.green, padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>
               {t.btnQuote} <ArrowRight size={18} />
             </a>
