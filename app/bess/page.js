@@ -118,7 +118,7 @@ function NavBar({ lang, setLang }) {
             <Link key={href} href={`/${href}`} style={{ color: "white", fontSize: 14, fontWeight: 500, textDecoration: "none", opacity: 0.85 }}>{label}</Link>
           ))}
           <button onClick={() => setLang(lang === "th" ? "en" : "th")} style={{ padding: "6px 12px", borderRadius: 15, border: `1px solid ${C.orange}`, color: C.orange, fontWeight: "bold", cursor: "pointer", fontSize: 12, background: "transparent" }}>{lang === "th" ? "EN" : "TH"}</button>
-          <a href={`https://wa.me/${CONTACT.phone}`} target="_blank" rel="noreferrer" style={{ background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, color: "white", padding: "10px 20px", borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: "none" }}>{lang === "th" ? "ขอใบเสนอราคา" : "Get Free Quote"}</a>
+          <a href={`https://line.me/ti/p/~Monarrattana`} target="_blank" rel="noreferrer" style={{ background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, color: "white", padding: "10px 20px", borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: "none" }}>{lang === "th" ? "ขอใบเสนอราคา" : "Get Free Quote"}</a>
         </div>
       </div>
     </nav>
@@ -132,7 +132,7 @@ function FloatingSupport({ lang }) {
       {open && (
         <div style={{ position: "absolute", bottom: 70, right: 0, background: C.darkCard, border: `1px solid ${C.border}`, borderRadius: 16, padding: 20, width: 220, boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}>
           <div style={{ color: C.text, fontWeight: 600, marginBottom: 16, fontSize: 14 }}>{lang === "th" ? "ติดต่อเรา" : "Contact Us"}</div>
-          {[{ label: "LINE Chat", color: "#06C755", href: `https://line.me/ti/p/~${CONTACT.line}` }, { label: "WhatsApp", color: "#25D366", href: `https://wa.me/${CONTACT.phone}` }, { label: lang === "th" ? "โทรหาเรา" : "Call Us", color: C.orangeLight, href: `tel:${CONTACT.phone}` }].map(({ label, color, href }) => (
+          {[{ label: "LINE Chat", color: "#06C755", href: `https://line.me/ti/p/~${CONTACT.line}` }, { label: "WhatsApp", color: "#25D366", href: `https://line.me/ti/p/~Monarrattana` }, { label: lang === "th" ? "โทรหาเรา" : "Call Us", color: C.orangeLight, href: `tel:${CONTACT.phone}` }].map(({ label, color, href }) => (
             <a key={label} href={href} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderRadius: 10, marginBottom: 8, background: `${color}15`, border: `1px solid ${color}30`, color, fontSize: 14, fontWeight: 500, textDecoration: "none" }}><MessageCircle size={16} /> {label}</a>
           ))}
         </div>
@@ -203,7 +203,7 @@ export default function BESSPage() {
           <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 700, lineHeight: 1.2, color: C.text, marginBottom: 20, maxWidth: 700 }}>{t.heroTitle}</h1>
           <p style={{ color: C.textMuted, fontSize: 18, lineHeight: 1.8, maxWidth: 580, marginBottom: 36 }}>{t.heroDesc}</p>
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            <a href={`https://wa.me/${CONTACT.phone}`} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg, ${C.blue}, ${C.blueLight})`, color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: `0 8px 32px ${C.blue}44` }}>{t.btnQuote} <ArrowRight size={18} /></a>
+            <a href={`https://line.me/ti/p/~Monarrattana`} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg, ${C.blue}, ${C.blueLight})`, color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: `0 8px 32px ${C.blue}44` }}>{t.btnQuote} <ArrowRight size={18} /></a>
             <Link href="/#calculator" style={{ display: "flex", alignItems: "center", gap: 8, background: C.glass, backdropFilter: "blur(12px)", border: `1px solid ${C.border}`, color: C.text, padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 500, textDecoration: "none" }}>{t.btnCalc}</Link>
           </div>
         </div>
@@ -298,7 +298,7 @@ export default function BESSPage() {
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", color: "white", marginBottom: 20 }}>{t.ctaTitle}</h2>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.9)", marginBottom: 40, lineHeight: 1.8 }}>{t.ctaDesc}</p>
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href={`https://wa.me/${CONTACT.phone}`} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, background: "white", color: C.blue, padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>{t.btnQuote} <ArrowRight size={18} /></a>
+            <a href={`https://line.me/ti/p/~Monarrattana`} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, background: "white", color: C.blue, padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>{t.btnQuote} <ArrowRight size={18} /></a>
             <a href={`https://line.me/ti/p/~${CONTACT.line}`} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.15)", color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", border: "1px solid rgba(255,255,255,0.3)" }}><MessageCircle size={18} /> LINE Chat</a>
           </div>
         </div>
