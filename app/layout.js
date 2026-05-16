@@ -36,6 +36,10 @@ export const metadata = {
   creator: "Solar ACM Systems Corporation",
   publisher: "Solar ACM Systems Corporation",
 
+  verification: {
+    google: "rSC-5M8IMM-NBJ4NS6YmJBQMdU8BzGpafPdJ9y2FGk8",
+  },
+
   openGraph: {
     type: "website",
     locale: "th_TH",
