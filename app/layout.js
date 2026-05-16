@@ -1,35 +1,18 @@
-import { Playfair_Display, DM_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
-// ── โหลด font แบบ optimized (เร็วกว่า @import ของเดิม) ──
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["700"],
-  variable: "--font-playfair",
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-dmsans",
-  display: "swap",
-});
-
-// ── METADATA หลักของเว็บ ──
 export const metadata = {
   metadataBase: new URL("https://web-site-solar-acm.vercel.app"),
-  
+
   title: {
     default: "Solar ACM Systems | ที่ปรึกษาโซลาร์เซลล์ครบวงจร อันดับ 1 ของไทย",
     template: "%s | Solar ACM Systems",
   },
-  
+
   description:
     "ศูนย์รวมที่ปรึกษาและผู้เชี่ยวชาญติดตั้งโซลาร์เซลล์ครบวงจรสำหรับบ้านพักอาศัย ธุรกิจ และอุตสาหกรรม พร้อมระบบกักเก็บพลังงาน BESS และเครือข่ายผู้รับเหมา EPC ที่ผ่านการคัดสรร รับประกัน 25 ปี ประหยัดค่าไฟสูงสุด 70%",
-  
+
   keywords: [
     "โซลาร์เซลล์",
     "โซลาร์เซลล์บ้าน",
@@ -48,12 +31,11 @@ export const metadata = {
     "ลดค่าไฟ",
     "Solar ACM",
   ],
-  
+
   authors: [{ name: "Solar ACM Systems Corporation" }],
   creator: "Solar ACM Systems Corporation",
   publisher: "Solar ACM Systems Corporation",
-  
-  // ── Open Graph (Facebook, LINE, etc.) ──
+
   openGraph: {
     type: "website",
     locale: "th_TH",
@@ -72,17 +54,15 @@ export const metadata = {
       },
     ],
   },
-  
-  // ── Twitter / X Card ──
+
   twitter: {
     card: "summary_large_image",
     title: "Solar ACM Systems | ที่ปรึกษาโซลาร์เซลล์ครบวงจร อันดับ 1 ของไทย",
     description:
-      "ประหยัดค่าไฟสูงสุด 70% คืนทุนเร็ว 4-6 ปี รับประกัน 25 ปี โดยทีมผู้เชี่ยวชาญที่ติดตั้งมาแล้วกว่า 500+ โครงการ",
+      "ประหยัดค่าไฟสูงสุด 70% คืนทุนเร็ว 4-6 ปี รับประกัน 25 ปี โดยทีมผู้เชี่ยวชาญ",
     images: ["/Logo SolarACM.png"],
   },
-  
-  // ── Robots / SEO ──
+
   robots: {
     index: true,
     follow: true,
@@ -94,41 +74,26 @@ export const metadata = {
       "max-snippet": -1,
     },
   },
-  
-  // ── Icons ──
+
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/Logo SolarACM.png",
   },
-  
-  // ── Verification (ใส่หลังลงทะเบียน Google Search Console) ──
-  verification: {
-    // google: "ใส่ verification code ที่นี่หลัง register Google Search Console",
-  },
-  
-  // ── Other ──
+
   category: "Energy & Solar",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
 };
 
-// ── Viewport (Next.js 14+ แยกออกจาก metadata) ──
 export const viewport = {
   themeColor: "#2D7D46",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="th" className={`${playfair.variable} ${dmSans.variable}`}>
+    <html lang="th">
       <head>
-        {/* ── JSON-LD Structured Data สำหรับ Google ── */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -136,7 +101,6 @@ export default function RootLayout({ children }) {
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               name: "Solar ACM Systems Corporation",
-              image: "https://web-site-solar-acm.vercel.app/Logo SolarACM.png",
               url: "https://web-site-solar-acm.vercel.app",
               telephone: "+66-95-309-5196",
               email: "mon-attention@hotmail.com",
@@ -145,14 +109,8 @@ export default function RootLayout({ children }) {
                 addressCountry: "TH",
                 addressLocality: "Bangkok",
               },
-              priceRange: "฿฿",
               description:
-                "Thailand's leading solar consultancy providing residential, commercial, industrial solar installations and battery energy storage systems.",
-              sameAs: [
-                // เพิ่ม social media URLs ตรงนี้เมื่อพร้อม
-                // "https://www.facebook.com/yourpage",
-                // "https://line.me/ti/p/~Monarrattana"
-              ],
+                "Thailand's leading solar consultancy providing residential, commercial and industrial solar installations.",
               areaServed: {
                 "@type": "Country",
                 name: "Thailand",
@@ -170,9 +128,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         {children}
-        {/* ── Vercel Analytics (ฟรี ดูสถิติคนเข้าเว็บได้) ── */}
         <Analytics />
-        {/* ── Vercel Speed Insights (ฟรี วัดความเร็วเว็บ) ── */}
         <SpeedInsights />
       </body>
     </html>
