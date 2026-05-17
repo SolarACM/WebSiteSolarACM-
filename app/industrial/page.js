@@ -121,9 +121,9 @@ function NavBar({ lang, setLang }) {
             <Link key={href} href={`/${href}`} style={{ color: "white", fontSize: 14, fontWeight: 500, textDecoration: "none", opacity: 0.85 }}>{label}</Link>
           ))}
           <button onClick={() => setLang(lang === "th" ? "en" : "th")} style={{ padding: "6px 12px", borderRadius: 15, border: `1px solid ${C.orange}`, color: C.orange, fontWeight: "bold", cursor: "pointer", fontSize: 12, background: "transparent" }}>{lang === "th" ? "EN" : "TH"}</button>
-          <a href={`https://line.me/ti/p/~Monarrattana`} target="_blank" rel="noreferrer" style={{ background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, color: "white", padding: "10px 20px", borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: "none" }}>
+          <Link href="/quote" style={{ background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, color: "white", padding: "10px 20px", borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: "none" }}>
             {lang === "th" ? "ขอใบเสนอราคา" : "Get Free Quote"}
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
@@ -210,7 +210,7 @@ export default function IndustrialPage() {
           <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 700, lineHeight: 1.2, color: C.text, marginBottom: 20, maxWidth: 700 }}>{t.heroTitle}</h1>
           <p style={{ color: C.textMuted, fontSize: 18, lineHeight: 1.8, maxWidth: 580, marginBottom: 36 }}>{t.heroDesc}</p>
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            <a href={`https://line.me/ti/p/~Monarrattana`} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: `0 8px 32px ${C.green}44` }}>{t.btnQuote} <ArrowRight size={18} /></a>
+            <Link href="/quote" style={{ display: "flex", alignItems: "center", gap: 8, background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: `0 8px 32px ${C.green}44` }}>{t.btnQuote} <ArrowRight size={18} /></Link>
             <Link href="/#calculator" style={{ display: "flex", alignItems: "center", gap: 8, background: C.glass, backdropFilter: "blur(12px)", border: `1px solid ${C.border}`, color: C.text, padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 500, textDecoration: "none" }}>{t.btnCalc}</Link>
           </div>
         </div>
@@ -314,7 +314,7 @@ export default function IndustrialPage() {
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", color: "white", marginBottom: 20 }}>{t.ctaTitle}</h2>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.9)", marginBottom: 40, lineHeight: 1.8 }}>{t.ctaDesc}</p>
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href={`https://line.me/ti/p/~Monarrattana`} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, background: "white", color: C.green, padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>{t.btnQuote} <ArrowRight size={18} /></a>
+            <Link href="/quote" style={{ display: "flex", alignItems: "center", gap: 8, background: "white", color: C.green, padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}>{t.btnQuote} <ArrowRight size={18} /></Link>
             <a href={`https://line.me/ti/p/~${CONTACT.line}`} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.15)", color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", border: "1px solid rgba(255,255,255,0.3)" }}><MessageCircle size={18} /> LINE Chat</a>
           </div>
         </div>
