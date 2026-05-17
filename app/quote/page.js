@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Sun, Home, Building2, Battery, Globe, MessageCircle, X, ArrowLeft,
-  CheckCircle, Shield, Award, Zap, AlertCircle, Loader2, Send
+  CheckCircle, Shield, Award, Zap, AlertCircle, Loader2, Send,
+  Upload, Trash2, FileImage
 } from "lucide-react";
 
 const C = {
@@ -18,10 +19,22 @@ const C = {
 const CONTACT = { phone: "0953095196", line: "Monarrattana" };
 
 // ⚠️ แทนที่ URL ด้านล่างด้วย Apps Script Web App URL ของคุณ
-// (วิธี deploy ดูในไฟล์ APPS_SCRIPT_SETUP.md)
+// (วิธี deploy ดูในไฟล์ apps-script/SETUP.md)
 const SHEET_ENDPOINT =
   process.env.NEXT_PUBLIC_QUOTE_SHEET_URL ||
   "https://script.google.com/macros/s/REPLACE_WITH_YOUR_WEB_APP_URL/exec";
+
+// ─── FILE UPLOAD CONFIG ──────────────────────────────────
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const ACCEPTED_MIME = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+];
+const ACCEPT_ATTR = "image/jpeg,image/png,image/webp,image/heic,image/heif";
 
 const tx = {
   th: {
@@ -44,7 +57,12 @@ const tx = {
     phaseThree: "3 เฟส (ธุรกิจ/อุตสาหกรรม)",
     labelNote: "หมายเหตุเพิ่มเติม (ไม่บังคับ)",
     placeNote: "เช่น พื้นที่หลังคา ทิศที่ตั้ง หรือคำถามอื่นๆ ที่คุณอยากให้เราดูแลค่ะ",
-    required: "*",
+    labelBillImage: "แนบรูปภาพบิลค่าไฟ (ไม่บังคับ)",
+    billImageHint: "ช่วยให้เราคำนวณระบบที่เหมาะสมได้แม่นยำยิ่งขึ้น • รองรับ JPG, PNG, WebP, HEIC • สูงสุด 5 MB",
+    billImageCTA: "เลือกไฟล์รูปภาพ",
+    billImageDrag: "หรือลากไฟล์มาวางตรงนี้",
+    billImageChange: "เปลี่ยนรูป",
+    billImageRemove: "ลบ",
     submit: "ส่งคำขอใบเสนอราคา",
     submitting: "กำลังส่งข้อมูล...",
     benefits: [
@@ -66,6 +84,8 @@ const tx = {
       billInvalid: "ค่าไฟต้องเป็นตัวเลขมากกว่า 0",
       service: "กรุณาเลือกประเภทบริการ",
       phase: "กรุณาเลือกระบบไฟ",
+      fileType: "ไฟล์ต้องเป็นรูปภาพ (JPG, PNG, WebP, HEIC)",
+      fileSize: "ไฟล์ใหญ่เกินไป — สูงสุด 5 MB",
       network: "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง หรือติดต่อเราทาง LINE",
     },
   },
@@ -89,7 +109,12 @@ const tx = {
     phaseThree: "Three-Phase (Commercial/Industrial)",
     labelNote: "Additional Notes (Optional)",
     placeNote: "e.g. roof area, orientation, or any specific questions",
-    required: "*",
+    labelBillImage: "Attach Electric Bill Photo (Optional)",
+    billImageHint: "Helps us size your system more accurately • JPG, PNG, WebP, HEIC • Max 5 MB",
+    billImageCTA: "Choose an image",
+    billImageDrag: "or drag and drop here",
+    billImageChange: "Change",
+    billImageRemove: "Remove",
     submit: "Request My Free Quote",
     submitting: "Sending...",
     benefits: [
@@ -111,6 +136,8 @@ const tx = {
       billInvalid: "Bill must be a number greater than 0",
       service: "Please select a service",
       phase: "Please select an electrical phase",
+      fileType: "File must be an image (JPG, PNG, WebP, HEIC)",
+      fileSize: "File too large — max 5 MB",
       network: "Failed to send. Please try again or contact us on LINE.",
     },
   },
@@ -229,12 +256,17 @@ function Footer() {
 }
 
 /* ─── INPUT COMPONENTS ─────────────────────────────────────── */
-function Field({ label, required, error, children }) {
+function Field({ label, required, error, hint, children }) {
   return (
     <div style={{ marginBottom: 22 }}>
-      <label style={{ display: "block", color: C.text, fontSize: 14, fontWeight: 500, marginBottom: 8 }}>
+      <label style={{ display: "block", color: C.text, fontSize: 14, fontWeight: 500, marginBottom: hint ? 4 : 8 }}>
         {label} {required && <span style={{ color: C.orange }}>*</span>}
       </label>
+      {hint && (
+        <div style={{ color: C.textMuted, fontSize: 12, marginBottom: 10, lineHeight: 1.5 }}>
+          {hint}
+        </div>
+      )}
       {children}
       {error && (
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, color: C.orange, fontSize: 12 }}>
@@ -259,11 +291,33 @@ const inputStyle = (hasError) => ({
   transition: "border-color 0.2s, box-shadow 0.2s",
 });
 
+/* ─── HELPERS ──────────────────────────────────────────────── */
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result || "");
+      // dataUrl = "data:image/jpeg;base64,XXXX..."
+      const comma = dataUrl.indexOf(",");
+      resolve(comma >= 0 ? dataUrl.slice(comma + 1) : dataUrl);
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+function formatBytes(n) {
+  if (n < 1024) return n + " B";
+  if (n < 1024 * 1024) return (n / 1024).toFixed(1) + " KB";
+  return (n / (1024 * 1024)).toFixed(2) + " MB";
+}
+
 /* ─── MAIN PAGE ────────────────────────────────────────────── */
 export default function QuotePage() {
   const router = useRouter();
   const [lang, setLang] = useState("th");
   const t = tx[lang];
+  const fileInputRef = useRef(null);
 
   const [form, setForm] = useState({
     name: "",
@@ -273,6 +327,9 @@ export default function QuotePage() {
     phase: "",
     note: "",
   });
+  const [billFile, setBillFile] = useState(null);
+  const [billPreview, setBillPreview] = useState(""); // data URL for thumbnail
+  const [isDragging, setIsDragging] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -282,6 +339,39 @@ export default function QuotePage() {
     if (errors[field]) {
       setErrors((e) => ({ ...e, [field]: undefined }));
     }
+  }
+
+  function handleFileSelect(file) {
+    if (!file) return;
+
+    // Validate type
+    const isImage =
+      ACCEPTED_MIME.includes(file.type) ||
+      /\.(jpe?g|png|webp|heic|heif)$/i.test(file.name);
+    if (!isImage) {
+      setErrors((e) => ({ ...e, billFile: t.errors.fileType }));
+      return;
+    }
+
+    // Validate size
+    if (file.size > MAX_FILE_SIZE) {
+      setErrors((e) => ({ ...e, billFile: t.errors.fileSize }));
+      return;
+    }
+
+    // Clear error and set file + preview
+    setErrors((e) => ({ ...e, billFile: undefined }));
+    setBillFile(file);
+    const reader = new FileReader();
+    reader.onload = () => setBillPreview(String(reader.result || ""));
+    reader.readAsDataURL(file);
+  }
+
+  function clearFile() {
+    setBillFile(null);
+    setBillPreview("");
+    setErrors((e) => ({ ...e, billFile: undefined }));
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   function validate() {
@@ -319,7 +409,19 @@ export default function QuotePage() {
         service: t.services.find((s) => s.id === form.service)?.label || form.service,
         phase: form.phase === "single" ? "1 เฟส" : "3 เฟส",
         note: form.note.trim(),
+        file: null,
       };
+
+      // ถ้ามีไฟล์ ให้แปลงเป็น base64 แล้วใส่ใน payload
+      if (billFile) {
+        const base64 = await readFileAsBase64(billFile);
+        payload.file = {
+          name: billFile.name,
+          type: billFile.type || "image/jpeg",
+          size: billFile.size,
+          data: base64,
+        };
+      }
 
       // ใช้ text/plain เพื่อหลีกเลี่ยง CORS preflight ของ Apps Script
       await fetch(SHEET_ENDPOINT, {
@@ -336,6 +438,21 @@ export default function QuotePage() {
       setSubmitError(t.errors.network);
       setSubmitting(false);
     }
+  }
+
+  function onDragOver(ev) {
+    ev.preventDefault();
+    setIsDragging(true);
+  }
+  function onDragLeave(ev) {
+    ev.preventDefault();
+    setIsDragging(false);
+  }
+  function onDrop(ev) {
+    ev.preventDefault();
+    setIsDragging(false);
+    const file = ev.dataTransfer.files?.[0];
+    if (file) handleFileSelect(file);
   }
 
   return (
@@ -565,6 +682,136 @@ export default function QuotePage() {
                   rows={4}
                   style={{ ...inputStyle(false), resize: "vertical", minHeight: 100 }}
                 />
+              </Field>
+
+              {/* ── BILL IMAGE UPLOAD ─────────────────────────── */}
+              <Field
+                label={t.labelBillImage}
+                hint={t.billImageHint}
+                error={errors.billFile}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept={ACCEPT_ATTR}
+                  onChange={(e) => handleFileSelect(e.target.files?.[0])}
+                  style={{ display: "none" }}
+                />
+
+                {!billFile ? (
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragOver={onDragOver}
+                    onDragLeave={onDragLeave}
+                    onDrop={onDrop}
+                    style={{
+                      border: `2px dashed ${isDragging ? C.green : (errors.billFile ? C.orange : C.border)}`,
+                      background: isDragging ? `${C.green}08` : C.midDark,
+                      borderRadius: 12,
+                      padding: "28px 20px",
+                      textAlign: "center",
+                      cursor: "pointer",
+                      transition: "all 0.2s",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = C.green; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = isDragging ? C.green : (errors.billFile ? C.orange : C.border); }}
+                  >
+                    <div style={{
+                      width: 48, height: 48, borderRadius: "50%",
+                      background: `${C.green}15`,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      margin: "0 auto 12px",
+                    }}>
+                      <Upload size={22} color={C.green} />
+                    </div>
+                    <div style={{ color: C.text, fontWeight: 600, fontSize: 14, marginBottom: 4 }}>
+                      {t.billImageCTA}
+                    </div>
+                    <div style={{ color: C.textMuted, fontSize: 12 }}>
+                      {t.billImageDrag}
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{
+                    border: `1px solid ${C.border}`,
+                    background: C.midDark,
+                    borderRadius: 12,
+                    padding: 14,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                  }}>
+                    {billPreview ? (
+                      <img
+                        src={billPreview}
+                        alt="bill preview"
+                        style={{
+                          width: 64, height: 64, objectFit: "cover",
+                          borderRadius: 8, border: `1px solid ${C.border}`,
+                          flexShrink: 0,
+                        }}
+                      />
+                    ) : (
+                      <div style={{
+                        width: 64, height: 64, borderRadius: 8,
+                        background: C.greenPale,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        flexShrink: 0,
+                      }}>
+                        <FileImage size={26} color={C.green} />
+                      </div>
+                    )}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{
+                        color: C.text, fontWeight: 600, fontSize: 14,
+                        overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                        marginBottom: 4,
+                      }}>
+                        {billFile.name}
+                      </div>
+                      <div style={{ color: C.textMuted, fontSize: 12 }}>
+                        {formatBytes(billFile.size)}
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        style={{
+                          background: "transparent",
+                          border: `1px solid ${C.border}`,
+                          borderRadius: 8,
+                          padding: "6px 12px",
+                          fontSize: 12,
+                          color: C.text,
+                          cursor: "pointer",
+                          fontFamily: "inherit",
+                        }}
+                      >
+                        {t.billImageChange}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={clearFile}
+                        style={{
+                          background: "transparent",
+                          border: `1px solid ${C.orange}40`,
+                          borderRadius: 8,
+                          padding: "6px 10px",
+                          fontSize: 12,
+                          color: C.orange,
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
+                          fontFamily: "inherit",
+                        }}
+                      >
+                        <Trash2 size={12} /> {t.billImageRemove}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </Field>
 
               {submitError && (
