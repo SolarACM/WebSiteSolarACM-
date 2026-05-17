@@ -147,7 +147,7 @@ function calcSolar({ bill, area, type }) {
 function Nav({ scrolled, lang, setLang }) {
   const [open, setOpen] = useState(false);
   return (
-    <nav style={{
+    <nav className="nav-bar" style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
       background: scrolled ? "rgba(15,28,20,0.95)" : "transparent",
       backdropFilter: scrolled ? "blur(20px)" : "none",
@@ -224,7 +224,7 @@ function StatPill({ icon: Icon, label, value }) {
 
 function Hero({ lang }) {
   return (
-    <section id="hero" style={{
+    <section id="hero" className="hero-section" style={{
       minHeight: "100vh", position: "relative", display: "flex", alignItems: "center",
       background: `radial-gradient(ellipse 80% 60% at 60% 40%, ${C.green}18 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 80% 70%, ${C.orange}12 0%, transparent 50%), ${C.dark}`,
       overflow: "hidden", padding: "0 2rem"
@@ -240,7 +240,7 @@ function Hero({ lang }) {
       <div style={{ position: "absolute", bottom: "10%", left: "5%", width: 300, height: 300, borderRadius: "50%", background: `radial-gradient(circle, ${C.green}20, transparent 70%)`, pointerEvents: "none" }} />
 
       <div style={{ maxWidth: 1280, margin: "0 auto", width: "100%", paddingTop: 80 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center" }}>
+        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center" }}>
           <div>
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 8, background: `${C.orange}15`,
@@ -251,7 +251,7 @@ function Hero({ lang }) {
               <Leaf size={13} /> Thailand's Trusted Solar Consultancy
             </div>
 
-            <h1 style={{
+            <h1 className="hero-title" style={{
           fontFamily: "'Playfair Display', Georgia, serif",
           fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)",
           fontWeight: 600,
@@ -262,11 +262,11 @@ function Hero({ lang }) {
           {content[lang].heroTitle}
         </h1>
 
-        <p style={{ color: C.textMuted, fontSize: 18, lineHeight: 1.8, maxWidth: 540, margin: "0 0 36px" }}>
+        <p className="hero-desc" style={{ color: C.textMuted, fontSize: 18, lineHeight: 1.8, maxWidth: 540, margin: "0 0 36px" }}>
           {content[lang].heroDesc}
         </p>
 
-            <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 48 }}>
+            <div className="hero-ctas" style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 48 }}>
               <a href="#calculator" style={{
                 display: "flex", alignItems: "center", gap: 8,
                 background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`,
@@ -285,15 +285,15 @@ function Hero({ lang }) {
               </a>
             </div>
 
-            <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+            <div className="stats-row" style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
               <StatPill icon={Building2} label="Projects completed" value="1,200+" />
               <StatPill icon={Zap} label="MW installed" value="48 MW" />
               <StatPill icon={Leaf} label="Tons CO₂ saved" value="32,000" />
             </div>
           </div>
 
-          {/* Hero visual — solar system illustration */}
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          {/* Hero visual — solar system illustration (ซ่อนบนมือถือ) */}
+          <div className="hero-visual" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <div style={{ position: "relative", width: 440, height: 440 }}>
               {/* Orbit rings */}
               {[280, 340, 400].map((d, i) => (
@@ -358,15 +358,15 @@ function Solutions({ lang }) {
 ];
 
   return (
-    <section id="solutions" style={{ padding: "100px 2rem", background: C.dark }}>
+    <section id="solutions" className="section-pad" style={{ padding: "100px 2rem", background: C.dark }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 60 }}>
           <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>{content[lang].offerTag}</div>
-          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: C.text, margin: 0 }}>{content[lang].solutionsTitle}</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: C.text, margin: 0 }}>{content[lang].solutionsTitle}</h2>
           <p style={{ color: C.textMuted, fontSize: 17, marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>{content[lang].solutionsDesc}</p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
+        <div className="solutions-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
           {items.map(({ icon: Icon, title, desc, badge, color }) => (
             <div key={title} style={{
               background: C.darkCard, border: `1px solid ${C.border}`,
@@ -411,11 +411,11 @@ function Calculator_({ lang }) {
   const COLORS_CHART = ["#2D7D46", "#E8630A", "#4CAF72", "#FF8C3A"];
 
   return (
-    <section id="calculator" style={{ padding: "100px 2rem", background: C.midDark }}>
+    <section id="calculator" className="section-pad" style={{ padding: "100px 2rem", background: C.midDark }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 56 }}>
           <div style={{ color: C.orangeLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>Smart ROI Calculator</div>
-          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: C.text, margin: 0 }}>
+          <h2 className="section-h2" style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: C.text, margin: 0 }}>
             {content[lang].calcTitle}
           </h2>
           <p style={{ color: C.textMuted, fontSize: 17, marginTop: 16 }}>{content[lang].calcDesc}</p>
@@ -438,7 +438,7 @@ function Calculator_({ lang }) {
           ))}
         </div>
 
-        <div style={{
+        <div className="calc-card" style={{
           maxWidth: step === 4 ? "100%" : 580,
           margin: "0 auto",
           background: C.darkCard, border: `1px solid ${C.border}`,
@@ -453,7 +453,7 @@ function Calculator_({ lang }) {
         <p style={{ color: C.textMuted, textAlign: "center", marginBottom: 32, fontSize: 14 }}>
           {lang === "th" ? "เลือกประเภทสถานที่ของพวกเราเพื่อการคำนวณที่แม่นยำค่ะ" : "Choose your property type for accurate estimates"}
         </p>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+        <div className="calc-types" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
           {[
             { id: "residential", icon: Home, title: content[lang].resTitle, sub: lang === "th" ? "บ้านและคอนโด" : "Houses & condos", color: C.green },
             { id: "industrial", icon: Building2, title: content[lang].indTitle, sub: lang === "th" ? "โรงงานและอาคารธุรกิจ" : "Factories, offices & retail", color: C.orange },
@@ -511,7 +511,7 @@ function Calculator_({ lang }) {
             <div>
               <h3 style={{ color: C.text, fontSize: 22, marginBottom: 8 }}>Your location</h3>
               <p style={{ color: C.textMuted, marginBottom: 32, fontSize: 14 }}>Solar irradiance varies by province — we use local averages</p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 32 }}>
+              <div className="calc-locations" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 32 }}>
                 {locations.map(loc => (
                   <button key={loc} onClick={() => setForm({ ...form, location: loc })}
                     style={{
@@ -545,7 +545,7 @@ function Calculator_({ lang }) {
               </div>
 
               {/* KPI Cards */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 36 }}>
+              <div className="calc-kpi-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 36 }}>
                 {[
                   { label: "System Size", value: `${result.kwpNeeded} kWp`, icon: Zap, color: C.green },
                   { label: "System Cost", value: `฿${Math.round(result.systemCost / 1000)}K`, icon: DollarSign, color: C.orange },
@@ -636,17 +636,17 @@ function Partners({ lang }) {
 ];
 
   return (
-    <section id="partners" style={{ padding: "100px 2rem", background: C.dark }}>
+    <section id="partners" className="section-pad" style={{ padding: "100px 2rem", background: C.dark }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 56 }}>
           <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>{content[lang].partnerTag}</div>
-          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: C.text, margin: 0 }}>{content[lang].partnerTitle}</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: C.text, margin: 0 }}>{content[lang].partnerTitle}</h2>
           <p style={{ color: C.textMuted, fontSize: 17, marginTop: 16, maxWidth: 540, margin: "16px auto 0" }}>
             {content[lang].partnerDesc}
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, marginBottom: 48 }}>
+        <div className="partners-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, marginBottom: 48 }}>
           {brands.map(({ name, role, tier, color }) => (
             <div key={name} style={{
               background: C.darkCard, border: `1px solid ${C.border}`,
@@ -671,7 +671,7 @@ function Partners({ lang }) {
           ))}
         </div>
 
-        <div style={{
+        <div className="partners-cta" style={{
           background: `linear-gradient(135deg, ${C.green}18, ${C.orange}10)`,
           border: `1px solid ${C.green}30`, borderRadius: 16, padding: 32,
           display: "flex", alignItems: "center", gap: 32
@@ -701,13 +701,13 @@ function Trust() {
   ];
 
   return (
-    <section style={{ padding: "80px 2rem", background: C.midDark }}>
+    <section className="section-pad" style={{ padding: "80px 2rem", background: C.midDark }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 48 }}>
           <div style={{ color: C.orangeLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>Client Stories</div>
-          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(1.8rem, 3vw, 2.5rem)", color: C.text, margin: 0 }}>Real Results, Real Savings</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(1.8rem, 3vw, 2.5rem)", color: C.text, margin: 0 }}>Real Results, Real Savings</h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
+        <div className="trust-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
           {testimonials.map(({ name, location, bill, stars, quote }) => (
             <div key={name} style={{ background: C.darkCard, border: `1px solid ${C.border}`, borderRadius: 16, padding: 28 }}>
               <div style={{ display: "flex", gap: 4, marginBottom: 16 }}>
@@ -737,12 +737,12 @@ function Support() {
   ];
 
   return (
-    <section id="support" style={{ padding: "100px 2rem", background: C.dark }}>
+    <section id="support" className="section-pad" style={{ padding: "100px 2rem", background: C.dark }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center" }}>
+        <div className="support-section-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center" }}>
           <div>
             <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>24/7 Support</div>
-            <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 2.8rem)", color: C.text, margin: "0 0 20px" }}>
+            <h2 className="section-h2" style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 2.8rem)", color: C.text, margin: "0 0 20px" }}>
               {content[lang].contactTitle}
             </h2>
             <p style={{ color: C.textMuted, fontSize: 17, lineHeight: 1.7, marginBottom: 36 }}>
@@ -764,7 +764,7 @@ function Support() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="support-channels" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {channels.map(({ name, handle, color, icon, desc }) => (
               <div key={name} style={{
                 background: C.darkCard, border: `1px solid ${C.border}`,
@@ -837,9 +837,9 @@ function FloatingSupport() {
 
 function Footer() {
   return (
-    <footer style={{ background: C.darkCard, borderTop: `1px solid ${C.border}`, padding: "48px 2rem 32px" }}>
+    <footer className="section-pad" style={{ background: C.darkCard, borderTop: `1px solid ${C.border}`, padding: "48px 2rem 32px" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 40 }}>
+        <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 40 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
               <div style={{ width: 36, height: 36, borderRadius: "50%", background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -865,7 +865,7 @@ function Footer() {
             </div>
           ))}
         </div>
-        <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div className="footer-bottom" style={{ borderTop: `1px solid ${C.border}`, paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ color: C.textMuted, fontSize: 13 }}>© 2025 Solar ACM Systems Corporation. All rights reserved.</div>
           <div style={{ color: C.textMuted, fontSize: 13 }}>Registered in Thailand · TAT License · EGAT Certified</div>
         </div>
@@ -890,11 +890,56 @@ export default function SolarACM() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { overflow-x: hidden; max-width: 100vw; }
+        img { max-width: 100%; height: auto; }
         input:focus { border-color: #2D7D46 !important; box-shadow: 0 0 0 3px rgba(45,125,70,0.15); }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0F1C14; }
+        ::-webkit-scrollbar-track { background: #F0F4F1; }
         ::-webkit-scrollbar-thumb { background: #2D7D46; border-radius: 3px; }
+
+        /* ── TABLET (≤ 1024px) ─────────────────────────── */
+        @media (max-width: 1024px) {
+          .hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+          .hero-visual { display: none !important; }
+          .calc-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+          .partners-cta { flex-direction: column !important; text-align: center !important; gap: 20px !important; }
+          .support-section-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+        }
+
+        /* ── MOBILE (≤ 768px) ──────────────────────────── */
+        @media (max-width: 768px) {
+          .desktop-nav { display: none !important; }
+          .hero-section, .section-pad { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+          .nav-bar { padding: 0 1rem !important; }
+          .hero-title { font-size: clamp(1.8rem, 7vw, 2.4rem) !important; }
+          .hero-desc { font-size: 16px !important; }
+          .hero-ctas { flex-direction: column !important; align-items: stretch !important; }
+          .hero-ctas > a { justify-content: center !important; }
+          .stats-row { gap: 10px !important; }
+          .stats-row > div { flex: 1 1 calc(50% - 5px) !important; min-width: 0 !important; }
+          .solutions-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+          .calc-types { grid-template-columns: 1fr !important; gap: 14px !important; }
+          .calc-locations { grid-template-columns: 1fr 1fr !important; }
+          .calc-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+          .partners-grid { grid-template-columns: 1fr !important; }
+          .trust-grid { grid-template-columns: 1fr !important; }
+          .support-channels { grid-template-columns: 1fr 1fr !important; }
+          .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 28px !important; }
+          .footer-grid > div:first-child { grid-column: 1 / -1 !important; }
+          .footer-bottom { flex-direction: column !important; gap: 8px !important; text-align: center !important; }
+          .calc-card { padding: 24px !important; max-width: 100% !important; }
+          .section-h2 { font-size: clamp(1.6rem, 5vw, 2.2rem) !important; }
+        }
+
+        /* ── SMALL MOBILE (≤ 480px) ────────────────────── */
+        @media (max-width: 480px) {
+          .stats-row > div { flex: 1 1 100% !important; }
+          .support-channels { grid-template-columns: 1fr !important; }
+          .footer-grid { grid-template-columns: 1fr !important; }
+          .calc-locations { grid-template-columns: 1fr !important; }
+        }
       `}</style>
     <Nav lang={lang} scrolled={scrolled} setLang={setLang} />
 <Hero lang={lang} />
