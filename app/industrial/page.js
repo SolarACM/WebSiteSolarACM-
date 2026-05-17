@@ -116,7 +116,7 @@ function NavBar({ lang, setLang }) {
             <span style={{ fontSize: 10, color: "rgba(255,255,255,0.7)", letterSpacing: "0.05em", textTransform: "uppercase" }}>Systems Corporation</span>
           </div>
         </Link>
-        <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
+        <div className="desktop-nav" style={{ display: "flex", gap: 28, alignItems: "center" }}>
           {[["residential", lang === "th" ? "บ้านพักอาศัย" : "Residential"], ["industrial", lang === "th" ? "ธุรกิจ" : "Industrial"], ["bess", "BESS"], ["epc", "EPC Network"]].map(([href, label]) => (
             <Link key={href} href={`/${href}`} style={{ color: "white", fontSize: 14, fontWeight: 500, textDecoration: "none", opacity: 0.85 }}>{label}</Link>
           ))}
@@ -156,7 +156,7 @@ function Footer({ lang }) {
   return (
     <footer style={{ background: C.darkCard, borderTop: `1px solid ${C.border}`, padding: "48px 2rem 32px" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 40 }}>
+        <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 40 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
               <div style={{ width: 36, height: 36, borderRadius: "50%", background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`, display: "flex", alignItems: "center", justifyContent: "center" }}><Sun size={18} color="white" /></div>
