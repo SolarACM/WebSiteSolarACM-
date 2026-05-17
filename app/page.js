@@ -11,6 +11,7 @@ import {
   LineChart, Line, AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
 } from "recharts";
+import Link from "next/link";
 
 const content = {
   th: {
@@ -189,15 +190,15 @@ function Nav({ scrolled, lang, setLang }) {
             {lang === "th" ? "EN" : "TH"}
           </button>
 
-          {/* ปุ่มขอใบเสนอราคา (Get Free Quote) */}
-          <a href="#calculator" style={{
+          {/* ปุ่มขอใบเสนอราคา (Get Free Quote) → ไปที่หน้าฟอร์ม /quote */}
+          <Link href="/quote" style={{
             background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`,
-            color: "white", padding: "10px 20px", borderRadius: 8, 
+            color: "white", padding: "10px 20px", borderRadius: 8,
             fontSize: 13, fontWeight: 600, textDecoration: "none",
             boxShadow: `0 4px 20px ${C.green}44`
           }}>
             Get Free Quote
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
@@ -611,9 +612,9 @@ function Calculator_({ lang }) {
 
               <div style={{ display: "flex", gap: 12 }}>
                 <button onClick={() => { setStep(1); setResult(null); setType(null); }} style={{ flex: 1, background: "transparent", border: `1px solid ${C.border}`, borderRadius: 10, padding: 14, color: C.textMuted, cursor: "pointer", fontSize: 14 }}>Recalculate</button>
-                <a href="#support" style={{ flex: 2, background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`, border: "none", borderRadius: 10, padding: 14, color: "white", cursor: "pointer", fontSize: 15, fontWeight: 600, textAlign: "center", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                <Link href="/quote" style={{ flex: 2, background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`, border: "none", borderRadius: 10, padding: 14, color: "white", cursor: "pointer", fontSize: 15, fontWeight: 600, textAlign: "center", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <MessageCircle size={18} /> {content[lang].btnQuote}
-                </a>
+                </Link>
               </div>
             </div>
           )}
@@ -803,7 +804,7 @@ function FloatingSupport() {
           {[
             // แก้บรรทัด 757-759 ให้เป็นแบบนี้ค่ะ:
 { label: "LINE Chat", color: "#06C755", href: `https://line.me/ti/p/~${content[lang].line.replace('@', '')}` },
-{ label: "WhatsApp", color: "#25D366", href: `https://wa.me/${content[lang].phone.replace(/[^0-9]/g, '')}` },
+{ label: "WhatsApp", color: "#25D366", href: `https://line.me/ti/p/~Monarrattana${content[lang].phone.replace(/[^0-9]/g, '')}` },
 { label: "Call Us", color: C.orangeLight, href: `tel:${content[lang].phone}` },
           ].map(({ label, color, href }) => (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{
