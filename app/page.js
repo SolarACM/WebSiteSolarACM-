@@ -145,11 +145,17 @@ function calcSolar({ bill, area, type }) {
 /* ─── COMPONENTS ────────────────────────────────────────────── */
 
 function scrollToId(id) {
+  if (typeof window === "undefined") return;
   const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-    history.replaceState(null, "", `#${id}`);
+  if (!el) {
+    console.warn(`[scrollToId] Element #${id} not found`);
+    return;
   }
+  const navOffset = 80;
+  const rect = el.getBoundingClientRect();
+  const targetY = rect.top + window.pageYOffset - navOffset;
+  window.scrollTo({ top: targetY, behavior: "smooth" });
+  try { history.replaceState(null, "", `#${id}`); } catch {}
 }
 
 function Nav({ scrolled, lang, setLang }) {
