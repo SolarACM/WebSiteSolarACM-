@@ -742,13 +742,17 @@ function Partners({ lang }) {
         }}>
           <Shield size={48} color={C.greenLight} style={{ flexShrink: 0 }} />
           <div>
-            <h4 style={{ color: C.text, fontSize: 18, margin: "0 0 8px" }}>Our Installer Network — Trusted, Vetted, Private</h4>
+            <h4 style={{ color: C.text, fontSize: 18, margin: "0 0 8px" }}>
+              {lang === "th" ? "เครือข่ายผู้ติดตั้ง — น่าเชื่อถือ คัดสรรแล้ว" : "Our Installer Network — Trusted, Vetted, Private"}
+            </h4>
             <p style={{ color: C.textMuted, fontSize: 14, margin: 0, lineHeight: 1.7 }}>
-              We maintain a carefully curated network of certified EPC contractors across Thailand. By aggregating multiple installers, we drive competitive pricing while protecting our partnerships. You get top-quality installation without the vendor friction.
+              {lang === "th"
+                ? "เราบริหารเครือข่ายผู้รับเหมา EPC ที่ผ่านการคัดเกรดทั่วประเทศไทย ด้วยการรวมผู้ติดตั้งหลายราย เราขับเคลื่อนราคาที่แข่งขันได้ พร้อมปกป้องความสัมพันธ์กับพันธมิตร คุณได้งานติดตั้งคุณภาพสูงโดยไม่ต้องยุ่งยากกับการเลือกผู้รับเหมาเอง"
+                : "We maintain a carefully curated network of certified EPC contractors across Thailand. By aggregating multiple installers, we drive competitive pricing while protecting our partnerships. You get top-quality installation without the vendor friction."}
             </p>
           </div>
           <a href="#support" style={{ flexShrink: 0, background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, color: "white", padding: "12px 24px", borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: "none", whiteSpace: "nowrap" }}>
-            Request Access
+            {lang === "th" ? "ติดต่อเรา" : "Request Access"}
           </a>
         </div>
       </div>
