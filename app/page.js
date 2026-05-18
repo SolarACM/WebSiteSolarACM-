@@ -144,6 +144,14 @@ function calcSolar({ bill, area, type }) {
 
 /* ─── COMPONENTS ────────────────────────────────────────────── */
 
+function scrollToId(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    history.replaceState(null, "", `#${id}`);
+  }
+}
+
 function Nav({ scrolled, lang, setLang }) {
   const [open, setOpen] = useState(false);
 
@@ -154,6 +162,14 @@ function Nav({ scrolled, lang, setLang }) {
     { label: "Support", href: "#support" },
     { label: lang === "th" ? "ผลงาน" : "Portfolio", href: "/portfolio", isLink: true },
   ];
+
+  function handleHashClick(e, href) {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      scrollToId(href.slice(1));
+      setOpen(false);
+    }
+  }
 
   return (
     <nav className="nav-bar" style={{
@@ -184,7 +200,7 @@ function Nav({ scrolled, lang, setLang }) {
                 {label}
               </Link>
             ) : (
-              <a key={href} href={href} style={{ color: "white", fontSize: 14, fontWeight: 500, textDecoration: "none", opacity: 0.8 }}>
+              <a key={href} href={href} onClick={(e) => handleHashClick(e, href)} style={{ color: "white", fontSize: 14, fontWeight: 500, textDecoration: "none", opacity: 0.8, cursor: "pointer" }}>
                 {label}
               </a>
             )
@@ -247,10 +263,10 @@ function Nav({ scrolled, lang, setLang }) {
                 {label}
               </Link>
             ) : (
-              <a key={href} href={href} onClick={() => setOpen(false)} style={{
+              <a key={href} href={href} onClick={(e) => handleHashClick(e, href)} style={{
                 display: "block", color: "white", fontSize: 16, fontWeight: 500,
                 textDecoration: "none", padding: "12px 0",
-                borderBottom: "1px solid rgba(255,255,255,0.08)",
+                borderBottom: "1px solid rgba(255,255,255,0.08)", cursor: "pointer",
               }}>
                 {label}
               </a>
@@ -332,7 +348,7 @@ function Hero({ lang }) {
         </p>
 
             <div className="hero-ctas" style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 48 }}>
-              <a href="#calculator" onClick={(e) => { e.preventDefault(); document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', '#calculator'); }} style={{
+              <a href="#calculator" onClick={(e) => { e.preventDefault(); scrollToId('calculator'); }} style={{
                 display: "flex", alignItems: "center", gap: 8,
                 background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`,
                 color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600,
@@ -340,7 +356,7 @@ function Hero({ lang }) {
               }}>
                 <Calculator size={18} /> Calculate My ROI
               </a>
-              <a href="#solutions" onClick={(e) => { e.preventDefault(); document.getElementById('solutions')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', '#solutions'); }} style={{
+              <a href="#solutions" onClick={(e) => { e.preventDefault(); scrollToId('solutions'); }} style={{
                 display: "flex", alignItems: "center", gap: 8,
                 background: C.glass, backdropFilter: "blur(12px)",
                 border: `1px solid ${C.border}`, color: C.text,
@@ -788,7 +804,7 @@ function Partners({ lang }) {
                 : "We maintain a carefully curated network of certified EPC contractors across Thailand. By aggregating multiple installers, we drive competitive pricing while protecting our partnerships. You get top-quality installation without the vendor friction."}
             </p>
           </div>
-          <a href="#support" style={{ flexShrink: 0, background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, color: "white", padding: "12px 24px", borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: "none", whiteSpace: "nowrap" }}>
+          <a href="#support" onClick={(e) => { e.preventDefault(); scrollToId('support'); }} style={{ flexShrink: 0, background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, color: "white", padding: "12px 24px", borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: "none", whiteSpace: "nowrap", cursor: "pointer" }}>
             {lang === "th" ? "ติดต่อเรา" : "Request Access"}
           </a>
         </div>
@@ -1144,8 +1160,8 @@ export default function SolarACM() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; overflow-x: hidden; scroll-padding-top: 90px; }
-        body { overflow-x: hidden; max-width: 100vw; }
+        html { scroll-behavior: smooth; scroll-padding-top: 90px; overflow-x: clip; }
+        body { overflow-x: clip; margin: 0; }
         section[id] { scroll-margin-top: 90px; }
         img { max-width: 100%; height: auto; }
         input:focus { border-color: #2D7D46 !important; box-shadow: 0 0 0 3px rgba(45,125,70,0.15); }
