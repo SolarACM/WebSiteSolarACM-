@@ -207,9 +207,9 @@ function Nav({ scrolled, lang, setLang }) {
                 {label}
               </Link>
             ) : (
-              <a key={href} href={href} onClick={(e) => handleHashClick(e, href)} style={{ color: "white", fontSize: 14, fontWeight: 500, textDecoration: "none", opacity: 0.8, cursor: "pointer" }}>
+              <button key={href} type="button" onClick={() => { scrollToId(href.slice(1)); setOpen(false); }} style={{ background: "transparent", border: "none", color: "white", fontSize: 14, fontWeight: 500, opacity: 0.8, cursor: "pointer", padding: 0, fontFamily: "inherit" }}>
                 {label}
-              </a>
+              </button>
             )
           )}
           <button
@@ -270,13 +270,15 @@ function Nav({ scrolled, lang, setLang }) {
                 {label}
               </Link>
             ) : (
-              <a key={href} href={href} onClick={(e) => handleHashClick(e, href)} style={{
-                display: "block", color: "white", fontSize: 16, fontWeight: 500,
-                textDecoration: "none", padding: "12px 0",
+              <button key={href} type="button" onClick={() => { scrollToId(href.slice(1)); setOpen(false); }} style={{
+                display: "block", width: "100%", textAlign: "left",
+                background: "transparent", border: "none", color: "white", fontSize: 16, fontWeight: 500,
+                padding: "12px 0",
                 borderBottom: "1px solid rgba(255,255,255,0.08)", cursor: "pointer",
+                fontFamily: "inherit",
               }}>
                 {label}
-              </a>
+              </button>
             )
           )}
           <Link href="/quote" onClick={() => setOpen(false)} style={{
@@ -355,22 +357,24 @@ function Hero({ lang }) {
         </p>
 
             <div className="hero-ctas" style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 48 }}>
-              <a href="#calculator" onClick={(e) => { e.preventDefault(); scrollToId('calculator'); }} style={{
+              <button type="button" onClick={() => scrollToId('calculator')} style={{
                 display: "flex", alignItems: "center", gap: 8,
                 background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`,
                 color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600,
-                textDecoration: "none", boxShadow: `0 8px 32px ${C.orange}44`, cursor: "pointer"
+                border: "none", boxShadow: `0 8px 32px ${C.orange}44`, cursor: "pointer",
+                fontFamily: "inherit",
               }}>
                 <Calculator size={18} /> Calculate My ROI
-              </a>
-              <a href="#solutions" onClick={(e) => { e.preventDefault(); scrollToId('solutions'); }} style={{
+              </button>
+              <button type="button" onClick={() => scrollToId('solutions')} style={{
                 display: "flex", alignItems: "center", gap: 8,
                 background: C.glass, backdropFilter: "blur(12px)",
                 border: `1px solid ${C.border}`, color: C.text,
-                padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 500, textDecoration: "none", cursor: "pointer"
+                padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 500, cursor: "pointer",
+                fontFamily: "inherit",
               }}>
                 Explore Solutions <ChevronRight size={16} />
-              </a>
+              </button>
             </div>
 
             <div className="stats-row" style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
