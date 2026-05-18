@@ -22,9 +22,18 @@ body {
   background: #F9FCF9;
   color: #14241B;
   font-family: "DM Sans", "Geist", Arial, Helvetica, sans-serif;
-  /* กันไม่ให้เกิด horizontal scroll บนมือถือถ้ามี element ใดยื่นออกขวา */
-  overflow-x: hidden;
-  max-width: 100%;
+  /* ใช้ clip แทน hidden เพื่อไม่สร้าง scroll container ใหม่
+     (hidden จะทำให้ scroll-behavior: smooth และ anchor link scroll พัง) */
+  overflow-x: clip;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
+section[id] {
+  scroll-margin-top: 90px;
 }
 
 * {
