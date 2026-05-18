@@ -153,9 +153,10 @@ function NavBar({ lang, setLang }) {
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      background: scrolled ? "rgba(15,28,20,0.95)" : "transparent",
-      backdropFilter: scrolled ? "blur(20px)" : "none",
-      borderBottom: scrolled ? `1px solid ${C.border}` : "none",
+      background: scrolled ? "rgba(15,28,20,0.97)" : "rgba(15,28,20,0.88)",
+      backdropFilter: "blur(20px)",
+      borderBottom: `1px solid rgba(255,255,255,0.08)`,
+      boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.15)" : "none",
       transition: "all 0.4s ease", padding: "0 2rem",
     }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 80 }}>

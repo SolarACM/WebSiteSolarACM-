@@ -689,17 +689,33 @@ function Calculator_({ lang }) {
   );
 }
 
-/* ─── PARTNER LOGO (with Clearbit fallback) ─────────────────── */
-function PartnerLogo({ name, domain, color }) {
-  const [errored, setErrored] = useState(false);
-  if (errored || !domain) {
-    return <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 13, fontWeight: 700, color, letterSpacing: "0.05em" }}>{name.slice(0, 3).toUpperCase()}</span>;
+/* ─── PARTNER LOGO ──────────────────────────────────────────── */
+// โหลดจาก /public/partners/ ก่อน → ถ้าไม่มีลอง Clearbit → fallback ชื่อแบรนด์เต็ม
+function PartnerLogo({ name, slug, domain, brandColor }) {
+  const [srcIdx, setSrcIdx] = useState(0);
+  const sources = [
+    `/partners/${slug}.svg`,
+    `/partners/${slug}.png`,
+    domain ? `https://logo.clearbit.com/${domain}` : null,
+  ].filter(Boolean);
+
+  if (srcIdx >= sources.length) {
+    return (
+      <span style={{
+        fontFamily: "'Playfair Display', Georgia, serif",
+        fontSize: 17, fontWeight: 700, color: brandColor,
+        letterSpacing: "-0.01em", textAlign: "center",
+      }}>
+        {name}
+      </span>
+    );
   }
+
   return (
     <img
-      src={`https://logo.clearbit.com/${domain}`}
+      src={sources[srcIdx]}
       alt={`${name} logo`}
-      onError={() => setErrored(true)}
+      onError={() => setSrcIdx(srcIdx + 1)}
       style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
     />
   );
@@ -708,12 +724,12 @@ function PartnerLogo({ name, domain, color }) {
 /* ─── PARTNERS ──────────────────────────────────────────────── */
 function Partners({ lang }) {
   const brands = [
-  { name: "Huawei", domain: "huawei.com", role: content[lang].huaweiDesc, tier: "Platinum", color: "#E8630A" },
-  { name: "LONGi Solar", domain: "longi.com", role: content[lang].longiDesc, tier: "Platinum", color: "#2D7D46" },
-  { name: "Deye", domain: "deyeinverter.com", role: content[lang].deyeDesc, tier: "Gold", color: "#FF8C3A" },
-  { name: "Risen Energy", domain: "risenenergy.com", role: content[lang].risenDesc, tier: "Gold", color: "#4CAF72" },
-  { name: "Sungrow", domain: "sungrowpower.com", role: content[lang].sungrowDesc, tier: "Gold", color: "#2D7D46" },
-  { name: "BYD Energy", domain: "byd.com", role: content[lang].bydDesc, tier: "Silver", color: "#E8630A" },
+  { name: "Huawei",        slug: "huawei",  domain: "huawei.com",         role: content[lang].huaweiDesc, tier: "Platinum", color: "#E8630A", brandColor: "#CF0A2C" },
+  { name: "LONGi Solar",   slug: "longi",   domain: "longi.com",          role: content[lang].longiDesc,  tier: "Platinum", color: "#2D7D46", brandColor: "#003F88" },
+  { name: "Deye",          slug: "deye",    domain: "deyeinverter.com",   role: content[lang].deyeDesc,   tier: "Gold",     color: "#FF8C3A", brandColor: "#E30613" },
+  { name: "Risen Energy",  slug: "risen",   domain: "risenenergy.com",    role: content[lang].risenDesc,  tier: "Gold",     color: "#4CAF72", brandColor: "#003C71" },
+  { name: "Sungrow",       slug: "sungrow", domain: "sungrowpower.com",   role: content[lang].sungrowDesc,tier: "Gold",     color: "#2D7D46", brandColor: "#C8102E" },
+  { name: "BYD Energy",    slug: "byd",     domain: "byd.com",            role: content[lang].bydDesc,    tier: "Silver",   color: "#E8630A", brandColor: "#E60012" },
 ];
 
   return (
@@ -728,7 +744,7 @@ function Partners({ lang }) {
         </div>
 
         <div className="partners-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, marginBottom: 48 }}>
-          {brands.map(({ name, domain, role, tier, color }) => (
+          {brands.map(({ name, slug, domain, brandColor, role, tier, color }) => (
             <div key={name} style={{
               background: C.darkCard, border: `1px solid ${C.border}`,
               borderRadius: 14, padding: 24, display: "flex", alignItems: "center", gap: 20,
@@ -738,12 +754,12 @@ function Partners({ lang }) {
               onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
             >
               <div style={{
-                width: 84, height: 64, borderRadius: 10,
+                width: 96, height: 72, borderRadius: 10,
                 background: "#FFFFFF", border: `1px solid ${C.border}`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0, padding: 10, overflow: "hidden",
+                flexShrink: 0, padding: 12, overflow: "hidden",
               }}>
-                <PartnerLogo name={name} domain={domain} color={color} />
+                <PartnerLogo name={name} slug={slug} domain={domain} brandColor={brandColor} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
