@@ -177,7 +177,10 @@ function Nav({ scrolled, lang, setLang }) {
               {l}
             </a>
           ))}
-          
+          <Link href="/portfolio" style={{ color: "white", fontSize: 14, fontWeight: 500, textDecoration: "none", opacity: 0.8 }}>
+            ผลงาน
+          </Link>
+
           {/* ปุ่มสลับภาษา TH/EN ที่เราเพิ่มใหม่ค่ะ */}
           <button 
             onClick={() => setLang(lang === "th" ? "en" : "th")}
@@ -787,6 +790,63 @@ function Support() {
   );
 }
 
+/* ─── PORTFOLIO TEASER ──────────────────────────────────────── */
+function PortfolioTeaser() {
+  const highlights = [
+    { type: "residential", label: "บ้านพักอาศัย", kw: "5–12 kWp", icon: Home, color: "#2D7D46" },
+    { type: "industrial", label: "ธุรกิจ/อุตสาหกรรม", kw: "50–200 kWp", icon: Building2, color: "#1a5e8a" },
+    { type: "bess", label: "ระบบกักเก็บพลังงาน", kw: "BESS + Solar", icon: Battery, color: "#7B3FA0" },
+    { type: "epc", label: "EPC / Solar Farm", kw: "500 kWp – 1 MWp", icon: Globe, color: "#E8630A" },
+  ];
+
+  return (
+    <section style={{ padding: "100px 2rem", background: C.midDark }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 52 }}>
+          <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>ผลงานของเรา</div>
+          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: C.text, margin: "0 0 16px" }}>
+            โครงการที่เราภาคภูมิใจ
+          </h2>
+          <p style={{ color: C.textMuted, fontSize: 17, margin: "0 auto", maxWidth: 500, lineHeight: 1.7 }}>
+            ผลงานครอบคลุมทุกประเภท ตั้งแต่บ้านพักอาศัยจนถึง Solar Farm ขนาด 1 MWp
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20, marginBottom: 40 }}>
+          {highlights.map(({ label, kw, icon: Icon, color }) => (
+            <div key={label} style={{
+              background: C.darkCard, border: `1px solid ${C.border}`,
+              borderRadius: 14, padding: "24px 20px", textAlign: "center",
+              transition: "transform 0.25s, border-color 0.25s",
+            }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = `${color}50`; e.currentTarget.style.transform = "translateY(-4px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              <div style={{ width: 52, height: 52, borderRadius: 12, background: `${color}18`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
+                <Icon size={26} color={color} />
+              </div>
+              <div style={{ color: C.text, fontWeight: 600, fontSize: 15, marginBottom: 6 }}>{label}</div>
+              <div style={{ color, fontSize: 13, fontWeight: 500 }}>{kw}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ textAlign: "center" }}>
+          <Link href="/portfolio" style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`,
+            color: "white", padding: "13px 28px", borderRadius: 10,
+            fontSize: 15, fontWeight: 600, textDecoration: "none",
+            boxShadow: `0 8px 28px ${C.green}40`,
+          }}>
+            ดูผลงานทั้งหมด <ArrowRight size={16} />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── FLOATING SUPPORT BUTTON ───────────────────────────────── */
 function FloatingSupport() {
   const lang = 'th';
@@ -946,6 +1006,7 @@ export default function SolarACM() {
      <Solutions lang={lang} />
         <Calculator_ lang={lang} />
         <Partners lang={lang} />
+        <PortfolioTeaser />
         <Trust lang={lang} />
         <Support lang={lang} />
         <Footer lang={lang} />
