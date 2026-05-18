@@ -1144,8 +1144,9 @@ export default function SolarACM() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; overflow-x: hidden; }
+        html { scroll-behavior: smooth; overflow-x: hidden; scroll-padding-top: 90px; }
         body { overflow-x: hidden; max-width: 100vw; }
+        section[id] { scroll-margin-top: 90px; }
         img { max-width: 100%; height: auto; }
         input:focus { border-color: #2D7D46 !important; box-shadow: 0 0 0 3px rgba(45,125,70,0.15); }
         ::-webkit-scrollbar { width: 6px; }
