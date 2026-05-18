@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   Sun, Zap, TrendingUp, Shield, ChevronRight, ChevronDown,
   Phone, MessageCircle, Building2, Home, BarChart3, Leaf,
-  Star, CheckCircle, ArrowRight, Calculator, Globe, Award,
+  CheckCircle, ArrowRight, Calculator, Globe, Award,
   Users, Battery, Cpu, Wind, DollarSign, Calendar, MapPin,
   Mail, Menu, X
 } from "lucide-react";
@@ -756,39 +756,6 @@ function Partners({ lang }) {
   );
 }
 
-/* ─── TRUST SECTION ─────────────────────────────────────────── */
-function Trust() {
-  const testimonials = [
-    { name: "Somchai P.", location: "Bangkok", bill: "฿8,200 → ฿640/mo", stars: 5, quote: "Solar ACM matched me with an excellent installer. My electricity bill dropped by 92%. The ROI calculator was spot-on." },
-    { name: "Wanida T.", location: "Chiang Mai", bill: "Industrial 48 kWp", stars: 5, quote: "As a factory owner I was skeptical, but the team aggregated three quotes and handled everything. Best investment decision of 2024." },
-    { name: "Prayut L.", location: "Rayong", bill: "฿4,500 → ฿200/mo", stars: 5, quote: "The 25-year savings dashboard convinced me. Transparent, professional, and the installation was flawless." },
-  ];
-
-  return (
-    <section className="section-pad" style={{ padding: "80px 2rem", background: C.midDark }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 48 }}>
-          <div style={{ color: C.orangeLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>Client Stories</div>
-          <h2 className="section-h2" style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(1.8rem, 3vw, 2.5rem)", color: C.text, margin: 0 }}>Real Results, Real Savings</h2>
-        </div>
-        <div className="trust-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
-          {testimonials.map(({ name, location, bill, stars, quote }) => (
-            <div key={name} style={{ background: C.darkCard, border: `1px solid ${C.border}`, borderRadius: 16, padding: 28 }}>
-              <div style={{ display: "flex", gap: 4, marginBottom: 16 }}>
-                {Array.from({ length: stars }).map((_, i) => <Star key={i} size={14} color={C.orangeLight} fill={C.orangeLight} />)}
-              </div>
-              <p style={{ color: C.text, fontSize: 15, lineHeight: 1.7, margin: "0 0 20px", fontStyle: "italic" }}>"{quote}"</p>
-              <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 16 }}>
-                <div style={{ color: C.text, fontWeight: 600 }}>{name}</div>
-                <div style={{ color: C.textMuted, fontSize: 13 }}>{location} · {bill}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ─── SUPPORT WIDGET ────────────────────────────────────────── */
 function Support() {
@@ -1090,7 +1057,6 @@ export default function SolarACM() {
         <Calculator_ lang={lang} />
         <Partners lang={lang} />
         <PortfolioTeaser lang={lang} />
-        <Trust lang={lang} />
         <Support lang={lang} />
         <Footer lang={lang} />
         <FloatingSupport lang={lang} />
