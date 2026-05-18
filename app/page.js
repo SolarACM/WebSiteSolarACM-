@@ -146,6 +146,15 @@ function calcSolar({ bill, area, type }) {
 
 function Nav({ scrolled, lang, setLang }) {
   const [open, setOpen] = useState(false);
+
+  const navLinks = [
+    { label: lang === "th" ? "Solutions" : "Solutions", href: "#solutions" },
+    { label: "Calculator", href: "#calculator" },
+    { label: "Partners", href: "#partners" },
+    { label: "Support", href: "#support" },
+    { label: lang === "th" ? "ผลงาน" : "Portfolio", href: "/portfolio", isLink: true },
+  ];
+
   return (
     <nav className="nav-bar" style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
@@ -156,54 +165,106 @@ function Nav({ scrolled, lang, setLang }) {
       padding: "0 2rem",
     }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 80 }}>
-        
-        {/* --- ส่วนโลโก้บริษัท (รูป + ชื่อบริษัท Solar ACM) --- */}
+
+        {/* Logo */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <img 
-            src="/Logo SolarACM.png" 
-            alt="Solar ACM Logo" 
-            style={{ height: "45px", width: "auto", objectFit: "contain" }} 
-          />
+          <img src="/Logo SolarACM.png" alt="Solar ACM Logo" style={{ height: "45px", width: "auto", objectFit: "contain" }} />
           <div style={{ display: "flex", flexDirection: "column", lineHeight: "1.2" }}>
             <span style={{ fontWeight: "700", fontSize: "18px", color: "white" }}>Solar ACM</span>
             <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.05em", textTransform: "uppercase" }}>Systems Corporation</span>
           </div>
         </div>
 
-        {/* --- ส่วนเมนูหลัก และปุ่มสลับภาษา --- */}
+        {/* Desktop nav */}
         <div style={{ display: "flex", gap: 32, alignItems: "center" }} className="desktop-nav">
-          {["Solutions", "Calculator", "Partners", "Support"].map((l) => (
-            <a key={l} href={`#${l.toLowerCase()}`} style={{ color: "white", fontSize: 14, fontWeight: 500, textDecoration: "none", opacity: 0.8 }}>
-              {l}
-            </a>
-          ))}
-          <Link href="/portfolio" style={{ color: "white", fontSize: 14, fontWeight: 500, textDecoration: "none", opacity: 0.8 }}>
-            ผลงาน
-          </Link>
-
-          {/* ปุ่มสลับภาษา TH/EN ที่เราเพิ่มใหม่ค่ะ */}
-          <button 
+          {navLinks.map(({ label, href, isLink }) =>
+            isLink ? (
+              <Link key={href} href={href} style={{ color: "white", fontSize: 14, fontWeight: 500, textDecoration: "none", opacity: 0.8 }}>
+                {label}
+              </Link>
+            ) : (
+              <a key={href} href={href} style={{ color: "white", fontSize: 14, fontWeight: 500, textDecoration: "none", opacity: 0.8 }}>
+                {label}
+              </a>
+            )
+          )}
+          <button
             onClick={() => setLang(lang === "th" ? "en" : "th")}
-            style={{ 
-              marginLeft: "10px", padding: "6px 12px", borderRadius: "15px", 
-              border: `1px solid ${C.orange}`, color: C.orange, fontWeight: "bold", 
+            style={{
+              marginLeft: "10px", padding: "6px 12px", borderRadius: "15px",
+              border: `1px solid ${C.orange}`, color: C.orange, fontWeight: "bold",
               cursor: "pointer", fontSize: "12px", background: "transparent"
             }}
           >
             {lang === "th" ? "EN" : "TH"}
           </button>
-
-          {/* ปุ่มขอใบเสนอราคา (Get Free Quote) → ไปที่หน้าฟอร์ม /quote */}
           <Link href="/quote" style={{
             background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`,
             color: "white", padding: "10px 20px", borderRadius: 8,
             fontSize: 13, fontWeight: 600, textDecoration: "none",
             boxShadow: `0 4px 20px ${C.green}44`
           }}>
-            Get Free Quote
+            {lang === "th" ? "ขอใบเสนอราคา" : "Get Free Quote"}
           </Link>
         </div>
+
+        {/* Mobile: ปุ่มภาษา + hamburger */}
+        <div className="mobile-nav-controls" style={{ display: "none", alignItems: "center", gap: 10 }}>
+          <button
+            onClick={() => setLang(lang === "th" ? "en" : "th")}
+            style={{
+              padding: "6px 12px", borderRadius: "15px",
+              border: `1px solid ${C.orange}`, color: C.orange, fontWeight: "bold",
+              cursor: "pointer", fontSize: "12px", background: "transparent"
+            }}
+          >
+            {lang === "th" ? "EN" : "TH"}
+          </button>
+          <button
+            onClick={() => setOpen(!open)}
+            style={{ background: "transparent", border: "none", cursor: "pointer", padding: 4, color: "white" }}
+          >
+            {open ? <X size={24} color="white" /> : <Menu size={24} color="white" />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile dropdown menu */}
+      {open && (
+        <div style={{
+          background: "rgba(15,28,20,0.98)", backdropFilter: "blur(20px)",
+          borderTop: `1px solid rgba(255,255,255,0.1)`,
+          padding: "16px 2rem 24px",
+        }}>
+          {navLinks.map(({ label, href, isLink }) =>
+            isLink ? (
+              <Link key={href} href={href} onClick={() => setOpen(false)} style={{
+                display: "block", color: "white", fontSize: 16, fontWeight: 500,
+                textDecoration: "none", padding: "12px 0",
+                borderBottom: "1px solid rgba(255,255,255,0.08)",
+              }}>
+                {label}
+              </Link>
+            ) : (
+              <a key={href} href={href} onClick={() => setOpen(false)} style={{
+                display: "block", color: "white", fontSize: 16, fontWeight: 500,
+                textDecoration: "none", padding: "12px 0",
+                borderBottom: "1px solid rgba(255,255,255,0.08)",
+              }}>
+                {label}
+              </a>
+            )
+          )}
+          <Link href="/quote" onClick={() => setOpen(false)} style={{
+            display: "block", marginTop: 16, textAlign: "center",
+            background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`,
+            color: "white", padding: "12px 20px", borderRadius: 8,
+            fontSize: 15, fontWeight: 600, textDecoration: "none",
+          }}>
+            {lang === "th" ? "ขอใบเสนอราคาฟรี" : "Get Free Quote"}
+          </Link>
+        </div>
+      )}
     </nav>
   );
 }
@@ -791,29 +852,50 @@ function Support() {
 }
 
 /* ─── PORTFOLIO TEASER ──────────────────────────────────────── */
-function PortfolioTeaser() {
-  const highlights = [
-    { type: "residential", label: "บ้านพักอาศัย", kw: "5–12 kWp", icon: Home, color: "#2D7D46" },
-    { type: "industrial", label: "ธุรกิจ/อุตสาหกรรม", kw: "50–200 kWp", icon: Building2, color: "#1a5e8a" },
-    { type: "bess", label: "ระบบกักเก็บพลังงาน", kw: "BESS + Solar", icon: Battery, color: "#7B3FA0" },
-    { type: "epc", label: "EPC / Solar Farm", kw: "500 kWp – 1 MWp", icon: Globe, color: "#E8630A" },
-  ];
+function PortfolioTeaser({ lang }) {
+  const t = {
+    th: {
+      tag: "ผลงานของเรา",
+      title: "โครงการที่เราภาคภูมิใจ",
+      desc: "ผลงานครอบคลุมทุกประเภท ตั้งแต่บ้านพักอาศัยจนถึง Solar Farm ขนาด 1 MWp",
+      btn: "ดูผลงานทั้งหมด",
+      highlights: [
+        { type: "residential", label: "บ้านพักอาศัย", kw: "5–12 kWp", icon: Home, color: "#2D7D46" },
+        { type: "industrial", label: "ธุรกิจ/อุตสาหกรรม", kw: "50–200 kWp", icon: Building2, color: "#1a5e8a" },
+        { type: "bess", label: "ระบบกักเก็บพลังงาน", kw: "BESS + Solar", icon: Battery, color: "#7B3FA0" },
+        { type: "epc", label: "EPC / Solar Farm", kw: "500 kWp – 1 MWp", icon: Globe, color: "#E8630A" },
+      ],
+    },
+    en: {
+      tag: "Our Projects",
+      title: "Projects We're Proud Of",
+      desc: "Covering all types from residential to utility-scale Solar Farm at 1 MWp",
+      btn: "View All Projects",
+      highlights: [
+        { type: "residential", label: "Residential", kw: "5–12 kWp", icon: Home, color: "#2D7D46" },
+        { type: "industrial", label: "Business / Industrial", kw: "50–200 kWp", icon: Building2, color: "#1a5e8a" },
+        { type: "bess", label: "Energy Storage (BESS)", kw: "BESS + Solar", icon: Battery, color: "#7B3FA0" },
+        { type: "epc", label: "EPC / Solar Farm", kw: "500 kWp – 1 MWp", icon: Globe, color: "#E8630A" },
+      ],
+    },
+  };
+  const tx = t[lang] || t.th;
 
   return (
     <section style={{ padding: "100px 2rem", background: C.midDark }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 52 }}>
-          <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>ผลงานของเรา</div>
+          <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>{tx.tag}</div>
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: C.text, margin: "0 0 16px" }}>
-            โครงการที่เราภาคภูมิใจ
+            {tx.title}
           </h2>
           <p style={{ color: C.textMuted, fontSize: 17, margin: "0 auto", maxWidth: 500, lineHeight: 1.7 }}>
-            ผลงานครอบคลุมทุกประเภท ตั้งแต่บ้านพักอาศัยจนถึง Solar Farm ขนาด 1 MWp
+            {tx.desc}
           </p>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20, marginBottom: 40 }}>
-          {highlights.map(({ label, kw, icon: Icon, color }) => (
+          {tx.highlights.map(({ label, kw, icon: Icon, color }) => (
             <div key={label} style={{
               background: C.darkCard, border: `1px solid ${C.border}`,
               borderRadius: 14, padding: "24px 20px", textAlign: "center",
@@ -839,7 +921,7 @@ function PortfolioTeaser() {
             fontSize: 15, fontWeight: 600, textDecoration: "none",
             boxShadow: `0 8px 28px ${C.green}40`,
           }}>
-            ดูผลงานทั้งหมด <ArrowRight size={16} />
+            {tx.btn} <ArrowRight size={16} />
           </Link>
         </div>
       </div>
@@ -971,6 +1053,7 @@ export default function SolarACM() {
         /* ── MOBILE (≤ 768px) ──────────────────────────── */
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }
+          .mobile-nav-controls { display: flex !important; }
           .hero-section, .section-pad { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
           .nav-bar { padding: 0 1rem !important; }
           .hero-title { font-size: clamp(1.8rem, 7vw, 2.4rem) !important; }
@@ -1006,7 +1089,7 @@ export default function SolarACM() {
      <Solutions lang={lang} />
         <Calculator_ lang={lang} />
         <Partners lang={lang} />
-        <PortfolioTeaser />
+        <PortfolioTeaser lang={lang} />
         <Trust lang={lang} />
         <Support lang={lang} />
         <Footer lang={lang} />
