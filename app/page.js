@@ -332,19 +332,19 @@ function Hero({ lang }) {
         </p>
 
             <div className="hero-ctas" style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 48 }}>
-              <a href="#calculator" style={{
+              <a href="#calculator" onClick={(e) => { e.preventDefault(); document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', '#calculator'); }} style={{
                 display: "flex", alignItems: "center", gap: 8,
                 background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`,
                 color: "white", padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600,
-                textDecoration: "none", boxShadow: `0 8px 32px ${C.orange}44`
+                textDecoration: "none", boxShadow: `0 8px 32px ${C.orange}44`, cursor: "pointer"
               }}>
                 <Calculator size={18} /> Calculate My ROI
               </a>
-              <a href="#solutions" style={{
+              <a href="#solutions" onClick={(e) => { e.preventDefault(); document.getElementById('solutions')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', '#solutions'); }} style={{
                 display: "flex", alignItems: "center", gap: 8,
                 background: C.glass, backdropFilter: "blur(12px)",
                 border: `1px solid ${C.border}`, color: C.text,
-                padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 500, textDecoration: "none"
+                padding: "14px 28px", borderRadius: 10, fontSize: 15, fontWeight: 500, textDecoration: "none", cursor: "pointer"
               }}>
                 Explore Solutions <ChevronRight size={16} />
               </a>
