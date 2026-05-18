@@ -144,18 +144,19 @@ function calcSolar({ bill, area, type }) {
 
 /* ─── COMPONENTS ────────────────────────────────────────────── */
 
+// Force scroll แม้ URL hash จะตรงกับปัจจุบัน (native anchor จะไม่ทำงาน)
 function scrollToId(id) {
   if (typeof window === "undefined") return;
   const el = document.getElementById(id);
-  if (!el) {
-    console.warn(`[scrollToId] Element #${id} not found`);
-    return;
-  }
+  if (!el) return;
   const navOffset = 80;
-  const rect = el.getBoundingClientRect();
-  const targetY = rect.top + window.pageYOffset - navOffset;
-  window.scrollTo({ top: targetY, behavior: "smooth" });
-  try { history.replaceState(null, "", `#${id}`); } catch {}
+  const top = el.getBoundingClientRect().top + window.scrollY - navOffset;
+  // ถ้า URL hash ตรงกับ id อยู่แล้ว ต้องลบ hash ออกก่อนแล้วใส่กลับเพื่อให้ scroll ใหม่
+  if (window.location.hash === `#${id}`) {
+    history.replaceState(null, "", window.location.pathname);
+  }
+  window.scrollTo({ top, behavior: "smooth" });
+  setTimeout(() => { try { history.replaceState(null, "", `#${id}`); } catch {} }, 50);
 }
 
 function Nav({ scrolled, lang, setLang }) {
