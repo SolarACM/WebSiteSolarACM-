@@ -158,9 +158,10 @@ function Nav({ scrolled, lang, setLang }) {
   return (
     <nav className="nav-bar" style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      background: scrolled ? "rgba(15,28,20,0.95)" : "transparent",
-      backdropFilter: scrolled ? "blur(20px)" : "none",
-      borderBottom: scrolled ? `1px solid ${C.border}` : "none",
+      background: scrolled ? "rgba(15,28,20,0.97)" : "rgba(15,28,20,0.88)",
+      backdropFilter: "blur(20px)",
+      borderBottom: `1px solid rgba(255,255,255,0.08)`,
+      boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.15)" : "none",
       transition: "all 0.4s ease",
       padding: "0 2rem",
     }}>
@@ -688,15 +689,31 @@ function Calculator_({ lang }) {
   );
 }
 
+/* ─── PARTNER LOGO (with Clearbit fallback) ─────────────────── */
+function PartnerLogo({ name, domain, color }) {
+  const [errored, setErrored] = useState(false);
+  if (errored || !domain) {
+    return <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 13, fontWeight: 700, color, letterSpacing: "0.05em" }}>{name.slice(0, 3).toUpperCase()}</span>;
+  }
+  return (
+    <img
+      src={`https://logo.clearbit.com/${domain}`}
+      alt={`${name} logo`}
+      onError={() => setErrored(true)}
+      style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
+    />
+  );
+}
+
 /* ─── PARTNERS ──────────────────────────────────────────────── */
 function Partners({ lang }) {
   const brands = [
-  { name: "Huawei", role: content[lang].huaweiDesc, tier: "Platinum", color: "#E8630A" },
-  { name: "LONGi Solar", role: content[lang].longiDesc, tier: "Platinum", color: "#2D7D46" },
-  { name: "Deye", role: content[lang].deyeDesc, tier: "Gold", color: "#FF8C3A" },
-  { name: "Risen Energy", role: content[lang].risenDesc, tier: "Gold", color: "#4CAF72" },
-  { name: "Sungrow", role: content[lang].sungrowDesc, tier: "Gold", color: "#2D7D46" },
-  { name: "BYD Energy", role: content[lang].bydDesc, tier: "Silver", color: "#E8630A" },
+  { name: "Huawei", domain: "huawei.com", role: content[lang].huaweiDesc, tier: "Platinum", color: "#E8630A" },
+  { name: "LONGi Solar", domain: "longi.com", role: content[lang].longiDesc, tier: "Platinum", color: "#2D7D46" },
+  { name: "Deye", domain: "deyeinverter.com", role: content[lang].deyeDesc, tier: "Gold", color: "#FF8C3A" },
+  { name: "Risen Energy", domain: "risenenergy.com", role: content[lang].risenDesc, tier: "Gold", color: "#4CAF72" },
+  { name: "Sungrow", domain: "sungrowpower.com", role: content[lang].sungrowDesc, tier: "Gold", color: "#2D7D46" },
+  { name: "BYD Energy", domain: "byd.com", role: content[lang].bydDesc, tier: "Silver", color: "#E8630A" },
 ];
 
   return (
@@ -711,26 +728,30 @@ function Partners({ lang }) {
         </div>
 
         <div className="partners-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, marginBottom: 48 }}>
-          {brands.map(({ name, role, tier, color }) => (
+          {brands.map(({ name, domain, role, tier, color }) => (
             <div key={name} style={{
               background: C.darkCard, border: `1px solid ${C.border}`,
               borderRadius: 14, padding: 24, display: "flex", alignItems: "center", gap: 20,
-              transition: "border-color 0.3s, transform 0.3s",
+              transition: "border-color 0.3s, transform 0.3s, box-shadow 0.3s",
             }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = `${color}50`; e.currentTarget.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = "none"; }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = `${color}50`; e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 12px 32px ${color}1f`; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
             >
-              <div style={{ width: 56, height: 56, borderRadius: 12, background: `${color}18`, border: `1px solid ${color}30`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 11, fontWeight: 700, color, textAlign: "center" }}>{name.slice(0, 3).toUpperCase()}</span>
+              <div style={{
+                width: 84, height: 64, borderRadius: 10,
+                background: "#FFFFFF", border: `1px solid ${C.border}`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                flexShrink: 0, padding: 10, overflow: "hidden",
+              }}>
+                <PartnerLogo name={name} domain={domain} color={color} />
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
                   <span style={{ color: C.text, fontWeight: 600, fontSize: 16 }}>{name}</span>
-                  <span style={{ background: `${color}20`, border: `1px solid ${color}40`, borderRadius: 10, padding: "2px 8px", fontSize: 10, color, fontWeight: 600 }}>{tier}</span>
+                  <span style={{ background: `${color}18`, border: `1px solid ${color}40`, borderRadius: 10, padding: "2px 8px", fontSize: 10, color, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase" }}>{tier}</span>
                 </div>
-                <div style={{ color: C.textMuted, fontSize: 13 }}>{role}</div>
+                <div style={{ color: C.textMuted, fontSize: 13, lineHeight: 1.6 }}>{role}</div>
               </div>
-              <Award size={18} color={color} style={{ flexShrink: 0 }} />
             </div>
           ))}
         </div>
@@ -948,39 +969,143 @@ function FloatingSupport() {
   );
 }
 
-function Footer() {
+function Footer({ lang = "th" }) {
+  const isTh = lang === "th";
+
+  const sections = [
+    {
+      title: isTh ? "บริการของเรา" : "Our Services",
+      links: [
+        { label: isTh ? "บ้านพักอาศัย" : "Residential", href: "/residential" },
+        { label: isTh ? "ธุรกิจ/อุตสาหกรรม" : "Industrial", href: "/industrial" },
+        { label: isTh ? "ระบบกักเก็บพลังงาน" : "Energy Storage", href: "/bess" },
+        { label: isTh ? "เครือข่าย EPC" : "EPC Network", href: "/epc" },
+      ],
+    },
+    {
+      title: isTh ? "ลิงก์ลัด" : "Quick Links",
+      links: [
+        { label: isTh ? "ผลงานของเรา" : "Portfolio", href: "/portfolio" },
+        { label: isTh ? "คำนวณ ROI" : "ROI Calculator", href: "/#calculator" },
+        { label: isTh ? "ขอใบเสนอราคา" : "Get a Quote", href: "/quote" },
+        { label: isTh ? "พันธมิตร" : "Partners", href: "/#partners" },
+      ],
+    },
+  ];
+
+  const contacts = [
+    { icon: Phone, label: "095-309-5196", href: "tel:0953095196" },
+    { icon: Mail, label: "mon-attention@hotmail.com", href: "mailto:mon-attention@hotmail.com" },
+    { icon: MessageCircle, label: "LINE: Monarrattana", href: "https://line.me/ti/p/~Monarrattana" },
+  ];
+
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="section-pad" style={{ background: C.darkCard, borderTop: `1px solid ${C.border}`, padding: "48px 2rem 32px" }}>
+    <footer style={{
+      background: "linear-gradient(180deg, #0F1C14 0%, #14241B 100%)",
+      borderTop: `1px solid rgba(255,255,255,0.06)`,
+      padding: "64px 2rem 28px",
+    }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-        <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 40 }}>
+        <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1.4fr", gap: 48, marginBottom: 48 }}>
+
+          {/* Brand column */}
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-              <div style={{ width: 36, height: 36, borderRadius: "50%", background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Sun size={18} color="white" />
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+              <img src="/Logo SolarACM.png" alt="Solar ACM" style={{ height: 42, width: "auto", objectFit: "contain" }} />
+              <div style={{ lineHeight: 1.2 }}>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 17, color: "white" }}>Solar ACM</div>
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Systems Corporation</div>
               </div>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 16, color: C.text }}>Solar ACM Systems</div>
             </div>
-            <p style={{ color: C.textMuted, fontSize: 14, lineHeight: 1.7, maxWidth: 280 }}>
-              Thailand's leading solar consultancy and vendor aggregator. Making clean energy accessible, affordable, and simple.
+            <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, lineHeight: 1.75, maxWidth: 320, margin: "0 0 20px" }}>
+              {isTh
+                ? "ที่ปรึกษาและผู้เชี่ยวชาญติดตั้งโซลาร์เซลล์ครบวงจรในไทย ทำให้พลังงานสะอาดเข้าถึงง่าย คุ้มค่า และไม่ซับซ้อน"
+                : "Thailand's trusted solar consultancy. Making clean energy accessible, affordable, and simple."}
             </p>
+            {/* Trust badges */}
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {[
+                isTh ? "TAT License" : "TAT License",
+                isTh ? "PEA / MEA รับรอง" : "PEA / MEA Certified",
+                isTh ? "PDPA Compliant" : "PDPA Compliant",
+              ].map(b => (
+                <span key={b} style={{
+                  fontSize: 10, color: "rgba(255,255,255,0.7)",
+                  background: "rgba(76,175,114,0.12)", border: "1px solid rgba(76,175,114,0.25)",
+                  padding: "4px 10px", borderRadius: 20, fontWeight: 500,
+                }}>{b}</span>
+              ))}
+            </div>
           </div>
-          {[
-            { title: "Solutions", links: ["Residential", "Industrial", "Energy Storage", "Smart Grid"] },
-            { title: "Company", links: ["About Us", "Our Process", "Certifications", "Careers"] },
-            { title: "Legal", links: ["Privacy Policy", "Terms of Service", "Warranty Policy", "PDPA Compliance"] },
-          ].map(({ title, links }) => (
+
+          {/* Link sections */}
+          {sections.map(({ title, links }) => (
             <div key={title}>
-              <div style={{ color: C.text, fontWeight: 600, marginBottom: 16, fontSize: 14 }}>{title}</div>
-              {links.map(l => <div key={l} style={{ color: C.textMuted, fontSize: 13, marginBottom: 10, cursor: "pointer" }}
-                onMouseEnter={e => e.target.style.color = C.greenLight}
-                onMouseLeave={e => e.target.style.color = C.textMuted}
-              >{l}</div>)}
+              <div style={{ color: "white", fontWeight: 600, marginBottom: 18, fontSize: 14, letterSpacing: "0.02em" }}>{title}</div>
+              {links.map(({ label, href }) => (
+                <Link key={label} href={href} style={{
+                  color: "rgba(255,255,255,0.6)", fontSize: 13, marginBottom: 12,
+                  textDecoration: "none", display: "block", transition: "color 0.2s",
+                }}
+                  onMouseEnter={e => e.currentTarget.style.color = C.greenLight}
+                  onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}
+                >
+                  {label}
+                </Link>
+              ))}
             </div>
           ))}
+
+          {/* Contact column */}
+          <div>
+            <div style={{ color: "white", fontWeight: 600, marginBottom: 18, fontSize: 14, letterSpacing: "0.02em" }}>
+              {isTh ? "ติดต่อเรา" : "Contact Us"}
+            </div>
+            {contacts.map(({ icon: Icon, label, href }) => (
+              <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" style={{
+                display: "flex", alignItems: "center", gap: 10,
+                color: "rgba(255,255,255,0.7)", fontSize: 13, marginBottom: 14,
+                textDecoration: "none", transition: "color 0.2s",
+              }}
+                onMouseEnter={e => e.currentTarget.style.color = C.greenLight}
+                onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}
+              >
+                <div style={{
+                  width: 32, height: 32, borderRadius: 8,
+                  background: "rgba(76,175,114,0.12)", border: "1px solid rgba(76,175,114,0.25)",
+                  display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                }}>
+                  <Icon size={14} color={C.greenLight} />
+                </div>
+                <span>{label}</span>
+              </a>
+            ))}
+            {/* CTA */}
+            <Link href="/quote" style={{
+              display: "inline-flex", alignItems: "center", gap: 6, marginTop: 8,
+              background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`,
+              color: "white", padding: "10px 18px", borderRadius: 8,
+              fontSize: 13, fontWeight: 600, textDecoration: "none",
+              boxShadow: `0 6px 20px ${C.orange}33`,
+            }}>
+              <MessageCircle size={14} /> {isTh ? "ขอใบเสนอราคาฟรี" : "Get Free Quote"}
+            </Link>
+          </div>
         </div>
-        <div className="footer-bottom" style={{ borderTop: `1px solid ${C.border}`, paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ color: C.textMuted, fontSize: 13 }}>© 2025 Solar ACM Systems Corporation. All rights reserved.</div>
-          <div style={{ color: C.textMuted, fontSize: 13 }}>Registered in Thailand · TAT License · EGAT Certified</div>
+
+        {/* Bottom bar */}
+        <div className="footer-bottom" style={{
+          borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 24,
+          display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap",
+        }}>
+          <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 12 }}>
+            © {currentYear} Solar ACM Systems Corporation. {isTh ? "สงวนลิขสิทธิ์" : "All rights reserved."}
+          </div>
+          <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 12 }}>
+            {isTh ? "จดทะเบียนในประเทศไทย" : "Registered in Thailand"} · Thai Solar Industry Association
+          </div>
         </div>
       </div>
     </footer>
