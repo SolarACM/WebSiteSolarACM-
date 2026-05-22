@@ -1,9 +1,9 @@
 "use client"; //
 import { useState, useEffect, useRef } from "react";
 import {
-  Sun, Zap, TrendingUp, Shield, ChevronRight, ChevronDown,
+  Sun, Moon, Zap, TrendingUp, Shield, ChevronRight, ChevronDown,
   Phone, MessageCircle, Building2, Home, BarChart3, Leaf,
-  CheckCircle, ArrowRight, Calculator, Globe, Award,
+  CheckCircle, ArrowRight, Calculator, Globe, Award, Sparkles,
   Users, Battery, Cpu, Wind, DollarSign, Calendar, MapPin,
   Mail, Menu, X
 } from "lucide-react";
@@ -117,12 +117,23 @@ const SOLAR_HOURS = 4.5; // peak sun hours/day Thailand
 const COST_PER_KWP = 35000; // THB
 const PANEL_EFFICIENCY = 0.20;
 
-function calcSolar({ bill, area, type }) {
+function calcSolar({ bill, area, type, dayUsage = 50 }) {
   const kwhPerMonth = bill / TARIFF;
   const kwhPerYear = kwhPerMonth * 12;
   const kwpNeeded = Math.ceil(kwhPerYear / (SOLAR_HOURS * 365));
-  const systemCost = kwpNeeded * COST_PER_KWP * (type === "industrial" ? 0.88 : 1);
-  const annualSavings = kwhPerYear * TARIFF;
+
+  // Hybrid system (มีแบตเตอรี่) ราคา ~1.7x ของ On-Grid
+  const needsBattery = dayUsage < 50;
+  const batteryMultiplier = needsBattery ? 1.7 : 1.0;
+
+  const baseCost = kwpNeeded * COST_PER_KWP * (type === "industrial" ? 0.88 : 1);
+  const systemCost = baseCost * batteryMultiplier;
+
+  // On-Grid ใช้ไฟกลางวันได้เต็มที่ กลางคืนต้องซื้อจากกริด
+  // Hybrid ใช้ไฟทั้งวันได้ (กลางคืนใช้จากแบตเตอรี่)
+  const utilization = needsBattery ? 0.92 : (dayUsage / 100) * 0.95 + 0.05;
+  const annualSavings = kwhPerYear * TARIFF * utilization;
+
   const roiYears = systemCost / annualSavings;
   const panels = Math.ceil(kwpNeeded / 0.4); // ~400W panels
   const co2Saved = (kwhPerYear * 0.4644) / 1000; // tons CO2
@@ -139,7 +150,41 @@ function calcSolar({ bill, area, type }) {
     };
   });
 
-  return { kwpNeeded, systemCost, annualSavings, roiYears, panels, co2Saved, projections };
+  return { kwpNeeded, systemCost, annualSavings, roiYears, panels, co2Saved, projections, needsBattery };
+}
+
+// AI-style recommendation logic ตามพฤติกรรมการใช้ไฟ
+function recommendSystem({ dayUsage, type, bill }) {
+  if (dayUsage >= 70) {
+    return {
+      system: "ongrid",
+      confidence: 95,
+      reasonTh: "ใช้ไฟกลางวันเป็นหลัก On-Grid คือทางเลือกที่คุ้มที่สุด ลงทุนต่ำ คืนทุนเร็ว",
+      reasonEn: "Primarily daytime usage. On-Grid is the most cost-effective choice — lower investment, faster ROI.",
+    };
+  }
+  if (dayUsage >= 50) {
+    return {
+      system: "ongrid",
+      confidence: 80,
+      reasonTh: "ใช้ไฟกลางวันมากกว่า On-Grid เหมาะสม และสามารถเพิ่มแบตเตอรี่ในอนาคตได้",
+      reasonEn: "Mostly daytime usage. On-Grid recommended — battery upgrade can be added later.",
+    };
+  }
+  if (dayUsage >= 30) {
+    return {
+      system: "hybrid",
+      confidence: 85,
+      reasonTh: "ใช้ไฟกลางคืนเยอะ Hybrid เหมาะสมเพราะเก็บไฟจากแสงแดดไว้ใช้กลางคืนได้",
+      reasonEn: "Significant night usage. Hybrid recommended — store solar energy for nighttime use.",
+    };
+  }
+  return {
+    system: "hybrid",
+    confidence: 95,
+    reasonTh: "ใช้ไฟกลางคืนเป็นหลัก จำเป็นต้องใช้ Hybrid + แบตเตอรี่เพื่อสำรองไฟใช้ตลอดคืน",
+    reasonEn: "Primarily night usage. Hybrid system with battery is essential for nighttime power.",
+  };
 }
 
 /* ─── COMPONENTS ────────────────────────────────────────────── */
@@ -490,14 +535,42 @@ function Solutions({ lang }) {
 function Calculator_({ lang }) {
   const [step, setStep] = useState(1);
   const [type, setType] = useState(null);
-  const [form, setForm] = useState({ bill: 3000, area: 50, location: "Bangkok" });
+  const [form, setForm] = useState({ bill: 3000, area: 50, location: "Bangkok", dayUsage: 50 });
   const [result, setResult] = useState(null);
+  const [recommendation, setRecommendation] = useState(null);
 
   const locations = ["Bangkok", "Chiang Mai", "Phuket", "Pattaya", "Rayong", "Korat", "Khon Kaen", "Other"];
+  const isTh = lang === "th";
+
+  const usagePatterns = [
+    { dayUsage: 80, icon: Sun, iconColor: "#E8630A",
+      labelTh: "ใช้ไฟกลางวันเป็นหลัก", labelEn: "Mostly daytime",
+      subTh: "ทำงานบ้าน / โรงงาน / ร้านค้า", subEn: "Work from home / factory / shop",
+      ratio: "80% / 20%" },
+    { dayUsage: 60, icon: Sun, iconColor: "#FF8C3A",
+      labelTh: "ใช้กลางวันมากกว่า", labelEn: "More day than night",
+      subTh: "อยู่บ้านครึ่งวัน", subEn: "Home for half the day",
+      ratio: "60% / 40%" },
+    { dayUsage: 50, icon: Sparkles, iconColor: "#4CAF72",
+      labelTh: "ใช้พอๆ กัน", labelEn: "Balanced usage",
+      subTh: "ใช้ไฟทั้งวันทั้งคืน", subEn: "All-day usage",
+      ratio: "50% / 50%" },
+    { dayUsage: 40, icon: Moon, iconColor: "#2D7D46",
+      labelTh: "ใช้กลางคืนมากกว่า", labelEn: "More night than day",
+      subTh: "กลับบ้านตอนเย็น", subEn: "Home in the evening",
+      ratio: "40% / 60%" },
+    { dayUsage: 20, icon: Moon, iconColor: "#7B3FA0",
+      labelTh: "ใช้ไฟกลางคืนเป็นหลัก", labelEn: "Mostly nighttime",
+      subTh: "เปิดแอร์ / อุปกรณ์กลางคืน", subEn: "AC / appliances at night",
+      ratio: "20% / 80%" },
+  ];
 
   function handleCalc() {
-    setResult(calcSolar({ ...form, type }));
-    setStep(4);
+    const calcResult = calcSolar({ ...form, type });
+    const rec = recommendSystem({ ...form, type });
+    setResult(calcResult);
+    setRecommendation(rec);
+    setStep(5);
   }
 
   const COLORS_CHART = ["#2D7D46", "#E8630A", "#4CAF72", "#FF8C3A"];
@@ -514,8 +587,8 @@ function Calculator_({ lang }) {
         </div>
 
         {/* Progress bar */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 0, marginBottom: 48 }}>
-          {[1, 2, 3, 4].map((s, i) => (
+        <div className="calc-progress" style={{ display: "flex", justifyContent: "center", gap: 0, marginBottom: 48, flexWrap: "wrap" }}>
+          {[1, 2, 3, 4, 5].map((s, i) => (
             <div key={s} style={{ display: "flex", alignItems: "center" }}>
               <div style={{
                 width: 36, height: 36, borderRadius: "50%",
@@ -525,13 +598,13 @@ function Calculator_({ lang }) {
                 fontSize: 14, fontWeight: 700, color: step >= s ? "white" : C.textMuted,
                 transition: "all 0.3s"
               }}>{step > s ? <CheckCircle size={18} /> : s}</div>
-              {i < 3 && <div style={{ width: 80, height: 2, background: step > s ? C.green : C.border, transition: "background 0.3s" }} />}
+              {i < 4 && <div style={{ width: 56, height: 2, background: step > s ? C.green : C.border, transition: "background 0.3s" }} />}
             </div>
           ))}
         </div>
 
         <div className="calc-card" style={{
-          maxWidth: step === 4 ? "100%" : 580,
+          maxWidth: step === 5 ? "100%" : 580,
           margin: "0 auto",
           background: C.darkCard, border: `1px solid ${C.border}`,
           borderRadius: 20, padding: 40
@@ -619,22 +692,160 @@ function Calculator_({ lang }) {
               </div>
               <div style={{ display: "flex", gap: 12 }}>
                 <button onClick={() => setStep(2)} style={{ flex: 1, background: "transparent", border: `1px solid ${C.border}`, borderRadius: 10, padding: 14, color: C.textMuted, cursor: "pointer", fontSize: 15 }}>← Back</button>
-                <button onClick={handleCalc} style={{ flex: 2, background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`, border: "none", borderRadius: 10, padding: 14, color: "white", cursor: "pointer", fontSize: 15, fontWeight: 600 }}>
-                  Calculate My ROI ✨
+                <button onClick={() => setStep(4)} style={{ flex: 2, background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, border: "none", borderRadius: 10, padding: 14, color: "white", cursor: "pointer", fontSize: 15, fontWeight: 600 }}>Continue →</button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 4 — Usage Pattern */}
+          {step === 4 && (
+            <div>
+              <h3 style={{ color: C.text, fontSize: 22, marginBottom: 8 }}>
+                {isTh ? "พฤติกรรมการใช้ไฟของคุณ" : "Your electricity usage pattern"}
+              </h3>
+              <p style={{ color: C.textMuted, marginBottom: 24, fontSize: 14 }}>
+                {isTh
+                  ? "ช่วยให้เราแนะนำระบบที่เหมาะสม (On-Grid หรือ Hybrid)"
+                  : "Helps us recommend the right system (On-Grid or Hybrid)"}
+              </p>
+
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, fontSize: 12, color: C.textMuted, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Sun size={13} color={C.orange} /> {isTh ? "กลางวัน" : "Day"}</span>
+                <span style={{ display: "flex", alignItems: "center", gap: 6 }}>{isTh ? "กลางคืน" : "Night"} <Moon size={13} color={C.green} /></span>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
+                {usagePatterns.map((p) => {
+                  const selected = form.dayUsage === p.dayUsage;
+                  const Icon = p.icon;
+                  return (
+                    <div
+                      key={p.dayUsage}
+                      onClick={() => setForm({ ...form, dayUsage: p.dayUsage })}
+                      style={{
+                        border: `2px solid ${selected ? p.iconColor : C.border}`,
+                        borderRadius: 12, padding: "14px 18px", cursor: "pointer",
+                        background: selected ? `${p.iconColor}10` : "transparent",
+                        display: "flex", alignItems: "center", gap: 16,
+                        transition: "all 0.2s",
+                      }}
+                      onMouseEnter={e => { if (!selected) e.currentTarget.style.borderColor = `${p.iconColor}80`; }}
+                      onMouseLeave={e => { if (!selected) e.currentTarget.style.borderColor = C.border; }}
+                    >
+                      <div style={{
+                        width: 44, height: 44, borderRadius: 10, flexShrink: 0,
+                        background: `${p.iconColor}18`,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <Icon size={22} color={p.iconColor} />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ color: C.text, fontWeight: 600, fontSize: 15, marginBottom: 2 }}>
+                          {isTh ? p.labelTh : p.labelEn}
+                        </div>
+                        <div style={{ color: C.textMuted, fontSize: 12 }}>{isTh ? p.subTh : p.subEn}</div>
+                      </div>
+                      <div style={{
+                        background: selected ? p.iconColor : `${p.iconColor}18`,
+                        color: selected ? "white" : p.iconColor,
+                        fontSize: 12, fontWeight: 700, padding: "5px 12px", borderRadius: 8,
+                        flexShrink: 0, whiteSpace: "nowrap",
+                      }}>
+                        {p.ratio}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div style={{ display: "flex", gap: 12 }}>
+                <button onClick={() => setStep(3)} style={{ flex: 1, background: "transparent", border: `1px solid ${C.border}`, borderRadius: 10, padding: 14, color: C.textMuted, cursor: "pointer", fontSize: 15 }}>← Back</button>
+                <button onClick={handleCalc} style={{ flex: 2, background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`, border: "none", borderRadius: 10, padding: 14, color: "white", cursor: "pointer", fontSize: 15, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                  <Sparkles size={16} /> {isTh ? "วิเคราะห์ด้วย AI" : "Analyze with AI"}
                 </button>
               </div>
             </div>
           )}
 
-          {/* Step 4 — Dashboard */}
-          {step === 4 && result && (
+          {/* Step 5 — Dashboard */}
+          {step === 5 && result && (
             <div>
-              <div style={{ textAlign: "center", marginBottom: 36 }}>
-                <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>Your Solar Report — {form.location}</div>
+              <div style={{ textAlign: "center", marginBottom: 28 }}>
+                <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>
+                  {isTh ? `รายงานโซลาร์ของคุณ — ${form.location}` : `Your Solar Report — ${form.location}`}
+                </div>
                 <h3 style={{ color: C.text, fontSize: 26, margin: 0 }}>
-                  You could save <span style={{ color: C.orangeLight }}>฿{Math.round(result.annualSavings).toLocaleString()}</span> per year
+                  {isTh ? "คุณประหยัดได้ " : "You could save "}
+                  <span style={{ color: C.orangeLight }}>฿{Math.round(result.annualSavings).toLocaleString()}</span>
+                  {isTh ? " ต่อปี" : " per year"}
                 </h3>
               </div>
+
+              {/* 🤖 AI Recommendation Card */}
+              {recommendation && (() => {
+                const isOnGrid = recommendation.system === "ongrid";
+                const recColor = isOnGrid ? C.green : "#7B3FA0";
+                const recColorLight = isOnGrid ? C.greenLight : "#a569bd";
+                const RecIcon = isOnGrid ? Sun : Battery;
+                return (
+                  <div style={{
+                    background: `linear-gradient(135deg, ${recColor}10, ${recColorLight}06)`,
+                    border: `1.5px solid ${recColor}40`,
+                    borderRadius: 16, padding: 24, marginBottom: 28,
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                      <Sparkles size={16} color={recColor} />
+                      <span style={{ color: recColor, fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                        {isTh ? "AI วิเคราะห์ระบบที่เหมาะสม" : "AI System Recommendation"}
+                      </span>
+                      <span style={{
+                        marginLeft: "auto", background: `${recColor}20`, color: recColor,
+                        fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 12,
+                      }}>
+                        {recommendation.confidence}% {isTh ? "มั่นใจ" : "confidence"}
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+                      <div style={{
+                        width: 64, height: 64, borderRadius: 14, flexShrink: 0,
+                        background: `linear-gradient(135deg, ${recColor}, ${recColorLight})`,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        boxShadow: `0 8px 24px ${recColor}44`,
+                      }}>
+                        <RecIcon size={30} color="white" />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 200 }}>
+                        <div style={{ color: C.text, fontWeight: 700, fontSize: 22, fontFamily: "'Playfair Display', serif", marginBottom: 4 }}>
+                          {isOnGrid ? "On-Grid System" : "Hybrid System"}
+                        </div>
+                        <div style={{ color: C.textMuted, fontSize: 13.5, lineHeight: 1.6 }}>
+                          {isTh ? recommendation.reasonTh : recommendation.reasonEn}
+                        </div>
+                      </div>
+                    </div>
+                    {/* Benefits */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 16 }}>
+                      {(isOnGrid
+                        ? (isTh
+                            ? ["ลงทุนต่ำ", "คืนทุน 4-5 ปี", "ไม่ต้องบำรุงรักษาแบต", "เสถียร 25 ปี"]
+                            : ["Lower investment", "ROI 4-5 yrs", "No battery maintenance", "25-year stable"])
+                        : (isTh
+                            ? ["สำรองไฟกลางคืน", "พร้อมรับไฟดับ", "ใช้ไฟ 24 ชม.", "ลดค่าไฟ Peak"]
+                            : ["Night backup", "Power outage ready", "24/7 power", "Peak shaving"])
+                      ).map(b => (
+                        <span key={b} style={{
+                          fontSize: 12, fontWeight: 500, color: recColor,
+                          background: `${recColor}12`, border: `1px solid ${recColor}30`,
+                          padding: "5px 11px", borderRadius: 14,
+                          display: "inline-flex", alignItems: "center", gap: 5,
+                        }}>
+                          <CheckCircle size={12} /> {b}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* KPI Cards */}
               <div className="calc-kpi-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 36 }}>
@@ -703,7 +914,7 @@ function Calculator_({ lang }) {
               </div>
 
               <div style={{ display: "flex", gap: 12 }}>
-                <button onClick={() => { setStep(1); setResult(null); setType(null); }} style={{ flex: 1, background: "transparent", border: `1px solid ${C.border}`, borderRadius: 10, padding: 14, color: C.textMuted, cursor: "pointer", fontSize: 14 }}>Recalculate</button>
+                <button onClick={() => { setStep(1); setResult(null); setRecommendation(null); setType(null); }} style={{ flex: 1, background: "transparent", border: `1px solid ${C.border}`, borderRadius: 10, padding: 14, color: C.textMuted, cursor: "pointer", fontSize: 14 }}>{isTh ? "คำนวณใหม่" : "Recalculate"}</button>
                 <Link href="/quote" style={{ flex: 2, background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`, border: "none", borderRadius: 10, padding: 14, color: "white", cursor: "pointer", fontSize: 15, fontWeight: 600, textAlign: "center", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <MessageCircle size={18} /> {content[lang].btnQuote}
                 </Link>
