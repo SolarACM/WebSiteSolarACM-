@@ -520,7 +520,7 @@ function PanelInfoCard({ lang }) {
     <div className="panel-info-card" style={{
       position: "absolute",
       bottom: 6,
-      left: 0,
+      right: 0,
       zIndex: 4,
       width: 250,
       background: "rgba(255,255,255,0.97)",
