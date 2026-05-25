@@ -5,7 +5,7 @@ import {
   Phone, MessageCircle, Building2, Home, BarChart3, Leaf,
   CheckCircle, ArrowRight, Calculator, Globe, Award, Sparkles,
   Users, Battery, Cpu, Wind, DollarSign, Calendar, MapPin,
-  Mail, Menu, X
+  Mail, Menu, X, Star, Clock
 } from "lucide-react";
 import {
   LineChart, Line, AreaChart, Area, BarChart, Bar,
@@ -784,11 +784,27 @@ function Hero({ lang }) {
       <div style={{ maxWidth: 1280, margin: "0 auto", width: "100%", paddingTop: 80 }}>
         <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center" }}>
           <div>
+            {/* ─── Social Proof Badge (5-star + trust statement) ─── */}
+            <div className="hero-social-proof" style={{
+              display: "inline-flex", alignItems: "center", gap: 10,
+              background: `${C.green}12`,
+              border: `1px solid ${C.green}30`, borderRadius: 22, padding: "6px 14px 6px 10px",
+              color: C.green, fontSize: 12.5, fontWeight: 600,
+              marginBottom: 18,
+            }}>
+              <span style={{ display: "inline-flex", gap: 1 }}>
+                {[0,1,2,3,4].map(i => (
+                  <Star key={i} size={13} color="#F59E0B" fill="#F59E0B" />
+                ))}
+              </span>
+              <span>{lang === "th" ? "เชื่อถือโดย 100+ ครัวเรือนและธุรกิจทั่วไทย" : "Trusted by 100+ homes & businesses across Thailand"}</span>
+            </div>
+
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 8, background: `${C.orange}15`,
               border: `1px solid ${C.orange}30`, borderRadius: 20, padding: "6px 14px",
               color: C.orangeLight, fontSize: 12, fontWeight: 600, letterSpacing: "0.08em",
-              textTransform: "uppercase", marginBottom: 28
+              textTransform: "uppercase", marginBottom: 22, marginLeft: 10,
             }}>
               <Leaf size={13} /> Thailand's Trusted Solar Consultancy
             </div>
@@ -804,11 +820,11 @@ function Hero({ lang }) {
           {content[lang].heroTitle}
         </h1>
 
-        <p className="hero-desc" style={{ color: C.textMuted, fontSize: 18, lineHeight: 1.8, maxWidth: 540, margin: "0 0 36px" }}>
+        <p className="hero-desc" style={{ color: C.textMuted, fontSize: 18, lineHeight: 1.8, maxWidth: 540, margin: "0 0 32px" }}>
           {content[lang].heroDesc}
         </p>
 
-            <div className="hero-ctas" style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 48 }}>
+            <div className="hero-ctas" style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 18 }}>
               <button type="button" onClick={() => scrollToId('calculator')} style={{
                 display: "flex", alignItems: "center", gap: 8,
                 background: `linear-gradient(135deg, ${C.orange}, ${C.orangeLight})`,
@@ -829,8 +845,24 @@ function Hero({ lang }) {
               </button>
             </div>
 
+            {/* ─── Trust Badges (ใต้ CTA) ─────────────────────────── */}
+            <div className="hero-trust-badges" style={{
+              display: "flex", gap: 20, flexWrap: "wrap", marginBottom: 36,
+              color: C.textMuted, fontSize: 13, fontWeight: 500,
+            }}>
+              {[
+                { icon: Shield, text: lang === "th" ? "ฟรีสำรวจหน้างาน" : "Free site survey" },
+                { icon: Clock, text: lang === "th" ? "ติดตั้งภายใน 3 วัน" : "Install in 3 days" },
+                { icon: DollarSign, text: lang === "th" ? "คืนทุน 4-6 ปี" : "ROI in 4-6 years" },
+              ].map(({ icon: Icon, text }) => (
+                <div key={text} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <Icon size={14} color={C.green} /> {text}
+                </div>
+              ))}
+            </div>
+
             <div className="stats-row" style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-              <StatPill icon={Building2} label="Projects completed" value="1,200+" />
+              <StatPill icon={Building2} label="Projects completed" value="100+" />
               <StatPill icon={Zap} label="MW installed" value="48 MW" />
               <StatPill icon={Leaf} label="Tons CO₂ saved" value="32,000" />
             </div>
@@ -1833,6 +1865,8 @@ export default function SolarACM() {
           .calc-card { padding: 24px !important; max-width: 100% !important; }
           .section-h2 { font-size: clamp(1.6rem, 5vw, 2.2rem) !important; }
           .stats-counter-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
+          .hero-social-proof { font-size: 11.5px !important; padding: 5px 12px 5px 10px !important; gap: 8px !important; }
+          .hero-trust-badges { gap: 14px !important; font-size: 12px !important; }
         }
 
         /* ── SMALL MOBILE (≤ 480px) ────────────────────── */
