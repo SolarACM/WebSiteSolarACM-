@@ -1393,7 +1393,6 @@ function Partners({ lang }) {
   { name: "Huawei",        slug: "huawei",  domain: "huawei.com",         role: content[lang].huaweiDesc, tier: "Platinum", color: "#E8630A", brandColor: "#CF0A2C" },
   { name: "LONGi Solar",   slug: "longi",   domain: "longi.com",          role: content[lang].longiDesc,  tier: "Platinum", color: "#2D7D46", brandColor: "#003F88" },
   { name: "Deye",          slug: "deye",    domain: "deyeinverter.com",   role: content[lang].deyeDesc,   tier: "Gold",     color: "#FF8C3A", brandColor: "#E30613" },
-  { name: "Risen Energy",  slug: "risen",   domain: "risenenergy.com",    role: content[lang].risenDesc,  tier: "Gold",     color: "#4CAF72", brandColor: "#003C71" },
   { name: "Sungrow",       slug: "sungrow", domain: "sungrowpower.com",   role: content[lang].sungrowDesc,tier: "Gold",     color: "#2D7D46", brandColor: "#C8102E" },
   { name: "BYD Energy",    slug: "byd",     domain: "byd.com",            role: content[lang].bydDesc,    tier: "Silver",   color: "#E8630A", brandColor: "#E60012" },
 ];
