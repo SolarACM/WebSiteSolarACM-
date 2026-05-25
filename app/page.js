@@ -357,6 +357,305 @@ function StatPill({ icon: Icon, label, value }) {
   );
 }
 
+/* ─── 3D SOLAR PANEL (CSS 3D — ไม่ใช้ Three.js เพื่อ performance) ──── */
+function SolarPanel3D() {
+  const wrapperRef = useRef(null);
+  const panelRef = useRef(null);
+  const [isHovering, setIsHovering] = useState(false);
+
+  function handleMouseMove(e) {
+    if (!wrapperRef.current || !panelRef.current) return;
+    const rect = wrapperRef.current.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / rect.width;
+    const dy = (e.clientY - cy) / rect.height;
+    const rotY = dx * 40; // -20 to +20 deg
+    const rotX = -dy * 30;
+    panelRef.current.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  }
+
+  function handleMouseLeave() {
+    setIsHovering(false);
+    if (panelRef.current) panelRef.current.style.transform = "";
+  }
+
+  // Solar cells grid (6 cols × 10 rows = 60 half-cells like Longi HiMO X10)
+  const cols = 6, rows = 10;
+
+  return (
+    <div
+      ref={wrapperRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        width: "min(440px, 90%)", height: 440,
+        perspective: 1400,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        position: "relative", zIndex: 2,
+      }}
+    >
+      <div
+        ref={panelRef}
+        className={isHovering ? "" : "solar-panel-auto-rotate"}
+        style={{
+          width: 280, height: 420,
+          position: "relative",
+          transformStyle: "preserve-3d",
+          transition: isHovering ? "transform 0.15s ease-out" : "transform 0.6s ease-out",
+        }}
+      >
+        {/* Panel front face */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(135deg, #C0C5CC 0%, #8A9099 100%)",
+          borderRadius: 8,
+          padding: 8,
+          boxShadow: "0 30px 60px rgba(0,0,0,0.4), 0 10px 25px rgba(0,0,0,0.25)",
+          transform: "translateZ(8px)",
+        }}>
+          {/* Inner panel */}
+          <div style={{
+            width: "100%", height: "100%",
+            background: "linear-gradient(135deg, #0a1628 0%, #15263d 50%, #0a1628 100%)",
+            borderRadius: 4,
+            padding: 6,
+            display: "grid",
+            gridTemplateColumns: `repeat(${cols}, 1fr)`,
+            gridTemplateRows: `repeat(${rows}, 1fr)`,
+            gap: 2,
+            position: "relative",
+            overflow: "hidden",
+          }}>
+            {/* Solar cells */}
+            {Array.from({ length: cols * rows }).map((_, i) => (
+              <div key={i} style={{
+                background: "linear-gradient(135deg, #1a2540 0%, #243657 50%, #1a2540 100%)",
+                border: "0.5px solid rgba(255,255,255,0.04)",
+                position: "relative",
+                overflow: "hidden",
+              }}>
+                {/* Busbar lines (3 horizontal silver lines per cell) */}
+                <div style={{ position: "absolute", left: 0, right: 0, top: "25%", height: 0.5, background: "rgba(192,197,204,0.45)" }} />
+                <div style={{ position: "absolute", left: 0, right: 0, top: "50%", height: 0.5, background: "rgba(192,197,204,0.45)" }} />
+                <div style={{ position: "absolute", left: 0, right: 0, top: "75%", height: 0.5, background: "rgba(192,197,204,0.45)" }} />
+                {/* Cell sheen */}
+                <div style={{
+                  position: "absolute", inset: 0,
+                  background: "linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%)",
+                }} />
+              </div>
+            ))}
+            {/* Glass reflection overlay (animated sheen) */}
+            <div className="panel-sheen" style={{
+              position: "absolute", inset: 0,
+              background: "linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.12) 50%, transparent 70%)",
+              pointerEvents: "none",
+            }} />
+          </div>
+        </div>
+
+        {/* Panel back (silver frame edge) */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(135deg, #6B7280 0%, #4B5563 100%)",
+          borderRadius: 8,
+          transform: "translateZ(-8px) rotateY(180deg)",
+          boxShadow: "inset 0 0 20px rgba(0,0,0,0.3)",
+        }} />
+
+        {/* Edges (4 thin sides to create depth) */}
+        {[
+          { side: "top", w: "100%", h: 16, transform: "translateY(-8px) rotateX(90deg)", top: 0, left: 0 },
+          { side: "bottom", w: "100%", h: 16, transform: "translateY(8px) rotateX(90deg)", bottom: 0, left: 0 },
+          { side: "left", w: 16, h: "100%", transform: "translateX(-8px) rotateY(90deg)", top: 0, left: 0 },
+          { side: "right", w: 16, h: "100%", transform: "translateX(8px) rotateY(90deg)", top: 0, right: 0 },
+        ].map((e) => (
+          <div key={e.side} style={{
+            position: "absolute",
+            width: e.w, height: e.h,
+            top: e.top, bottom: e.bottom, left: e.left, right: e.right,
+            background: "linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%)",
+            transform: e.transform,
+            transformOrigin: e.side === "top" ? "bottom" : e.side === "bottom" ? "top" : e.side === "left" ? "right" : "left",
+          }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── SUN RAYS ─────────────────────────────────────────────── */
+function SunRays() {
+  return (
+    <div style={{
+      position: "absolute", top: -60, right: -40,
+      width: 480, height: 480,
+      pointerEvents: "none", zIndex: 1,
+    }}>
+      {/* Glow center */}
+      <div style={{
+        position: "absolute", top: "50%", left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: 180, height: 180, borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(255,180,80,0.55) 0%, rgba(232,99,10,0.25) 40%, transparent 70%)",
+        filter: "blur(4px)",
+      }} className="sun-pulse" />
+
+      {/* Animated rays via SVG */}
+      <svg viewBox="0 0 480 480" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} className="sun-rotate">
+        <defs>
+          <radialGradient id="rayGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#FFB54D" stopOpacity="0.9" />
+            <stop offset="60%" stopColor="#E8630A" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#E8630A" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id="rayLine" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#FFB54D" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#FFB54D" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {/* Center bright spot */}
+        <circle cx="240" cy="240" r="60" fill="url(#rayGrad)" />
+        {/* 12 rays */}
+        {Array.from({ length: 12 }).map((_, i) => {
+          const angle = (i * 30 * Math.PI) / 180;
+          const x1 = 240 + Math.cos(angle) * 70;
+          const y1 = 240 + Math.sin(angle) * 70;
+          const x2 = 240 + Math.cos(angle) * 220;
+          const y2 = 240 + Math.sin(angle) * 220;
+          return (
+            <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="url(#rayLine)" strokeWidth={i % 2 === 0 ? 3 : 1.5} strokeLinecap="round" opacity={0.7} />
+          );
+        })}
+      </svg>
+
+      {/* Floating particles */}
+      {[
+        { top: "30%", left: "20%", size: 4, delay: "0s" },
+        { top: "60%", left: "70%", size: 3, delay: "1.2s" },
+        { top: "45%", left: "55%", size: 5, delay: "2.4s" },
+        { top: "75%", left: "30%", size: 3, delay: "0.6s" },
+        { top: "20%", left: "65%", size: 4, delay: "1.8s" },
+      ].map((p, i) => (
+        <div key={i} className="sun-particle" style={{
+          position: "absolute", top: p.top, left: p.left,
+          width: p.size, height: p.size, borderRadius: "50%",
+          background: "#FFB54D",
+          boxShadow: "0 0 8px #FFB54D",
+          animationDelay: p.delay,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+/* ─── ANIMATED STATS COUNTER (IntersectionObserver) ───────────── */
+function useCountUp(end, duration = 2000, start = 0) {
+  const [count, setCount] = useState(start);
+  const [hasStarted, setHasStarted] = useState(false);
+  const elRef = useRef(null);
+
+  useEffect(() => {
+    if (!elRef.current || hasStarted) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasStarted) {
+            setHasStarted(true);
+            const startTime = performance.now();
+            function tick(now) {
+              const elapsed = now - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              // easeOutCubic
+              const eased = 1 - Math.pow(1 - progress, 3);
+              setCount(Math.floor(start + (end - start) * eased));
+              if (progress < 1) requestAnimationFrame(tick);
+              else setCount(end);
+            }
+            requestAnimationFrame(tick);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(elRef.current);
+    return () => observer.disconnect();
+  }, [end, duration, start, hasStarted]);
+
+  return [count, elRef];
+}
+
+function CounterStat({ value, suffix = "", label, color, icon: Icon }) {
+  const [count, ref] = useCountUp(value, 2200);
+  return (
+    <div ref={ref} style={{
+      background: C.darkCard, border: `1px solid ${C.border}`,
+      borderRadius: 16, padding: "28px 24px", textAlign: "center",
+      transition: "transform 0.3s, box-shadow 0.3s, border-color 0.3s",
+    }}
+      onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.borderColor = `${color}50`; e.currentTarget.style.boxShadow = `0 16px 36px ${color}1f`; }}
+      onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = ""; }}
+    >
+      <div style={{
+        width: 52, height: 52, borderRadius: 12,
+        background: `${color}18`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        margin: "0 auto 16px",
+      }}>
+        <Icon size={26} color={color} />
+      </div>
+      <div style={{
+        fontFamily: "'Playfair Display', Georgia, serif",
+        fontSize: "clamp(2rem, 4vw, 2.6rem)", fontWeight: 700,
+        color: C.text, lineHeight: 1, marginBottom: 8,
+      }}>
+        {count.toLocaleString()}{suffix}
+      </div>
+      <div style={{ color: C.textMuted, fontSize: 14, fontWeight: 500 }}>{label}</div>
+    </div>
+  );
+}
+
+function StatsCounterSection({ lang }) {
+  const stats = lang === "th"
+    ? [
+        { value: 500, suffix: "+", label: "โครงการที่ติดตั้งแล้ว", color: "#2D7D46", icon: Building2 },
+        { value: 25, suffix: " ปี", label: "การรับประกันระบบ", color: "#E8630A", icon: Shield },
+        { value: 70, suffix: "%", label: "ประหยัดค่าไฟต่อเดือน", color: "#4CAF72", icon: TrendingUp },
+        { value: 98, suffix: "%", label: "ความพึงพอใจของลูกค้า", color: "#FF8C3A", icon: Award },
+      ]
+    : [
+        { value: 500, suffix: "+", label: "Projects Installed", color: "#2D7D46", icon: Building2 },
+        { value: 25, suffix: " yrs", label: "System Warranty", color: "#E8630A", icon: Shield },
+        { value: 70, suffix: "%", label: "Monthly Bill Savings", color: "#4CAF72", icon: TrendingUp },
+        { value: 98, suffix: "%", label: "Customer Satisfaction", color: "#FF8C3A", icon: Award },
+      ];
+
+  return (
+    <section style={{ padding: "80px 2rem", background: C.dark, position: "relative" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 14 }}>
+            {lang === "th" ? "ตัวเลขที่พิสูจน์ได้" : "Numbers That Prove It"}
+          </div>
+          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", color: C.text, margin: 0 }}>
+            {lang === "th" ? "ทำไมลูกค้าเลือกเรา" : "Why Customers Trust Us"}
+          </h2>
+        </div>
+        <div className="stats-counter-grid" style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: 20,
+        }}>
+          {stats.map((s, i) => <CounterStat key={i} {...s} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Hero({ lang }) {
   return (
     <section id="hero" className="hero-section" style={{
@@ -429,56 +728,10 @@ function Hero({ lang }) {
             </div>
           </div>
 
-          {/* Hero visual — solar system illustration (ซ่อนบนมือถือ) */}
-          <div className="hero-visual" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <div style={{ position: "relative", width: 440, height: 440 }}>
-              {/* Orbit rings */}
-              {[280, 340, 400].map((d, i) => (
-                <div key={i} style={{
-                  position: "absolute", top: "50%", left: "50%",
-                  width: d, height: d, borderRadius: "50%",
-                  border: `1px solid rgba(45,125,70,${0.12 + i * 0.06})`,
-                  transform: "translate(-50%, -50%)"
-                }} />
-              ))}
-              {/* Center sun */}
-              <div style={{
-                position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-                width: 120, height: 120, borderRadius: "50%",
-                background: `radial-gradient(circle, ${C.orangeLight}, ${C.orange})`,
-                boxShadow: `0 0 60px ${C.orange}88, 0 0 120px ${C.orange}44`,
-                display: "flex", alignItems: "center", justifyContent: "center"
-              }}>
-                <Sun size={48} color="white" />
-              </div>
-              {/* Orbiting elements */}
-              {[
-                { angle: 30, r: 140, icon: Home, label: "Residential", color: C.green },
-                { angle: 130, r: 140, icon: Building2, label: "Industrial", color: C.greenLight },
-                { angle: 230, r: 140, icon: Battery, label: "Storage", color: C.orange },
-                { angle: 320, r: 140, icon: Cpu, label: "Smart Grid", color: C.orangeLight },
-              ].map(({ angle, r, icon: Icon, label, color }) => {
-                const x = Math.cos((angle * Math.PI) / 180) * r;
-                const y = Math.sin((angle * Math.PI) / 180) * r;
-                return (
-                  <div key={label} style={{
-                    position: "absolute", top: "50%", left: "50%",
-                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                  }}>
-                    <div style={{
-                      width: 64, height: 64, borderRadius: 14,
-                      background: C.glass, backdropFilter: "blur(16px)",
-                      border: `1px solid ${color}40`,
-                      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4,
-                      boxShadow: `0 4px 24px ${color}30`
-                    }}>
-                      <Icon size={20} color={color} />
-                      <span style={{ fontSize: 9, color: C.textMuted, textAlign: "center", letterSpacing: "0.05em" }}>{label}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+          {/* Hero visual — 3D Solar Panel + Sun Rays (ซ่อนบนมือถือเพื่อ performance) */}
+          <div className="hero-visual" style={{ display: "flex", justifyContent: "center", alignItems: "center", position: "relative", minHeight: 460 }}>
+            <SunRays />
+            <SolarPanel3D />
           </div>
         </div>
       </div>
@@ -1391,6 +1644,52 @@ export default function SolarACM() {
         ::-webkit-scrollbar-track { background: #F0F4F1; }
         ::-webkit-scrollbar-thumb { background: #2D7D46; border-radius: 3px; }
 
+        /* ── 3D Solar Panel: auto-rotation ───────────────── */
+        @keyframes solar-panel-spin {
+          0% { transform: rotateX(-10deg) rotateY(0deg); }
+          50% { transform: rotateX(-10deg) rotateY(180deg); }
+          100% { transform: rotateX(-10deg) rotateY(360deg); }
+        }
+        .solar-panel-auto-rotate {
+          animation: solar-panel-spin 18s linear infinite;
+        }
+        /* Sheen sweep across the panel */
+        @keyframes panel-sheen {
+          0% { transform: translateX(-100%); opacity: 0; }
+          40% { opacity: 1; }
+          60% { opacity: 1; }
+          100% { transform: translateX(100%); opacity: 0; }
+        }
+        .panel-sheen {
+          animation: panel-sheen 5s ease-in-out infinite;
+        }
+
+        /* ── Sun Rays: rotation + pulse + particles ──────── */
+        @keyframes sun-rotate {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .sun-rotate { animation: sun-rotate 60s linear infinite; transform-origin: center; }
+
+        @keyframes sun-pulse {
+          0%, 100% { opacity: 0.85; transform: translate(-50%, -50%) scale(1); }
+          50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+        }
+        .sun-pulse { animation: sun-pulse 4s ease-in-out infinite; }
+
+        @keyframes particle-float {
+          0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
+          50% { transform: translateY(-20px) scale(1.3); opacity: 1; }
+        }
+        .sun-particle { animation: particle-float 4s ease-in-out infinite; }
+
+        /* Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+          .solar-panel-auto-rotate, .sun-rotate, .sun-pulse, .sun-particle, .panel-sheen {
+            animation: none !important;
+          }
+        }
+
         /* ── TABLET (≤ 1024px) ─────────────────────────── */
         @media (max-width: 1024px) {
           .hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
@@ -1425,6 +1724,7 @@ export default function SolarACM() {
           .footer-bottom { flex-direction: column !important; gap: 8px !important; text-align: center !important; }
           .calc-card { padding: 24px !important; max-width: 100% !important; }
           .section-h2 { font-size: clamp(1.6rem, 5vw, 2.2rem) !important; }
+          .stats-counter-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
         }
 
         /* ── SMALL MOBILE (≤ 480px) ────────────────────── */
@@ -1436,8 +1736,9 @@ export default function SolarACM() {
         }
       `}</style>
     <Nav lang={lang} scrolled={scrolled} setLang={setLang} />
-<Hero lang={lang} />
-     <Solutions lang={lang} />
+        <Hero lang={lang} />
+        <StatsCounterSection lang={lang} />
+        <Solutions lang={lang} />
         <Calculator_ lang={lang} />
         <Partners lang={lang} />
         <PortfolioTeaser lang={lang} />
