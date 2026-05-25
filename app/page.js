@@ -492,9 +492,9 @@ function SolarPanel3D() {
             }} />
           </div>
 
-          {/* Product label on silver frame (bottom-right, like real panel) */}
+          {/* Product label on silver frame (top-left, like real panel — moved from bottom-right to avoid overlap with info card) */}
           <div style={{
-            position: "absolute", bottom: 1, right: 5,
+            position: "absolute", top: 1, left: 5,
             display: "flex", alignItems: "center", gap: 3,
             pointerEvents: "none",
           }}>
