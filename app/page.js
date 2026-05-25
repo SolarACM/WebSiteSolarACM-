@@ -742,8 +742,10 @@ function StatsCounterSection({ lang }) {
       ];
 
   return (
-    <section style={{ padding: "80px 2rem", background: C.dark, position: "relative" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+    <section style={{ padding: "80px 2rem", background: C.dark, position: "relative", overflow: "hidden" }}>
+      {/* Dot pattern bg */}
+      <div className="dot-pattern-bg" style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.7 }} />
+      <div style={{ maxWidth: 1280, margin: "0 auto", position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", marginBottom: 48 }}>
           <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 14 }}>
             {lang === "th" ? "ตัวเลขที่พิสูจน์ได้" : "Numbers That Prove It"}
@@ -771,11 +773,9 @@ function Hero({ lang }) {
       background: `radial-gradient(ellipse 80% 60% at 60% 40%, ${C.green}18 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 80% 70%, ${C.orange}12 0%, transparent 50%), ${C.dark}`,
       overflow: "hidden", padding: "0 2rem"
     }}>
-      {/* Background grid */}
-      <div style={{
-        position: "absolute", inset: 0, opacity: 0.04,
-        backgroundImage: "linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px)",
-        backgroundSize: "60px 60px"
+      {/* Subtle dot pattern background (เขียวจางๆ) */}
+      <div className="dot-pattern-bg-soft" style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
       }} />
       {/* Glow orbs */}
       <div style={{ position: "absolute", top: "15%", right: "8%", width: 400, height: 400, borderRadius: "50%", background: `radial-gradient(circle, ${C.orange}18, transparent 70%)`, pointerEvents: "none" }} />
@@ -1353,6 +1353,40 @@ function PartnerLogo({ name, slug, domain, brandColor }) {
   );
 }
 
+/* ─── COMPACT LOGO CARD (สำหรับ infinite scroll row) ─────────── */
+function PartnerLogoCard({ name, slug, domain, brandColor, tier, color }) {
+  return (
+    <div style={{
+      flexShrink: 0, width: 260,
+      background: C.darkCard, border: `1px solid ${C.border}`,
+      borderRadius: 14, padding: "16px 18px",
+      display: "flex", alignItems: "center", gap: 14,
+      transition: "border-color 0.3s, box-shadow 0.3s",
+    }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = `${color}50`; e.currentTarget.style.boxShadow = `0 10px 24px ${color}1f`; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; }}
+    >
+      <div style={{
+        width: 80, height: 56, borderRadius: 8,
+        background: "#FFFFFF", border: `1px solid ${C.border}`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        flexShrink: 0, padding: 10, overflow: "hidden",
+      }}>
+        <PartnerLogo name={name} slug={slug} domain={domain} brandColor={brandColor} />
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ color: C.text, fontWeight: 600, fontSize: 14, marginBottom: 4, lineHeight: 1.2 }}>{name}</div>
+        <span style={{
+          background: `${color}18`, border: `1px solid ${color}40`,
+          borderRadius: 8, padding: "2px 7px", fontSize: 9.5,
+          color, fontWeight: 700, letterSpacing: "0.06em",
+          textTransform: "uppercase", display: "inline-block",
+        }}>{tier}</span>
+      </div>
+    </div>
+  );
+}
+
 /* ─── PARTNERS ──────────────────────────────────────────────── */
 function Partners({ lang }) {
   const brands = [
@@ -1375,33 +1409,28 @@ function Partners({ lang }) {
           </p>
         </div>
 
-        <div className="partners-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, marginBottom: 48 }}>
-          {brands.map(({ name, slug, domain, brandColor, role, tier, color }) => (
-            <div key={name} style={{
-              background: C.darkCard, border: `1px solid ${C.border}`,
-              borderRadius: 14, padding: 24, display: "flex", alignItems: "center", gap: 20,
-              transition: "border-color 0.3s, transform 0.3s, box-shadow 0.3s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = `${color}50`; e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 12px 32px ${color}1f`; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
-            >
-              <div style={{
-                width: 96, height: 72, borderRadius: 10,
-                background: "#FFFFFF", border: `1px solid ${C.border}`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0, padding: 12, overflow: "hidden",
-              }}>
-                <PartnerLogo name={name} slug={slug} domain={domain} brandColor={brandColor} />
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-                  <span style={{ color: C.text, fontWeight: 600, fontSize: 16 }}>{name}</span>
-                  <span style={{ background: `${color}18`, border: `1px solid ${color}40`, borderRadius: 10, padding: "2px 8px", fontSize: 10, color, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase" }}>{tier}</span>
-                </div>
-                <div style={{ color: C.textMuted, fontSize: 13, lineHeight: 1.6 }}>{role}</div>
-              </div>
+        {/* ─── Infinite Scrolling Logo Rows (2 ทิศทาง สวนกัน) ────── */}
+        <div className="partners-scroller" style={{
+          position: "relative", marginBottom: 48,
+          maskImage: "linear-gradient(90deg, transparent 0%, black 6%, black 94%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(90deg, transparent 0%, black 6%, black 94%, transparent 100%)",
+        }}>
+          {/* Row 1 — scroll LEFT */}
+          <div className="scroll-row" style={{ overflow: "hidden", marginBottom: 14 }}>
+            <div className="logo-track logo-track-left" style={{ display: "flex", gap: 16, width: "fit-content" }}>
+              {[...brands, ...brands].map((b, i) => (
+                <PartnerLogoCard key={`l-${i}`} {...b} />
+              ))}
             </div>
-          ))}
+          </div>
+          {/* Row 2 — scroll RIGHT */}
+          <div className="scroll-row" style={{ overflow: "hidden" }}>
+            <div className="logo-track logo-track-right" style={{ display: "flex", gap: 16, width: "fit-content" }}>
+              {[...brands, ...brands].reverse().map((b, i) => (
+                <PartnerLogoCard key={`r-${i}`} {...b} />
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="partners-cta" style={{
@@ -1441,8 +1470,10 @@ function Support() {
   ];
 
   return (
-    <section id="support" className="section-pad" style={{ padding: "100px 2rem", background: C.dark }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+    <section id="support" className="section-pad" style={{ padding: "100px 2rem", background: C.dark, position: "relative", overflow: "hidden" }}>
+      {/* Dot pattern bg */}
+      <div className="dot-pattern-bg-soft" style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
+      <div style={{ maxWidth: 1280, margin: "0 auto", position: "relative", zIndex: 1 }}>
         <div className="support-section-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center" }}>
           <div>
             <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>24/7 Support</div>
@@ -1825,9 +1856,34 @@ export default function SolarACM() {
 
         /* Respect reduced motion preference */
         @media (prefers-reduced-motion: reduce) {
-          .solar-panel-auto-rotate, .sun-rotate, .sun-pulse, .sun-particle, .panel-sheen {
+          .solar-panel-auto-rotate, .sun-rotate, .sun-pulse, .sun-particle, .panel-sheen,
+          .logo-track-left, .logo-track-right {
             animation: none !important;
           }
+        }
+
+        /* ── Infinite Logo Scroll (2 ทิศทางสวนกัน) ──────── */
+        @keyframes logo-scroll-left {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(calc(-50% - 8px)); }
+        }
+        @keyframes logo-scroll-right {
+          0%   { transform: translateX(calc(-50% - 8px)); }
+          100% { transform: translateX(0); }
+        }
+        .logo-track-left  { animation: logo-scroll-left  30s linear infinite; }
+        .logo-track-right { animation: logo-scroll-right 30s linear infinite; }
+        .scroll-row:hover .logo-track-left,
+        .scroll-row:hover .logo-track-right { animation-play-state: paused; }
+
+        /* ── Subtle Dot Pattern Backgrounds ───────────── */
+        .dot-pattern-bg {
+          background-image: radial-gradient(circle at 1px 1px, rgba(45,125,70,0.10) 1px, transparent 0);
+          background-size: 28px 28px;
+        }
+        .dot-pattern-bg-soft {
+          background-image: radial-gradient(circle at 1px 1px, rgba(45,125,70,0.07) 1px, transparent 0);
+          background-size: 24px 24px;
         }
 
         /* ── TABLET (≤ 1024px) ─────────────────────────── */
