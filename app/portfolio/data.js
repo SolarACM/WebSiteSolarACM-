@@ -75,7 +75,7 @@ export const projects = [
     image: "/portfolio/project-06.jpg",
     description:
       "ระบบโซลาร์ On-Grid ขนาด 8 kWp ติดตั้งบนหลังคาเมทัลชีท ใช้อินเวอร์เตอร์ Deye รุ่น Hybrid รองรับการขยายเพิ่มแบตเตอรี่ในอนาคต",
-    highlights: ["Hybrid Ready", "ลดค่าไฟ 78%", "รับประกัน 25 ปี"],
+    highlights: ["Hybrid Ready", "ลดค่าไฟ 78%", "รับประกัน 30 ปี"],
   },
   {
     id: 7,

@@ -138,7 +138,7 @@ function calcSolar({ bill, area, type, dayUsage = 50 }) {
   const panels = Math.ceil(kwpNeeded / 0.4); // ~400W panels
   const co2Saved = (kwhPerYear * 0.4644) / 1000; // tons CO2
 
-  const projections = Array.from({ length: 26 }, (_, i) => {
+  const projections = Array.from({ length: 31 }, (_, i) => {
     const yr = i;
     const cumSavings = annualSavings * yr * 1.035 ** yr; // 3.5% tariff increase
     const netBenefit = cumSavings - systemCost;
@@ -357,7 +357,7 @@ function StatPill({ icon: Icon, label, value }) {
   );
 }
 
-/* ─── 3D SOLAR PANEL (CSS 3D — ไม่ใช้ Three.js เพื่อ performance) ──── */
+/* ─── 3D SOLAR PANEL — สไตล์ Longi HiMO X10 (landscape, 6×12 cells, multi-busbar) ──── */
 function SolarPanel3D() {
   const wrapperRef = useRef(null);
   const panelRef = useRef(null);
@@ -370,18 +370,18 @@ function SolarPanel3D() {
     const cy = rect.top + rect.height / 2;
     const dx = (e.clientX - cx) / rect.width;
     const dy = (e.clientY - cy) / rect.height;
-    const rotY = dx * 40; // -20 to +20 deg
-    const rotX = -dy * 30;
+    const rotY = dx * 35;
+    const rotX = -10 - dy * 18; // tilt baseline ที่ -10°
     panelRef.current.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
   }
-
   function handleMouseLeave() {
     setIsHovering(false);
     if (panelRef.current) panelRef.current.style.transform = "";
   }
 
-  // Solar cells grid (6 cols × 10 rows = 60 half-cells like Longi HiMO X10)
-  const cols = 6, rows = 10;
+  // HiMO X10: 6 cols × 12 rows = 72 full-size cells (real panel layout)
+  const cols = 6, rows = 12;
+  const frameThickness = 6; // black anodized aluminum frame
 
   return (
     <div
@@ -390,8 +390,8 @@ function SolarPanel3D() {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={handleMouseLeave}
       style={{
-        width: "min(440px, 90%)", height: 440,
-        perspective: 1400,
+        width: "min(460px, 95%)", height: 460,
+        perspective: 1600,
         display: "flex", alignItems: "center", justifyContent: "center",
         position: "relative", zIndex: 2,
       }}
@@ -400,85 +400,124 @@ function SolarPanel3D() {
         ref={panelRef}
         className={isHovering ? "" : "solar-panel-auto-rotate"}
         style={{
-          width: 280, height: 420,
+          width: 420, height: 280,                                              // landscape ~1.5:1 like real panel
           position: "relative",
           transformStyle: "preserve-3d",
-          transition: isHovering ? "transform 0.15s ease-out" : "transform 0.6s ease-out",
+          transition: isHovering ? "transform 0.1s ease-out" : "transform 0.6s ease-out",
+          filter: "drop-shadow(0 30px 40px rgba(0,0,0,0.35))",
         }}
       >
-        {/* Panel front face */}
+        {/* ─── FRONT FACE ─────────────────────── */}
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(135deg, #C0C5CC 0%, #8A9099 100%)",
-          borderRadius: 8,
-          padding: 8,
-          boxShadow: "0 30px 60px rgba(0,0,0,0.4), 0 10px 25px rgba(0,0,0,0.25)",
-          transform: "translateZ(8px)",
+          background: "linear-gradient(135deg, #0a0a0a 0%, #1c1c1c 100%)",     // black aluminum frame
+          borderRadius: 6,
+          padding: frameThickness,
+          transform: "translateZ(7px)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.5)",
         }}>
-          {/* Inner panel */}
+          {/* Inner: dark backsheet visible between cells */}
           <div style={{
             width: "100%", height: "100%",
-            background: "linear-gradient(135deg, #0a1628 0%, #15263d 50%, #0a1628 100%)",
-            borderRadius: 4,
-            padding: 6,
+            background: "#050811",                                              // very dark navy backsheet
+            borderRadius: 2,
+            padding: 2,
             display: "grid",
             gridTemplateColumns: `repeat(${cols}, 1fr)`,
             gridTemplateRows: `repeat(${rows}, 1fr)`,
-            gap: 2,
+            gap: 1.5,
             position: "relative",
             overflow: "hidden",
           }}>
-            {/* Solar cells */}
+            {/* Cells */}
             {Array.from({ length: cols * rows }).map((_, i) => (
               <div key={i} style={{
-                background: "linear-gradient(135deg, #1a2540 0%, #243657 50%, #1a2540 100%)",
-                border: "0.5px solid rgba(255,255,255,0.04)",
+                background: `
+                  linear-gradient(135deg,
+                    #0f1f3d 0%,
+                    #1a3461 30%,
+                    #15294e 60%,
+                    #0d1830 100%
+                  )
+                `,                                                              // monocrystalline iridescent dark blue
                 position: "relative",
                 overflow: "hidden",
+                boxShadow: "inset 0 0 0 0.5px rgba(120,160,210,0.10)",
               }}>
-                {/* Busbar lines (3 horizontal silver lines per cell) */}
-                <div style={{ position: "absolute", left: 0, right: 0, top: "25%", height: 0.5, background: "rgba(192,197,204,0.45)" }} />
-                <div style={{ position: "absolute", left: 0, right: 0, top: "50%", height: 0.5, background: "rgba(192,197,204,0.45)" }} />
-                <div style={{ position: "absolute", left: 0, right: 0, top: "75%", height: 0.5, background: "rgba(192,197,204,0.45)" }} />
-                {/* Cell sheen */}
+                {/* 9 multi-busbar horizontal silver lines (HiMO MBB technology) */}
+                {[12, 22, 32, 42, 52, 62, 72, 82, 92].map((top) => (
+                  <div key={top} style={{
+                    position: "absolute", left: 0, right: 0, top: `${top}%`,
+                    height: 0.5,
+                    background: "linear-gradient(90deg, rgba(220,225,235,0.0) 0%, rgba(220,225,235,0.55) 15%, rgba(220,225,235,0.55) 85%, rgba(220,225,235,0.0) 100%)",
+                  }} />
+                ))}
+                {/* Vertical finger grid (very faint) */}
+                {[20, 40, 60, 80].map((left) => (
+                  <div key={left} style={{
+                    position: "absolute", top: 0, bottom: 0, left: `${left}%`,
+                    width: 0.3, background: "rgba(180,195,220,0.08)",
+                  }} />
+                ))}
+                {/* Iridescent corner highlight */}
                 <div style={{
-                  position: "absolute", inset: 0,
-                  background: "linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%)",
+                  position: "absolute", top: 0, left: 0, width: "60%", height: "60%",
+                  background: "radial-gradient(circle at 20% 20%, rgba(80,140,200,0.12), transparent 60%)",
                 }} />
               </div>
             ))}
-            {/* Glass reflection overlay (animated sheen) */}
+            {/* Glass reflection sheen (animated) */}
             <div className="panel-sheen" style={{
               position: "absolute", inset: 0,
-              background: "linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.12) 50%, transparent 70%)",
+              background: "linear-gradient(115deg, transparent 25%, rgba(255,255,255,0.14) 50%, transparent 75%)",
+              pointerEvents: "none",
+            }} />
+            {/* Subtle anti-reflective coating tint */}
+            <div style={{
+              position: "absolute", inset: 0,
+              background: "linear-gradient(180deg, rgba(20,40,80,0.08) 0%, transparent 50%, rgba(0,0,0,0.10) 100%)",
               pointerEvents: "none",
             }} />
           </div>
         </div>
 
-        {/* Panel back (silver frame edge) */}
+        {/* ─── BACK FACE (junction box visible) ─── */}
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(135deg, #6B7280 0%, #4B5563 100%)",
-          borderRadius: 8,
-          transform: "translateZ(-8px) rotateY(180deg)",
-          boxShadow: "inset 0 0 20px rgba(0,0,0,0.3)",
-        }} />
+          background: "linear-gradient(135deg, #ffffff 0%, #e8eaed 100%)",     // white backsheet
+          borderRadius: 6,
+          transform: "translateZ(-7px) rotateY(180deg)",
+        }}>
+          {/* Junction box */}
+          <div style={{
+            position: "absolute", top: "8%", left: "50%", transform: "translateX(-50%)",
+            width: 60, height: 28,
+            background: "linear-gradient(135deg, #2a2a2a, #1a1a1a)",
+            borderRadius: 3,
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)",
+          }} />
+          {/* Brand label */}
+          <div style={{
+            position: "absolute", bottom: "10%", left: "50%", transform: "translateX(-50%)",
+            fontSize: 8, fontWeight: 700, color: "#888", letterSpacing: "0.15em",
+          }}>LONGi HiMO X10</div>
+        </div>
 
-        {/* Edges (4 thin sides to create depth) */}
+        {/* ─── 4 EDGES (black aluminum frame depth) ─── */}
         {[
-          { side: "top", w: "100%", h: 16, transform: "translateY(-8px) rotateX(90deg)", top: 0, left: 0 },
-          { side: "bottom", w: "100%", h: 16, transform: "translateY(8px) rotateX(90deg)", bottom: 0, left: 0 },
-          { side: "left", w: 16, h: "100%", transform: "translateX(-8px) rotateY(90deg)", top: 0, left: 0 },
-          { side: "right", w: 16, h: "100%", transform: "translateX(8px) rotateY(90deg)", top: 0, right: 0 },
+          { side: "top",    w: "100%", h: 14, transform: "translateY(-7px) rotateX(90deg)", top: 0, left: 0 },
+          { side: "bottom", w: "100%", h: 14, transform: "translateY(7px) rotateX(90deg)",  bottom: 0, left: 0 },
+          { side: "left",   w: 14, h: "100%", transform: "translateX(-7px) rotateY(90deg)", top: 0, left: 0 },
+          { side: "right",  w: 14, h: "100%", transform: "translateX(7px) rotateY(90deg)",  top: 0, right: 0 },
         ].map((e) => (
           <div key={e.side} style={{
             position: "absolute",
             width: e.w, height: e.h,
             top: e.top, bottom: e.bottom, left: e.left, right: e.right,
-            background: "linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%)",
+            background: "linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 50%, #1a1a1a 100%)",
             transform: e.transform,
             transformOrigin: e.side === "top" ? "bottom" : e.side === "bottom" ? "top" : e.side === "left" ? "right" : "left",
+            boxShadow: "inset 0 0 4px rgba(0,0,0,0.6)",
           }} />
         ))}
       </div>
@@ -607,11 +646,14 @@ function CounterStat({ value, suffix = "", label, color, icon: Icon }) {
         <Icon size={26} color={color} />
       </div>
       <div style={{
-        fontFamily: "'Playfair Display', Georgia, serif",
-        fontSize: "clamp(2rem, 4vw, 2.6rem)", fontWeight: 700,
+        fontFamily: "'DM Sans', system-ui, -apple-system, sans-serif",
+        fontSize: "clamp(2.2rem, 4.5vw, 3rem)", fontWeight: 700,
         color: C.text, lineHeight: 1, marginBottom: 8,
+        fontVariantNumeric: "tabular-nums",
+        fontFeatureSettings: '"tnum" 1, "lnum" 1',
+        letterSpacing: "-0.02em",
       }}>
-        {count.toLocaleString()}{suffix}
+        {count.toLocaleString()}<span style={{ fontWeight: 600, color: C.textMuted, fontSize: "0.6em", marginLeft: 2 }}>{suffix}</span>
       </div>
       <div style={{ color: C.textMuted, fontSize: 14, fontWeight: 500 }}>{label}</div>
     </div>
@@ -1080,8 +1122,8 @@ function Calculator_({ lang }) {
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 16 }}>
                       {(isOnGrid
                         ? (isTh
-                            ? ["ลงทุนต่ำ", "คืนทุน 4-5 ปี", "ไม่ต้องบำรุงรักษาแบต", "เสถียร 25 ปี"]
-                            : ["Lower investment", "ROI 4-5 yrs", "No battery maintenance", "25-year stable"])
+                            ? ["ลงทุนต่ำ", "คืนทุน 4-5 ปี", "ไม่ต้องบำรุงรักษาแบต", "เสถียร 30 ปี"]
+                            : ["Lower investment", "ROI 4-5 yrs", "No battery maintenance", "30-year stable"])
                         : (isTh
                             ? ["สำรองไฟกลางคืน", "พร้อมรับไฟดับ", "ใช้ไฟ 24 ชม.", "ลดค่าไฟ Peak"]
                             : ["Night backup", "Power outage ready", "24/7 power", "Peak shaving"])
@@ -1118,9 +1160,9 @@ function Calculator_({ lang }) {
                 ))}
               </div>
 
-              {/* 25-year savings chart */}
+              {/* 30-year savings chart */}
               <div style={{ marginBottom: 32 }}>
-                <div style={{ color: C.textMuted, fontSize: 13, marginBottom: 16, fontWeight: 600 }}>25-Year Savings Projection (฿ thousands)</div>
+                <div style={{ color: C.textMuted, fontSize: 13, marginBottom: 16, fontWeight: 600 }}>{isTh ? "การประหยัด 30 ปี (พันบาท)" : "30-Year Savings Projection (฿ thousands)"}</div>
                 <ResponsiveContainer width="100%" height={280}>
                   <AreaChart data={result.projections} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                     <defs>
@@ -1644,14 +1686,14 @@ export default function SolarACM() {
         ::-webkit-scrollbar-track { background: #F0F4F1; }
         ::-webkit-scrollbar-thumb { background: #2D7D46; border-radius: 3px; }
 
-        /* ── 3D Solar Panel: auto-rotation ───────────────── */
-        @keyframes solar-panel-spin {
-          0% { transform: rotateX(-10deg) rotateY(0deg); }
-          50% { transform: rotateX(-10deg) rotateY(180deg); }
-          100% { transform: rotateX(-10deg) rotateY(360deg); }
+        /* ── 3D Solar Panel: gentle oscillating tilt ─────── */
+        @keyframes solar-panel-oscillate {
+          0%   { transform: rotateX(-12deg) rotateY(-22deg); }
+          50%  { transform: rotateX(-12deg) rotateY(22deg); }
+          100% { transform: rotateX(-12deg) rotateY(-22deg); }
         }
         .solar-panel-auto-rotate {
-          animation: solar-panel-spin 18s linear infinite;
+          animation: solar-panel-oscillate 10s ease-in-out infinite;
         }
         /* Sheen sweep across the panel */
         @keyframes panel-sheen {

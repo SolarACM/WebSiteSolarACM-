@@ -29,9 +29,9 @@ const tx = {
     ctaDesc: "รับใบเสนอราคาฟรีและคำปรึกษาจากผู้เชี่ยวชาญของเราวันนี้",
     benefits: [
       { title: "ลดค่าไฟถึง 70%", desc: "ประหยัดค่าไฟฟ้าได้เฉลี่ย 50-70% ต่อเดือน คุ้มค่ากว่าการใช้ไฟจากการไฟฟ้าอย่างชัดเจน" },
-      { title: "คืนทุนเร็ว 4-6 ปี", desc: "ระยะเวลาคืนทุนเฉลี่ย 4-6 ปี จากนั้นเป็นกำไรสุทธิเต็มจำนวนตลอด 25 ปีที่เหลือ" },
+      { title: "คืนทุนเร็ว 4-6 ปี", desc: "ระยะเวลาคืนทุนเฉลี่ย 4-6 ปี จากนั้นเป็นกำไรสุทธิเต็มจำนวนตลอด 30 ปีที่เหลือ" },
       { title: "ลด CO₂ กว่า 3 ตันต่อปี", desc: "ลดการปล่อยก๊าซเรือนกระจกเฉลี่ย 3-5 ตันต่อปี เทียบเท่าปลูกต้นไม้ 150 ต้น" },
-      { title: "การันตี 25 ปี", desc: "รับประกันประสิทธิภาพแผง 25 ปี และอุปกรณ์ 10-15 ปี จากแบรนด์ชั้นนำระดับโลก" },
+      { title: "การันตี 30 ปี", desc: "รับประกันประสิทธิภาพแผง 30 ปี และอุปกรณ์ 10-15 ปี จากแบรนด์ชั้นนำระดับโลก" },
     ],
     why: [
       { title: "ผู้เชี่ยวชาญที่ไว้วางใจได้", desc: "ทีมวิศวกรและที่ปรึกษามืออาชีพ มีประสบการณ์ติดตั้งกว่า 500+ โครงการทั่วประเทศ" },
@@ -63,9 +63,9 @@ const tx = {
     ctaDesc: "Get a free quote and expert consultation from our team today",
     benefits: [
       { title: "Reduce Bills by 70%", desc: "Save 50-70% on monthly electricity bills with immediate cost reductions from day one of operation." },
-      { title: "Quick ROI in 4-6 Years", desc: "Average payback period of 4-6 years, then pure profit for 25+ years of remaining system life." },
+      { title: "Quick ROI in 4-6 Years", desc: "Average payback period of 4-6 years, then pure profit for 30+ years of remaining system life." },
       { title: "Cut 3+ Tons CO₂/Year", desc: "Reduce your carbon footprint by 3-5 tons per year — equivalent to planting 150 trees annually." },
-      { title: "25-Year Warranty", desc: "25-year panel performance warranty and 10-15 year equipment warranty from world-class brands." },
+      { title: "30-Year Warranty", desc: "30-year panel performance warranty and 10-15 year equipment warranty from world-class brands." },
     ],
     why: [
       { title: "Trusted Expertise", desc: "Professional engineers with 500+ successful residential installations across Thailand." },
