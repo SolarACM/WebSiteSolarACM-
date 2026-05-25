@@ -357,7 +357,7 @@ function StatPill({ icon: Icon, label, value }) {
   );
 }
 
-/* ─── 3D SOLAR PANEL — สไตล์ Longi HiMO X10 (landscape, 6×12 cells, multi-busbar) ──── */
+/* ─── 3D SOLAR PANEL — สไตล์ Longi HiMO X10 (single front face + perspective tilt) ──── */
 function SolarPanel3D() {
   const wrapperRef = useRef(null);
   const panelRef = useRef(null);
@@ -370,18 +370,15 @@ function SolarPanel3D() {
     const cy = rect.top + rect.height / 2;
     const dx = (e.clientX - cx) / rect.width;
     const dy = (e.clientY - cy) / rect.height;
-    const rotY = dx * 35;
-    const rotX = -10 - dy * 18; // tilt baseline ที่ -10°
-    panelRef.current.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    panelRef.current.style.transform = `perspective(1400px) rotateX(${-dy * 18 - 6}deg) rotateY(${dx * 28}deg)`;
   }
   function handleMouseLeave() {
     setIsHovering(false);
     if (panelRef.current) panelRef.current.style.transform = "";
   }
 
-  // HiMO X10: 6 cols × 12 rows = 72 full-size cells (real panel layout)
+  // HiMO X10 หรือ Hi-MO 6: 6 cols × 12 rows = 72 full-size monocrystalline cells
   const cols = 6, rows = 12;
-  const frameThickness = 6; // black anodized aluminum frame
 
   return (
     <div
@@ -390,8 +387,7 @@ function SolarPanel3D() {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={handleMouseLeave}
       style={{
-        width: "min(460px, 95%)", height: 460,
-        perspective: 1600,
+        width: "min(520px, 95%)", height: 440,
         display: "flex", alignItems: "center", justifyContent: "center",
         position: "relative", zIndex: 2,
       }}
@@ -400,126 +396,101 @@ function SolarPanel3D() {
         ref={panelRef}
         className={isHovering ? "" : "solar-panel-auto-rotate"}
         style={{
-          width: 420, height: 280,                                              // landscape ~1.5:1 like real panel
+          width: 480, height: 300, // landscape 1.6:1 ratio of real panel
           position: "relative",
-          transformStyle: "preserve-3d",
-          transition: isHovering ? "transform 0.1s ease-out" : "transform 0.6s ease-out",
-          filter: "drop-shadow(0 30px 40px rgba(0,0,0,0.35))",
+          transition: isHovering ? "transform 0.1s ease-out" : "transform 0.7s ease-out",
+          transformOrigin: "center center",
         }}
       >
-        {/* ─── FRONT FACE ─────────────────────── */}
+        {/* Outer black aluminum frame */}
         <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(135deg, #0a0a0a 0%, #1c1c1c 100%)",     // black aluminum frame
-          borderRadius: 6,
-          padding: frameThickness,
-          transform: "translateZ(7px)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.5)",
+          width: "100%", height: "100%",
+          background: "linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 50%, #1a1a1a 100%)",
+          borderRadius: 8,
+          padding: 10,
+          boxShadow: `
+            0 35px 70px -10px rgba(0,0,0,0.55),
+            0 18px 30px -10px rgba(0,0,0,0.4),
+            0 0 0 1px rgba(255,255,255,0.05),
+            inset 0 1px 0 rgba(255,255,255,0.2),
+            inset 0 -1px 0 rgba(0,0,0,0.55)
+          `,
         }}>
-          {/* Inner: dark backsheet visible between cells */}
+          {/* Inner backsheet (gap visible between cells) */}
           <div style={{
             width: "100%", height: "100%",
-            background: "#050811",                                              // very dark navy backsheet
-            borderRadius: 2,
-            padding: 2,
+            background: "#02030a",
+            borderRadius: 3,
+            padding: 4,
             display: "grid",
             gridTemplateColumns: `repeat(${cols}, 1fr)`,
             gridTemplateRows: `repeat(${rows}, 1fr)`,
-            gap: 1.5,
+            gap: 2.5,
             position: "relative",
             overflow: "hidden",
+            boxShadow: "inset 0 0 30px rgba(0,0,0,0.7)",
           }}>
-            {/* Cells */}
+            {/* 72 monocrystalline cells */}
             {Array.from({ length: cols * rows }).map((_, i) => (
               <div key={i} style={{
                 background: `
                   linear-gradient(135deg,
-                    #0f1f3d 0%,
-                    #1a3461 30%,
-                    #15294e 60%,
-                    #0d1830 100%
+                    #1a2f5b 0%,
+                    #213a6f 22%,
+                    #1a2f5b 50%,
+                    #142545 75%,
+                    #0d1a36 100%
                   )
-                `,                                                              // monocrystalline iridescent dark blue
+                `,
                 position: "relative",
                 overflow: "hidden",
-                boxShadow: "inset 0 0 0 0.5px rgba(120,160,210,0.10)",
+                boxShadow: "inset 0 0 0 0.5px rgba(140,180,230,0.12)",
               }}>
-                {/* 9 multi-busbar horizontal silver lines (HiMO MBB technology) */}
-                {[12, 22, 32, 42, 52, 62, 72, 82, 92].map((top) => (
+                {/* 5 silver busbar lines (HiMO MBB technology) */}
+                {[16, 33, 50, 67, 84].map((top) => (
                   <div key={top} style={{
-                    position: "absolute", left: 0, right: 0, top: `${top}%`,
-                    height: 0.5,
-                    background: "linear-gradient(90deg, rgba(220,225,235,0.0) 0%, rgba(220,225,235,0.55) 15%, rgba(220,225,235,0.55) 85%, rgba(220,225,235,0.0) 100%)",
+                    position: "absolute", left: "4%", right: "4%", top: `${top}%`,
+                    height: 0.7,
+                    background: "linear-gradient(90deg, transparent 0%, rgba(225,235,245,0.8) 18%, rgba(225,235,245,0.8) 82%, transparent 100%)",
                   }} />
                 ))}
-                {/* Vertical finger grid (very faint) */}
-                {[20, 40, 60, 80].map((left) => (
-                  <div key={left} style={{
-                    position: "absolute", top: 0, bottom: 0, left: `${left}%`,
-                    width: 0.3, background: "rgba(180,195,220,0.08)",
-                  }} />
-                ))}
-                {/* Iridescent corner highlight */}
+                {/* Iridescent reflection (top-left) */}
                 <div style={{
-                  position: "absolute", top: 0, left: 0, width: "60%", height: "60%",
-                  background: "radial-gradient(circle at 20% 20%, rgba(80,140,200,0.12), transparent 60%)",
+                  position: "absolute", inset: 0,
+                  background: "radial-gradient(ellipse at 22% 22%, rgba(100,170,235,0.18) 0%, transparent 55%)",
+                }} />
+                {/* Subtle sheen */}
+                <div style={{
+                  position: "absolute", inset: 0,
+                  background: "linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.07) 50%, transparent 62%)",
                 }} />
               </div>
             ))}
-            {/* Glass reflection sheen (animated) */}
+            {/* Animated glass sheen across whole panel */}
             <div className="panel-sheen" style={{
               position: "absolute", inset: 0,
-              background: "linear-gradient(115deg, transparent 25%, rgba(255,255,255,0.14) 50%, transparent 75%)",
+              background: "linear-gradient(115deg, transparent 22%, rgba(255,255,255,0.20) 50%, transparent 78%)",
               pointerEvents: "none",
             }} />
-            {/* Subtle anti-reflective coating tint */}
+            {/* Anti-reflective coating overlay */}
             <div style={{
               position: "absolute", inset: 0,
-              background: "linear-gradient(180deg, rgba(20,40,80,0.08) 0%, transparent 50%, rgba(0,0,0,0.10) 100%)",
+              background: "linear-gradient(180deg, rgba(30,65,130,0.10) 0%, transparent 45%, rgba(0,0,0,0.18) 100%)",
               pointerEvents: "none",
             }} />
           </div>
-        </div>
 
-        {/* ─── BACK FACE (junction box visible) ─── */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(135deg, #ffffff 0%, #e8eaed 100%)",     // white backsheet
-          borderRadius: 6,
-          transform: "translateZ(-7px) rotateY(180deg)",
-        }}>
-          {/* Junction box */}
+          {/* Brand marking — bottom-right of frame (subtle, like real panel) */}
           <div style={{
-            position: "absolute", top: "8%", left: "50%", transform: "translateX(-50%)",
-            width: 60, height: 28,
-            background: "linear-gradient(135deg, #2a2a2a, #1a1a1a)",
-            borderRadius: 3,
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)",
-          }} />
-          {/* Brand label */}
-          <div style={{
-            position: "absolute", bottom: "10%", left: "50%", transform: "translateX(-50%)",
-            fontSize: 8, fontWeight: 700, color: "#888", letterSpacing: "0.15em",
-          }}>LONGi HiMO X10</div>
+            position: "absolute", bottom: 2, right: 12,
+            fontSize: 8, color: "rgba(200,210,225,0.45)",
+            fontWeight: 600, letterSpacing: "0.15em",
+            pointerEvents: "none",
+            fontFamily: "system-ui, sans-serif",
+          }}>
+            LONGi HiMO X10
+          </div>
         </div>
-
-        {/* ─── 4 EDGES (black aluminum frame depth) ─── */}
-        {[
-          { side: "top",    w: "100%", h: 14, transform: "translateY(-7px) rotateX(90deg)", top: 0, left: 0 },
-          { side: "bottom", w: "100%", h: 14, transform: "translateY(7px) rotateX(90deg)",  bottom: 0, left: 0 },
-          { side: "left",   w: 14, h: "100%", transform: "translateX(-7px) rotateY(90deg)", top: 0, left: 0 },
-          { side: "right",  w: 14, h: "100%", transform: "translateX(7px) rotateY(90deg)",  top: 0, right: 0 },
-        ].map((e) => (
-          <div key={e.side} style={{
-            position: "absolute",
-            width: e.w, height: e.h,
-            top: e.top, bottom: e.bottom, left: e.left, right: e.right,
-            background: "linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 50%, #1a1a1a 100%)",
-            transform: e.transform,
-            transformOrigin: e.side === "top" ? "bottom" : e.side === "bottom" ? "top" : e.side === "left" ? "right" : "left",
-            boxShadow: "inset 0 0 4px rgba(0,0,0,0.6)",
-          }} />
-        ))}
       </div>
     </div>
   );
@@ -663,14 +634,14 @@ function CounterStat({ value, suffix = "", label, color, icon: Icon }) {
 function StatsCounterSection({ lang }) {
   const stats = lang === "th"
     ? [
-        { value: 500, suffix: "+", label: "โครงการที่ติดตั้งแล้ว", color: "#2D7D46", icon: Building2 },
-        { value: 25, suffix: " ปี", label: "การรับประกันระบบ", color: "#E8630A", icon: Shield },
+        { value: 100, suffix: "+", label: "โครงการที่ติดตั้งแล้ว", color: "#2D7D46", icon: Building2 },
+        { value: 30, suffix: " ปี", label: "การรับประกันระบบ", color: "#E8630A", icon: Shield },
         { value: 70, suffix: "%", label: "ประหยัดค่าไฟต่อเดือน", color: "#4CAF72", icon: TrendingUp },
         { value: 98, suffix: "%", label: "ความพึงพอใจของลูกค้า", color: "#FF8C3A", icon: Award },
       ]
     : [
-        { value: 500, suffix: "+", label: "Projects Installed", color: "#2D7D46", icon: Building2 },
-        { value: 25, suffix: " yrs", label: "System Warranty", color: "#E8630A", icon: Shield },
+        { value: 100, suffix: "+", label: "Projects Installed", color: "#2D7D46", icon: Building2 },
+        { value: 30, suffix: " yrs", label: "System Warranty", color: "#E8630A", icon: Shield },
         { value: 70, suffix: "%", label: "Monthly Bill Savings", color: "#4CAF72", icon: TrendingUp },
         { value: 98, suffix: "%", label: "Customer Satisfaction", color: "#FF8C3A", icon: Award },
       ];
@@ -1686,14 +1657,13 @@ export default function SolarACM() {
         ::-webkit-scrollbar-track { background: #F0F4F1; }
         ::-webkit-scrollbar-thumb { background: #2D7D46; border-radius: 3px; }
 
-        /* ── 3D Solar Panel: gentle oscillating tilt ─────── */
-        @keyframes solar-panel-oscillate {
-          0%   { transform: rotateX(-12deg) rotateY(-22deg); }
-          50%  { transform: rotateX(-12deg) rotateY(22deg); }
-          100% { transform: rotateX(-12deg) rotateY(-22deg); }
+        /* ── 3D Solar Panel: gentle perspective tilt ─────── */
+        @keyframes solar-panel-tilt {
+          0%, 100% { transform: perspective(1400px) rotateX(-8deg) rotateY(-16deg); }
+          50%      { transform: perspective(1400px) rotateX(-8deg) rotateY(16deg); }
         }
         .solar-panel-auto-rotate {
-          animation: solar-panel-oscillate 10s ease-in-out infinite;
+          animation: solar-panel-tilt 9s ease-in-out infinite;
         }
         /* Sheen sweep across the panel */
         @keyframes panel-sheen {
