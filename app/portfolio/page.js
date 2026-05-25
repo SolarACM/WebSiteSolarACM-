@@ -125,21 +125,32 @@ function ProjectCard({ project, onClick }) {
         )}
       </div>
 
-      <div style={{ padding: "16px 20px 20px" }}>
-        <h3 style={{ color: C.text, fontSize: 16, fontWeight: 600, margin: "0 0 10px", lineHeight: 1.4 }}>
+      <div style={{ padding: "18px 20px 20px" }}>
+        <h3 style={{
+          color: C.text, fontSize: 15.5, fontWeight: 600, margin: "0 0 12px",
+          lineHeight: 1.4, minHeight: 42,
+        }}>
           {project.title}
         </h3>
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: C.textMuted, fontSize: 13 }}>
+        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 5,
+            color, fontSize: 13.5, fontWeight: 700,
+            fontVariantNumeric: "tabular-nums",
+            fontFeatureSettings: '"tnum" 1, "lnum" 1',
+          }}>
             <Zap size={13} color={color} />
-            <span style={{ fontWeight: 600, color }}>{project.capacity.toLocaleString()} kWp</span>
+            {project.capacity.toLocaleString()} kWp
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 5, color: C.textMuted, fontSize: 13 }}>
-            <MapPin size={13} />
+            <MapPin size={12} />
             {project.province}
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: C.textMuted, fontSize: 13 }}>
-            <Calendar size={13} />
+          <div style={{
+            display: "flex", alignItems: "center", gap: 5, color: C.textMuted, fontSize: 13,
+            fontVariantNumeric: "tabular-nums",
+          }}>
+            <Calendar size={12} />
             {project.year}
           </div>
         </div>
@@ -256,11 +267,18 @@ function Lightbox({ project, onClose, onPrev, onNext, hasPrev, hasNext }) {
           {/* Meta row */}
           <div style={{ display: "flex", gap: 20, flexWrap: "wrap", marginBottom: 18 }}>
             {[
-              { icon: Zap, label: `${project.capacity.toLocaleString()} kWp`, color },
-              { icon: MapPin, label: project.province, color: C.textMuted },
-              { icon: Calendar, label: `ปี ${project.year}`, color: C.textMuted },
-            ].map(({ icon: Icon, label, color: ic }) => (
-              <div key={label} style={{ display: "flex", alignItems: "center", gap: 6, color: ic, fontSize: 14, fontWeight: 500 }}>
+              { icon: Zap, label: `${project.capacity.toLocaleString()} kWp`, color, numeric: true },
+              { icon: MapPin, label: project.province, color: C.textMuted, numeric: false },
+              { icon: Calendar, label: `ปี ${project.year}`, color: C.textMuted, numeric: true },
+            ].map(({ icon: Icon, label, color: ic, numeric }) => (
+              <div key={label} style={{
+                display: "flex", alignItems: "center", gap: 6,
+                color: ic, fontSize: 14, fontWeight: 600,
+                ...(numeric && {
+                  fontVariantNumeric: "tabular-nums",
+                  fontFeatureSettings: '"tnum" 1, "lnum" 1',
+                }),
+              }}>
                 <Icon size={15} color={ic} /> {label}
               </div>
             ))}
@@ -393,8 +411,8 @@ export default function PortfolioPage() {
             โครงการที่เราภาคภูมิใจ
           </h1>
           <p style={{ color: C.textMuted, fontSize: 17, lineHeight: 1.8, margin: 0 }}>
-            ผลงานการติดตั้งโซลาร์เซลล์กว่า {projects.length} โครงการทั่วประเทศไทย<br />
-            ครอบคลุมทั้งบ้านพักอาศัย ธุรกิจ อุตสาหกรรม และ Solar Farm
+            ผลงานการติดตั้งโซลาร์เซลล์ภายใต้เครือข่าย Spring Marketing Networking<br />
+            ครอบคลุมโรงงานอุตสาหกรรมและอาคารพาณิชย์ทั่วประเทศไทย
           </p>
         </div>
 
@@ -402,25 +420,31 @@ export default function PortfolioPage() {
         <div style={{ display: "flex", gap: 24, justifyContent: "center", flexWrap: "wrap", marginTop: 40 }}>
           {[
             { value: `${projects.length}+`, label: "โครงการทั้งหมด" },
-            { value: `${(totalKwp / 1000).toFixed(1)} MWp`, label: "กำลังผลิตรวม" },
-            { value: "8 จังหวัด", label: "ครอบคลุมทั่วไทย" },
+            { value: `${(totalKwp / 1000).toFixed(2)} MWp`, label: "กำลังผลิตรวม" },
+            { value: `${new Set(projects.map(p => p.province)).size} จังหวัด`, label: "ครอบคลุมทั่วไทย" },
           ].map(({ value, label }) => (
             <div key={label} style={{
               background: C.darkCard, border: `1px solid ${C.border}`,
               borderRadius: 12, padding: "16px 28px", textAlign: "center",
               boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
             }}>
-              <div style={{ color: C.green, fontWeight: 700, fontSize: 24, lineHeight: 1 }}>{value}</div>
+              <div style={{
+                color: C.green, fontWeight: 700, fontSize: 26, lineHeight: 1,
+                fontFamily: "'DM Sans', system-ui, sans-serif",
+                fontVariantNumeric: "tabular-nums",
+                fontFeatureSettings: '"tnum" 1, "lnum" 1',
+                letterSpacing: "-0.01em",
+              }}>{value}</div>
               <div style={{ color: C.textMuted, fontSize: 13, marginTop: 6 }}>{label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ─── Filter Tabs ─────────────────────────────────────── */}
+      {/* ─── Filter Tabs (ซ่อนหมวดที่ count = 0 เพื่อให้ดูสะอาด) ──── */}
       <div style={{ padding: "0 2rem", background: C.dark, position: "sticky", top: 72, zIndex: 90, borderBottom: `1px solid ${C.border}` }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", gap: 4, overflowX: "auto", paddingBottom: 1 }}>
-          {filters.map(({ key, label }) => {
+          {filters.filter(({ key }) => key === "all" || (counts[key] || 0) > 0).map(({ key, label }) => {
             const count = key === "all" ? projects.length : counts[key] || 0;
             const active = activeFilter === key;
             return (
@@ -434,6 +458,7 @@ export default function PortfolioPage() {
                   borderBottom: active ? `2px solid ${C.green}` : "2px solid transparent",
                   whiteSpace: "nowrap",
                   transition: "all 0.2s",
+                  fontFamily: "inherit",
                 }}
               >
                 {label}
@@ -442,6 +467,7 @@ export default function PortfolioPage() {
                   background: active ? `${C.green}18` : C.midDark,
                   color: active ? C.green : C.textMuted,
                   borderRadius: 10, padding: "1px 7px", fontSize: 11, fontWeight: 600,
+                  fontVariantNumeric: "tabular-nums",
                 }}>
                   {count}
                 </span>
