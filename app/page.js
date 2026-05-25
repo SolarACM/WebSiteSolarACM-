@@ -491,7 +491,101 @@ function SolarPanel3D() {
               pointerEvents: "none",
             }} />
           </div>
+
+          {/* Product label on silver frame (bottom-right, like real panel) */}
+          <div style={{
+            position: "absolute", bottom: 1, right: 5,
+            display: "flex", alignItems: "center", gap: 3,
+            pointerEvents: "none",
+          }}>
+            <span style={{
+              fontSize: 6, fontWeight: 800, color: "#CF0A2C",
+              fontFamily: "system-ui, sans-serif", letterSpacing: "0.05em",
+            }}>LONGi</span>
+            <span style={{
+              fontSize: 6, fontWeight: 600, color: "rgba(60,70,80,0.7)",
+              fontFamily: "system-ui, sans-serif", letterSpacing: "0.08em",
+            }}>HiMO X10</span>
+          </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── PANEL INFO CARD — sales pitch ที่ลอยข้างๆ แผง ───────────────── */
+function PanelInfoCard({ lang }) {
+  const isTh = lang === "th";
+  return (
+    <div className="panel-info-card" style={{
+      position: "absolute",
+      bottom: 6,
+      left: 0,
+      zIndex: 4,
+      width: 250,
+      background: "rgba(255,255,255,0.97)",
+      backdropFilter: "blur(10px)",
+      border: "1px solid rgba(0,0,0,0.06)",
+      borderRadius: 14,
+      padding: 18,
+      boxShadow: "0 20px 50px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.06)",
+    }}>
+      {/* Brand row */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+        <span style={{
+          background: "#CF0A2C", color: "white", fontWeight: 800, fontSize: 11,
+          padding: "3px 8px", borderRadius: 4, letterSpacing: "0.04em",
+          fontFamily: "system-ui, sans-serif",
+        }}>LONGi</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: "#14241B", letterSpacing: "0.02em" }}>HiMO X10</span>
+        <span style={{
+          marginLeft: "auto", background: "#E8630A18", color: "#E8630A",
+          fontSize: 9, fontWeight: 800, padding: "3px 7px", borderRadius: 4,
+          border: "1px solid #E8630A40", letterSpacing: "0.06em",
+        }}>TIER-1</span>
+      </div>
+
+      {/* Headline */}
+      <div style={{
+        fontFamily: "'Playfair Display', Georgia, serif",
+        fontSize: 17, fontWeight: 700, lineHeight: 1.3,
+        color: "#14241B", marginBottom: 6,
+      }}>
+        {isTh ? "แผงพรีเมียมระดับโลก" : "World-Class Premium Panel"}
+      </div>
+
+      {/* Sales tagline */}
+      <div style={{ color: "#5C6B61", fontSize: 12, lineHeight: 1.6, marginBottom: 12 }}>
+        {isTh
+          ? "เทคโนโลยี Multi-Busbar ล่าสุด คุณภาพระดับโลก ในราคาที่จับต้องได้ที่สุด"
+          : "Latest multi-busbar tech, world-class quality — at the most accessible price."}
+      </div>
+
+      {/* Features */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 12 }}>
+        {[
+          isTh ? "ประสิทธิภาพสูง 22.5%+" : "22.5%+ efficiency",
+          isTh ? "Bifacial 2 ด้าน รับแสงเพิ่ม" : "Bifacial dual-side absorption",
+          isTh ? "รับประกัน 30 ปี ใช้งานยาวนาน" : "30-year warranty",
+        ].map(f => (
+          <div key={f} style={{
+            display: "flex", alignItems: "center", gap: 6,
+            fontSize: 11.5, color: "#2D7D46", fontWeight: 500,
+          }}>
+            <CheckCircle size={12} color="#2D7D46" /> {f}
+          </div>
+        ))}
+      </div>
+
+      {/* Value prop footer */}
+      <div style={{
+        borderTop: "1px solid rgba(0,0,0,0.06)",
+        paddingTop: 10, marginTop: 4,
+        display: "flex", alignItems: "center", gap: 6,
+        fontSize: 11, color: "#E8630A", fontWeight: 700,
+        letterSpacing: "0.04em",
+      }}>
+        <Sparkles size={11} /> {isTh ? "ดีกว่าเจ้าอื่นในราคาเท่ากัน" : "Better than competitors at same price"}
       </div>
     </div>
   );
@@ -742,10 +836,11 @@ function Hero({ lang }) {
             </div>
           </div>
 
-          {/* Hero visual — 3D Solar Panel + Sun Rays (ซ่อนบนมือถือเพื่อ performance) */}
-          <div className="hero-visual" style={{ display: "flex", justifyContent: "center", alignItems: "center", position: "relative", minHeight: 460 }}>
+          {/* Hero visual — 3D Solar Panel + Sun Rays + Info Card (ซ่อนบนมือถือเพื่อ performance) */}
+          <div className="hero-visual" style={{ display: "flex", justifyContent: "center", alignItems: "center", position: "relative", minHeight: 540 }}>
             <SunRays />
             <SolarPanel3D />
+            <PanelInfoCard lang={lang} />
           </div>
         </div>
       </div>
