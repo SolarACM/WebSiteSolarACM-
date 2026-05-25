@@ -551,7 +551,33 @@ function PanelInfoCard({ lang }) {
         fontSize: 17, fontWeight: 700, lineHeight: 1.3,
         color: "#14241B", marginBottom: 6,
       }}>
-        {isTh ? "แผง 650W ระดับโลก" : "World-Class 650W Panel"}
+        {isTh ? (
+          <>
+            แผง{" "}
+            <span style={{
+              fontFamily: "'DM Sans', system-ui, sans-serif",
+              fontWeight: 800,
+              color: "#CF0A2C",
+              letterSpacing: "-0.02em",
+              fontVariantNumeric: "tabular-nums",
+              fontFeatureSettings: '"tnum" 1, "lnum" 1',
+            }}>650W</span>
+            {" "}ระดับโลก
+          </>
+        ) : (
+          <>
+            World-Class{" "}
+            <span style={{
+              fontFamily: "'DM Sans', system-ui, sans-serif",
+              fontWeight: 800,
+              color: "#CF0A2C",
+              letterSpacing: "-0.02em",
+              fontVariantNumeric: "tabular-nums",
+              fontFeatureSettings: '"tnum" 1, "lnum" 1',
+            }}>650W</span>
+            {" "}Panel
+          </>
+        )}
       </div>
 
       {/* Sales tagline */}
