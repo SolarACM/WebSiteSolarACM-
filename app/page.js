@@ -537,7 +537,7 @@ function PanelInfoCard({ lang }) {
           padding: "3px 8px", borderRadius: 4, letterSpacing: "0.04em",
           fontFamily: "system-ui, sans-serif",
         }}>LONGi</span>
-        <span style={{ fontSize: 13, fontWeight: 700, color: "#14241B", letterSpacing: "0.02em" }}>HiMO X10</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: "#14241B", letterSpacing: "0.02em" }}>Hi-MO X10</span>
         <span style={{
           marginLeft: "auto", background: "#E8630A18", color: "#E8630A",
           fontSize: 9, fontWeight: 800, padding: "3px 7px", borderRadius: 4,
@@ -551,22 +551,22 @@ function PanelInfoCard({ lang }) {
         fontSize: 17, fontWeight: 700, lineHeight: 1.3,
         color: "#14241B", marginBottom: 6,
       }}>
-        {isTh ? "แผงพรีเมียมระดับโลก" : "World-Class Premium Panel"}
+        {isTh ? "แผง 650W ระดับโลก" : "World-Class 650W Panel"}
       </div>
 
       {/* Sales tagline */}
       <div style={{ color: "#5C6B61", fontSize: 12, lineHeight: 1.6, marginBottom: 12 }}>
         {isTh
-          ? "เทคโนโลยี Multi-Busbar ล่าสุด คุณภาพระดับโลก ในราคาที่จับต้องได้ที่สุด"
-          : "Latest multi-busbar tech, world-class quality — at the most accessible price."}
+          ? "เทคโนโลยี BC-Cell ล่าสุด ประสิทธิภาพสูงสุดของโลก ในราคาที่จับต้องได้"
+          : "Latest BC-Cell tech, world's highest efficiency — at the most accessible price."}
       </div>
 
       {/* Features */}
       <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 12 }}>
         {[
-          isTh ? "ประสิทธิภาพสูง 22.5%+" : "22.5%+ efficiency",
-          isTh ? "Bifacial 2 ด้าน รับแสงเพิ่ม" : "Bifacial dual-side absorption",
-          isTh ? "รับประกัน 30 ปี ใช้งานยาวนาน" : "30-year warranty",
+          isTh ? "ประสิทธิภาพสูงสุด 24.1%" : "24.1% peak efficiency",
+          isTh ? "กำลังไฟ 650W (LR7-72HVH)" : "650W output (LR7-72HVH)",
+          isTh ? "รับประกัน 30 ปี เสื่อม <12%" : "30-year warranty, <12% degradation",
         ].map(f => (
           <div key={f} style={{
             display: "flex", alignItems: "center", gap: 6,
