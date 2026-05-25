@@ -889,8 +889,8 @@ function Hero({ lang }) {
 
             <div className="stats-row" style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
               <StatPill icon={Building2} label="Projects completed" value="100+" />
-              <StatPill icon={Zap} label="MW installed" value="48 MW" />
-              <StatPill icon={Leaf} label="Tons CO₂ saved" value="32,000" />
+              <StatPill icon={Zap} label="MW installed" value="20 MW" />
+              <StatPill icon={Leaf} label="Tons CO₂ / year" value="13,900" />
             </div>
           </div>
 
