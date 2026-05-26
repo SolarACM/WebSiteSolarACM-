@@ -5,7 +5,7 @@ import {
   Phone, MessageCircle, Building2, Home, BarChart3, Leaf,
   CheckCircle, ArrowRight, Calculator, Globe, Award, Sparkles,
   Users, Battery, Cpu, Wind, DollarSign, Calendar, MapPin,
-  Mail, Menu, X, Star, Clock
+  Mail, Menu, X, Star, Clock, Wallet, TreePine
 } from "lucide-react";
 import {
   LineChart, Line, AreaChart, Area, BarChart, Bar,
@@ -951,6 +951,167 @@ function Solutions({ lang }) {
   );
 }
 
+/* ─── Animated number hook สำหรับ Executive Dashboard ─────── */
+function useAnimatedNumber(end, duration = 1500) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (typeof end !== "number" || isNaN(end)) { setValue(0); return; }
+    if (end === 0) { setValue(0); return; }
+    const startTime = performance.now();
+    let raf;
+    function tick(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+      setValue(end * eased);
+      if (progress < 1) raf = requestAnimationFrame(tick);
+      else setValue(end);
+    }
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [end, duration]);
+  return value;
+}
+
+/* ─── EXECUTIVE FINANCIAL & ESG DASHBOARD ───────────────────── */
+function ExecutiveDashboard({ result, isTh }) {
+  // ใช้ค่าจาก result ที่คำนวณแล้ว (ไม่สร้างตัวแปรซ้ำซ้อน)
+  const payback = result.roiYears;
+  const irr = (result.annualSavings / result.systemCost) * 100;
+  const totalSavings30Yr = result.annualSavings * 30 * 1.035;
+  const co2Tons = result.co2Saved;
+  const trees = (co2Tons * 1000) / 21.77;
+
+  // Animate ตัวเลข
+  const aPayback = useAnimatedNumber(payback);
+  const aIRR = useAnimatedNumber(irr);
+  const aSavings = useAnimatedNumber(totalSavings30Yr);
+  const aCO2 = useAnimatedNumber(co2Tons);
+  const aTrees = useAnimatedNumber(trees);
+
+  const cardStyle = {
+    background: "#FFFFFF",
+    border: `1px solid ${C.border}`,
+    borderRadius: 16,
+    padding: "22px 22px 24px",
+    boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+    transition: "transform 0.3s, box-shadow 0.3s, border-color 0.3s",
+  };
+  function onCardHover(e, color) {
+    e.currentTarget.style.transform = "translateY(-3px)";
+    e.currentTarget.style.boxShadow = `0 14px 32px ${color}1f`;
+    e.currentTarget.style.borderColor = `${color}40`;
+  }
+  function onCardLeave(e) {
+    e.currentTarget.style.transform = "";
+    e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.04)";
+    e.currentTarget.style.borderColor = C.border;
+  }
+
+  const numFont = {
+    fontFamily: "'DM Sans', system-ui, sans-serif",
+    fontVariantNumeric: "tabular-nums",
+    fontFeatureSettings: '"tnum" 1, "lnum" 1',
+    letterSpacing: "-0.025em",
+    lineHeight: 1.05,
+  };
+  const labelStyle = { fontSize: 11.5, color: C.textMuted, fontWeight: 600, letterSpacing: "0.04em" };
+  const iconBox = (color) => ({
+    width: 40, height: 40, borderRadius: 10,
+    background: `${color}15`,
+    display: "flex", alignItems: "center", justifyContent: "center",
+    flexShrink: 0,
+  });
+  const fmt = (n, d = 0) => n.toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d });
+
+  return (
+    <div className="exec-dashboard" style={{ marginBottom: 32 }}>
+      {/* Header */}
+      <div style={{ textAlign: "center", marginBottom: 22 }}>
+        <div style={{ color: C.orangeLight, fontSize: 11.5, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 8 }}>
+          {isTh ? "Executive Dashboard" : "Executive Dashboard"}
+        </div>
+        <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 22, color: C.text, fontWeight: 700 }}>
+          {isTh ? "ผลตอบแทนการลงทุนและความยั่งยืน" : "Financial Returns & ESG Impact"}
+        </div>
+      </div>
+
+      {/* Row 1: Financial Performance (3 cards) */}
+      <div style={{ marginBottom: 18 }}>
+        <div style={{ color: C.green, fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12, paddingLeft: 4, display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ width: 18, height: 1, background: C.green }} />
+          {isTh ? "ผลตอบแทนทางการเงิน" : "Financial Performance"}
+        </div>
+        <div className="exec-row-financial" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+          {/* Card 1: Payback */}
+          <div style={cardStyle} onMouseEnter={(e) => onCardHover(e, C.green)} onMouseLeave={onCardLeave}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={iconBox(C.green)}><Clock size={19} color={C.green} /></div>
+              <div style={labelStyle}>{isTh ? "ระยะเวลาคืนทุน" : "Payback Period"}</div>
+            </div>
+            <div style={{ ...numFont, fontSize: "clamp(1.9rem, 4.5vw, 2.6rem)", fontWeight: 800, color: C.green }}>
+              {fmt(aPayback, 1)}<span style={{ fontSize: "0.45em", fontWeight: 600, color: C.textMuted, marginLeft: 6 }}>{isTh ? "ปี" : "yrs"}</span>
+            </div>
+          </div>
+
+          {/* Card 2: IRR */}
+          <div style={cardStyle} onMouseEnter={(e) => onCardHover(e, C.orange)} onMouseLeave={onCardLeave}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={iconBox(C.orange)}><TrendingUp size={19} color={C.orange} /></div>
+              <div style={labelStyle}>{isTh ? "ผลตอบแทนการลงทุน (IRR)" : "Project IRR"}</div>
+            </div>
+            <div style={{ ...numFont, fontSize: "clamp(1.9rem, 4.5vw, 2.6rem)", fontWeight: 800, color: C.orange }}>
+              {fmt(aIRR, 1)}<span style={{ fontSize: "0.55em", fontWeight: 700 }}>%</span>
+            </div>
+          </div>
+
+          {/* Card 3: 30-Year Total Savings */}
+          <div style={cardStyle} onMouseEnter={(e) => onCardHover(e, C.green)} onMouseLeave={onCardLeave}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={iconBox(C.green)}><Wallet size={19} color={C.green} /></div>
+              <div style={labelStyle}>{isTh ? "ประหยัดรวม 30 ปี" : "30-Year Total Savings"}</div>
+            </div>
+            <div style={{ ...numFont, fontSize: "clamp(1.5rem, 3.3vw, 2.1rem)", fontWeight: 800, color: C.green }}>
+              <span style={{ fontSize: "0.65em", fontWeight: 700, marginRight: 2 }}>฿</span>{fmt(aSavings)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Row 2: ESG & Sustainability (2 cards centered) */}
+      <div>
+        <div style={{ color: C.green, fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12, paddingLeft: 4, display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ width: 18, height: 1, background: C.green }} />
+          {isTh ? "ความยั่งยืน (ESG & Green Impact)" : "ESG & Sustainability"}
+        </div>
+        <div className="exec-row-esg" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14, maxWidth: "calc(66.66% - 5px)", margin: "0 auto" }}>
+          {/* Card 4: Carbon Reduction */}
+          <div style={cardStyle} onMouseEnter={(e) => onCardHover(e, C.green)} onMouseLeave={onCardLeave}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={iconBox(C.green)}><Leaf size={19} color={C.green} /></div>
+              <div style={labelStyle}>{isTh ? "ลดคาร์บอน CO₂" : "Carbon Reduction"}</div>
+            </div>
+            <div style={{ ...numFont, fontSize: "clamp(1.9rem, 4.5vw, 2.6rem)", fontWeight: 800, color: C.green }}>
+              {fmt(aCO2, 1)}<span style={{ fontSize: "0.45em", fontWeight: 600, color: C.textMuted, marginLeft: 6 }}>{isTh ? "ตัน/ปี" : "tons/yr"}</span>
+            </div>
+          </div>
+
+          {/* Card 5: Trees */}
+          <div style={cardStyle} onMouseEnter={(e) => onCardHover(e, C.green)} onMouseLeave={onCardLeave}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={iconBox(C.green)}><TreePine size={19} color={C.green} /></div>
+              <div style={labelStyle}>{isTh ? "เทียบเท่าปลูกต้นไม้" : "Equivalent Trees Planted"}</div>
+            </div>
+            <div style={{ ...numFont, fontSize: "clamp(1.9rem, 4.5vw, 2.6rem)", fontWeight: 800, color: C.green }}>
+              {fmt(aTrees, 0)}<span style={{ fontSize: "0.45em", fontWeight: 600, color: C.textMuted, marginLeft: 6 }}>{isTh ? "ต้น/ปี" : "trees/yr"}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── ROI CALCULATOR ────────────────────────────────────────── */
 function Calculator_({ lang }) {
   const [step, setStep] = useState(1);
@@ -1314,24 +1475,8 @@ function Calculator_({ lang }) {
                 </ResponsiveContainer>
               </div>
 
-              {/* Monthly comparison bar */}
-              <div style={{ marginBottom: 32 }}>
-                <div style={{ color: C.textMuted, fontSize: 13, marginBottom: 16, fontWeight: 600 }}>Monthly Bill Comparison — Now vs. Solar (sample 12 months)</div>
-                <ResponsiveContainer width="100%" height={180}>
-                  <BarChart data={result.projections.slice(0, 12).map((d, i) => ({
-                    month: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][i],
-                    current: Math.round(form.bill / 1000 * (1 + i * 0.003)),
-                    withSolar: Math.round(form.bill * 0.08 / 1000),
-                  }))}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
-                    <XAxis dataKey="month" tick={{ fill: C.textMuted, fontSize: 11 }} tickLine={false} />
-                    <YAxis tick={{ fill: C.textMuted, fontSize: 11 }} tickLine={false} axisLine={false} />
-                    <Tooltip contentStyle={{ background: C.darkCard, border: `1px solid ${C.border}`, borderRadius: 8, color: C.text }} formatter={(v) => `฿${v}K`} />
-                    <Bar dataKey="current" fill={`${C.orange}88`} name="Without Solar" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="withSolar" fill={`${C.green}99`} name="With Solar" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+              {/* Executive Financial & ESG Dashboard (แทน Monthly Bill Comparison) */}
+              <ExecutiveDashboard result={result} isTh={isTh} />
 
               <div style={{ display: "flex", gap: 12 }}>
                 <button onClick={() => { setStep(1); setResult(null); setRecommendation(null); setType(null); }} style={{ flex: 1, background: "transparent", border: `1px solid ${C.border}`, borderRadius: 10, padding: 14, color: C.textMuted, cursor: "pointer", fontSize: 14 }}>{isTh ? "คำนวณใหม่" : "Recalculate"}</button>
@@ -1948,6 +2093,8 @@ export default function SolarACM() {
           .stats-counter-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
           .hero-social-proof { font-size: 11.5px !important; padding: 5px 12px 5px 10px !important; gap: 8px !important; }
           .hero-trust-badges { gap: 14px !important; font-size: 12px !important; }
+          .exec-row-financial { grid-template-columns: 1fr !important; }
+          .exec-row-esg { grid-template-columns: 1fr !important; max-width: 100% !important; }
         }
 
         /* ── SMALL MOBILE (≤ 480px) ────────────────────── */
