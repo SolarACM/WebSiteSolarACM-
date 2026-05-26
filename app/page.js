@@ -1431,16 +1431,41 @@ function Calculator_({ lang }) {
               {/* KPI Cards */}
               <div className="calc-kpi-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 36 }}>
                 {[
-                  { label: "System Size", value: `${result.kwpNeeded} kWp`, icon: Zap, color: C.green },
-                  { label: "System Cost", value: `฿${Math.round(result.systemCost / 1000)}K`, icon: DollarSign, color: C.orange },
-                  { label: "ROI Period", value: `${result.roiYears.toFixed(1)} yrs`, icon: Calendar, color: C.greenLight },
-                  { label: "CO₂ Saved/yr", value: `${result.co2Saved.toFixed(1)}t`, icon: Leaf, color: C.orangeLight },
+                  {
+                    label: isTh ? "ขนาดระบบ" : "System Size",
+                    value: `${result.kwpNeeded.toLocaleString("th-TH")} kWp`,
+                    icon: Zap, color: C.green,
+                  },
+                  {
+                    label: isTh ? "เงินลงทุน" : "System Cost",
+                    // ฿13,923,000 — ตัวเลขเต็มพร้อมคอมม่าคั่น (รูปแบบที่คนไทยคุ้นเคย)
+                    value: Math.round(result.systemCost).toLocaleString("th-TH", { style: "currency", currency: "THB", minimumFractionDigits: 0, maximumFractionDigits: 0 }),
+                    icon: DollarSign, color: C.orange,
+                  },
+                  {
+                    label: isTh ? "ระยะคืนทุน" : "ROI Period",
+                    value: `${result.roiYears.toFixed(1)} ${isTh ? "ปี" : "yrs"}`,
+                    icon: Calendar, color: C.greenLight,
+                  },
+                  {
+                    label: isTh ? "ลด CO₂ /ปี" : "CO₂ Saved/yr",
+                    value: `${result.co2Saved.toFixed(1)} ${isTh ? "ตัน" : "t"}`,
+                    icon: Leaf, color: C.orangeLight,
+                  },
                 ].map(({ label, value, icon: Icon, color }) => (
                   <div key={label} style={{ background: C.midDark, borderRadius: 12, padding: 18, border: `1px solid ${C.border}`, textAlign: "center" }}>
                     <div style={{ width: 36, height: 36, borderRadius: 8, background: `${color}20`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 10px" }}>
                       <Icon size={18} color={color} />
                     </div>
-                    <div style={{ color: C.text, fontWeight: 700, fontSize: 20 }}>{value}</div>
+                    <div style={{
+                      color: C.text, fontWeight: 700,
+                      fontSize: "clamp(15px, 1.6vw, 19px)",
+                      fontFamily: "'DM Sans', system-ui, sans-serif",
+                      fontVariantNumeric: "tabular-nums",
+                      fontFeatureSettings: '"tnum" 1, "lnum" 1',
+                      letterSpacing: "-0.01em",
+                      whiteSpace: "nowrap",
+                    }}>{value}</div>
                     <div style={{ color: C.textMuted, fontSize: 12, marginTop: 4 }}>{label}</div>
                   </div>
                 ))}
@@ -1466,11 +1491,17 @@ function Calculator_({ lang }) {
                     <YAxis tick={{ fill: C.textMuted, fontSize: 11 }} tickLine={false} axisLine={false} />
                     <Tooltip
                       contentStyle={{ background: C.darkCard, border: `1px solid ${C.border}`, borderRadius: 8, color: C.text }}
-                      formatter={(v, n) => [`฿${v}K`, n === "savings" ? "Cumulative Savings" : "Net Benefit"]}
+                      // v อยู่ในหน่วย "พันบาท" (data ÷ 1000) — × 1000 กลับเป็นบาทเต็ม แล้วใส่ comma
+                      formatter={(v, n) => [
+                        `฿${(v * 1000).toLocaleString("th-TH")}`,
+                        n === "savings"
+                          ? (isTh ? "ประหยัดสะสม" : "Cumulative Savings")
+                          : (isTh ? "กำไรสุทธิ" : "Net Benefit"),
+                      ]}
                     />
                     <Legend wrapperStyle={{ color: C.textMuted, fontSize: 12 }} />
-                    <Area type="monotone" dataKey="savings" stroke={C.green} strokeWidth={2} fill="url(#gSavings)" name="savings" />
-                    <Area type="monotone" dataKey="net" stroke={C.orange} strokeWidth={2} fill="url(#gNet)" name="net" />
+                    <Area type="monotone" dataKey="savings" stroke={C.green} strokeWidth={2} fill="url(#gSavings)" name={isTh ? "ประหยัดสะสม" : "Cumulative Savings"} />
+                    <Area type="monotone" dataKey="net" stroke={C.orange} strokeWidth={2} fill="url(#gNet)" name={isTh ? "กำไรสุทธิ" : "Net Benefit"} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
