@@ -117,10 +117,14 @@ const SOLAR_HOURS = 4.5; // peak sun hours/day Thailand
 const COST_PER_KWP = 35000; // THB
 const PANEL_EFFICIENCY = 0.20;
 
-function calcSolar({ bill, area, type, dayUsage = 50 }) {
+function calcSolar({ bill, roofDir = "south", type, dayUsage = 50 }) {
+  // ปรับ Solar Hours ตามทิศทางหลังคา (ไทยอยู่ซีกโลกเหนือ → หันใต้ดีที่สุด)
+  const roofDirMultiplier = { south: 1.0, eastwest: 0.87, north: 0.75 };
+  const effectiveSolarHours = SOLAR_HOURS * (roofDirMultiplier[roofDir] ?? 1.0);
+
   const kwhPerMonth = bill / TARIFF;
   const kwhPerYear = kwhPerMonth * 12;
-  const kwpNeeded = Math.ceil(kwhPerYear / (SOLAR_HOURS * 365));
+  const kwpNeeded = Math.ceil(kwhPerYear / (effectiveSolarHours * 365));
 
   // Hybrid system (มีแบตเตอรี่) ราคา ~1.7x ของ On-Grid
   const needsBattery = dayUsage < 50;
@@ -1116,7 +1120,7 @@ function ExecutiveDashboard({ result, isTh }) {
 function Calculator_({ lang }) {
   const [step, setStep] = useState(1);
   const [type, setType] = useState(null);
-  const [form, setForm] = useState({ bill: 3000, area: 50, location: "Bangkok", dayUsage: 50 });
+  const [form, setForm] = useState({ bill: 3000, roofDir: "south", location: "Bangkok", dayUsage: 50 });
   const [result, setResult] = useState(null);
   const [recommendation, setRecommendation] = useState(null);
 
@@ -1225,10 +1229,18 @@ function Calculator_({ lang }) {
           {/* Step 2 */}
           {step === 2 && (
             <div>
-              <h3 style={{ color: C.text, fontSize: 22, marginBottom: 8 }}>Your energy usage</h3>
-              <p style={{ color: C.textMuted, marginBottom: 32, fontSize: 14 }}>Find this on your electricity bill from PEA or MEA</p>
-              <div style={{ marginBottom: 24 }}>
-                <label style={{ color: C.textMuted, fontSize: 13, display: "block", marginBottom: 8 }}>Average Monthly Electric Bill (฿)</label>
+              <h3 style={{ color: C.text, fontSize: 22, marginBottom: 8 }}>
+                {isTh ? "ค่าไฟและหลังคาของคุณ" : "Your energy bill & rooftop"}
+              </h3>
+              <p style={{ color: C.textMuted, marginBottom: 32, fontSize: 14 }}>
+                {isTh ? "ดูค่าไฟเฉลี่ยจากบิล กฟน./กฟภ. และทิศที่หลังคาหันออก" : "Check your PEA/MEA bill and the direction your roof faces"}
+              </p>
+
+              {/* Monthly bill */}
+              <div style={{ marginBottom: 28 }}>
+                <label style={{ color: C.textMuted, fontSize: 13, display: "block", marginBottom: 8 }}>
+                  {isTh ? "ค่าไฟเฉลี่ยต่อเดือน (฿)" : "Average Monthly Electric Bill (฿)"}
+                </label>
                 <input type="number" value={form.bill}
                   onChange={e => setForm({ ...form, bill: +e.target.value })}
                   style={{ width: "100%", background: C.midDark, border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 16px", color: C.text, fontSize: 16, outline: "none", boxSizing: "border-box" }} />
@@ -1239,15 +1251,58 @@ function Calculator_({ lang }) {
                   ))}
                 </div>
               </div>
+
+              {/* Roof orientation */}
               <div style={{ marginBottom: 32 }}>
-                <label style={{ color: C.textMuted, fontSize: 13, display: "block", marginBottom: 8 }}>Available Roof / Area (m²)</label>
-                <input type="number" value={form.area}
-                  onChange={e => setForm({ ...form, area: +e.target.value })}
-                  style={{ width: "100%", background: C.midDark, border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 16px", color: C.text, fontSize: 16, outline: "none", boxSizing: "border-box" }} />
+                <label style={{ color: C.textMuted, fontSize: 13, display: "block", marginBottom: 12 }}>
+                  {isTh ? "หลังคาของคุณหันไปทิศใด?" : "Which direction does your roof face?"}
+                </label>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                  {[
+                    { id: "south", emoji: "🧭", labelTh: "ทิศใต้", labelEn: "South", subTh: "ดีที่สุด +100%", subEn: "Best yield", color: C.green },
+                    { id: "eastwest", emoji: "↔️", labelTh: "ตะวันออก/ตก", labelEn: "East / West", subTh: "ดีมาก ~87%", subEn: "Good ~87%", color: C.orange },
+                    { id: "north", emoji: "🔻", labelTh: "ทิศเหนือ", labelEn: "North", subTh: "ลดลง ~75%", subEn: "Lower ~75%", color: C.textMuted },
+                  ].map(({ id, emoji, labelTh, labelEn, subTh, subEn, color }) => {
+                    const selected = form.roofDir === id;
+                    return (
+                      <button key={id} type="button"
+                        onClick={() => setForm({ ...form, roofDir: id })}
+                        style={{
+                          background: selected ? `${color}18` : "transparent",
+                          border: `2px solid ${selected ? color : C.border}`,
+                          borderRadius: 12, padding: "14px 10px", cursor: "pointer",
+                          textAlign: "center", transition: "all 0.2s",
+                        }}
+                        onMouseEnter={e => { if (!selected) e.currentTarget.style.borderColor = color; }}
+                        onMouseLeave={e => { if (!selected) e.currentTarget.style.borderColor = C.border; }}
+                      >
+                        <div style={{ fontSize: 22, marginBottom: 6 }}>{emoji}</div>
+                        <div style={{ color: selected ? color : C.text, fontWeight: 700, fontSize: 13 }}>
+                          {isTh ? labelTh : labelEn}
+                        </div>
+                        <div style={{ color: selected ? color : C.textMuted, fontSize: 11, marginTop: 3 }}>
+                          {isTh ? subTh : subEn}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                {/* Helper tip */}
+                <div style={{ marginTop: 10, padding: "8px 14px", background: `${C.green}12`, borderRadius: 8, fontSize: 12, color: C.textMuted, display: "flex", alignItems: "center", gap: 6 }}>
+                  <Sun size={13} color={C.greenLight} />
+                  {isTh
+                    ? "เคล็ดลับ: ยืนมองหน้าบ้าน ถ้าเห็นดวงอาทิตย์ตรงข้ามในช่วงกลางวัน → หลังคาหันใต้"
+                    : "Tip: Stand facing your house. If you see the sun opposite you at noon → south-facing roof"}
+                </div>
               </div>
+
               <div style={{ display: "flex", gap: 12 }}>
-                <button onClick={() => setStep(1)} style={{ flex: 1, background: "transparent", border: `1px solid ${C.border}`, borderRadius: 10, padding: 14, color: C.textMuted, cursor: "pointer", fontSize: 15 }}>← Back</button>
-                <button onClick={() => setStep(3)} style={{ flex: 2, background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, border: "none", borderRadius: 10, padding: 14, color: "white", cursor: "pointer", fontSize: 15, fontWeight: 600 }}>Continue →</button>
+                <button onClick={() => setStep(1)} style={{ flex: 1, background: "transparent", border: `1px solid ${C.border}`, borderRadius: 10, padding: 14, color: C.textMuted, cursor: "pointer", fontSize: 15 }}>
+                  {isTh ? "← กลับ" : "← Back"}
+                </button>
+                <button onClick={() => setStep(3)} style={{ flex: 2, background: `linear-gradient(135deg, ${C.green}, ${C.greenLight})`, border: "none", borderRadius: 10, padding: 14, color: "white", cursor: "pointer", fontSize: 15, fontWeight: 600 }}>
+                  {isTh ? "ถัดไป →" : "Continue →"}
+                </button>
               </div>
             </div>
           )}
