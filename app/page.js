@@ -1116,111 +1116,190 @@ function ExecutiveDashboard({ result, isTh }) {
   );
 }
 
-/* ─── CALCULATOR SIDE GRAPHICS ─────────────────────────────── */
+/* ─── CALCULATOR SIDE GRAPHICS  (3D Glassmorphic) ───────────── */
 function SmartHomeGraphic({ active }) {
   return (
-    <div style={{ width: "100%", maxWidth: 230, margin: "0 auto" }}>
-      <svg viewBox="0 0 240 310" fill="none" xmlns="http://www.w3.org/2000/svg"
+    <div style={{ width: "100%", maxWidth: 270, margin: "0 auto" }}>
+      <svg viewBox="0 0 270 370" fill="none" xmlns="http://www.w3.org/2000/svg"
         className="calc-graphic-float" style={{ width: "100%", height: "auto" }}>
         <defs>
-          <radialGradient id="homeAura" cx="50%" cy="85%" r="55%">
-            <stop offset="0%" stopColor="#2D7D46" stopOpacity="0.28"/>
+          {/* ── Glow filters ── */}
+          <filter id="hGlow" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="14" stdDeviation="18" floodColor="#2D7D46" floodOpacity="0.42"/>
+            <feDropShadow dx="0" dy="0"  stdDeviation="8"  floodColor="#4CAF72" floodOpacity="0.28"/>
+          </filter>
+          <filter id="hGlowOn" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="16" stdDeviation="22" floodColor="#4CAF72" floodOpacity="0.62"/>
+            <feDropShadow dx="0" dy="0"  stdDeviation="12" floodColor="#4CAF72" floodOpacity="0.42"/>
+          </filter>
+          {/* ── Face gradients ── */}
+          <linearGradient id="hFront" x1="0%" y1="0%" x2="4%" y2="100%">
+            <stop offset="0%"   stopColor="#203d28" stopOpacity="0.96"/>
+            <stop offset="100%" stopColor="#0e1f16" stopOpacity="0.99"/>
+          </linearGradient>
+          <linearGradient id="hSide" x1="0%" y1="0%" x2="100%" y2="60%">
+            <stop offset="0%"   stopColor="#162c1c" stopOpacity="0.96"/>
+            <stop offset="100%" stopColor="#091410" stopOpacity="0.99"/>
+          </linearGradient>
+          <linearGradient id="hRoofF" x1="40%" y1="0%" x2="60%" y2="100%">
+            <stop offset="0%"   stopColor="#3aad5e" stopOpacity="0.92"/>
+            <stop offset="100%" stopColor="#1e5c32" stopOpacity="0.97"/>
+          </linearGradient>
+          <linearGradient id="hRoofR" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stopColor="#2D7D46" stopOpacity="0.88"/>
+            <stop offset="100%" stopColor="#163d23" stopOpacity="0.94"/>
+          </linearGradient>
+          {/* ── Glassmorphic window ── */}
+          <linearGradient id="hWin" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stopColor="#4CAF72" stopOpacity="0.30"/>
+            <stop offset="40%"  stopColor="#ffffff" stopOpacity="0.09"/>
+            <stop offset="100%" stopColor="#2D7D46" stopOpacity="0.18"/>
+          </linearGradient>
+          {/* ── Ground aura ── */}
+          <radialGradient id="hAura" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="#2D7D46" stopOpacity="0.38"/>
             <stop offset="100%" stopColor="#2D7D46" stopOpacity="0"/>
           </radialGradient>
         </defs>
 
-        {/* Background aura */}
-        <ellipse cx="120" cy="268" rx="105" ry="38" fill="url(#homeAura)"/>
-        <ellipse cx="120" cy="278" rx="72" ry="9" fill="#2D7D46" opacity="0.14"/>
+        {/* Ground glow */}
+        <ellipse cx="138" cy="308" rx="122" ry="34" fill="url(#hAura)"/>
+        <ellipse cx="138" cy="318" rx="86"  ry="11" fill="#2D7D46" opacity="0.18"/>
 
-        {/* Left tree */}
-        <rect x="16" y="214" width="7" height="38" rx="3.5" fill="#1a4a28"/>
-        <circle cx="19.5" cy="200" r="22" fill="#2D7D46" opacity="0.75"/>
-        <circle cx="19.5" cy="191" r="15" fill="#4CAF72" opacity="0.55"/>
+        {/* ── Trees ── */}
+        <rect x="12"  y="240" width="9" height="48" rx="4.5" fill="#1a4a28"/>
+        <ellipse cx="16"  cy="225" rx="24" ry="28" fill="#2D7D46" opacity="0.82"/>
+        <ellipse cx="16"  cy="214" rx="16" ry="20" fill="#4CAF72" opacity="0.58"/>
 
-        {/* Right tree (smaller) */}
-        <rect x="214" y="228" width="6" height="24" rx="3" fill="#1a4a28"/>
-        <circle cx="217" cy="218" r="15" fill="#2D7D46" opacity="0.65"/>
-        <circle cx="217" cy="211" r="10" fill="#4CAF72" opacity="0.5"/>
+        <rect x="245" y="222" width="7" height="30" rx="3.5" fill="#1a4a28"/>
+        <ellipse cx="248" cy="210" rx="18" ry="21" fill="#2D7D46" opacity="0.66"/>
+        <ellipse cx="248" cy="201" rx="12" ry="14" fill="#4CAF72" opacity="0.46"/>
 
-        {/* === HOUSE BODY === */}
-        <rect x="60" y="170" width="132" height="88" rx="5"
-          fill="#0f1f14" stroke="#2D7D46" strokeWidth="1.6"
-          className={active ? "calc-graphic-glow" : ""}/>
+        {/* ══ 3-FACE BUILDING ══ */}
+        {/* Building: front=(52,162)→(186,162)→(186,278)→(52,278)
+                     right=(186,162)→(228,132)→(228,248)→(186,278)
+                     roof-front gable=(52,162)→(119,88)→(186,162)
+                     roof-right slope=(186,162)→(228,132)→(163,60)→(119,88)
+        */}
+        <g filter={active ? "url(#hGlowOn)" : "url(#hGlow)"}>
 
-        {/* House side wall (3-D depth) */}
-        <polygon points="192,170 222,150 222,234 192,258"
-          fill="#0a1610" stroke="#2D7D46" strokeWidth="0.9" opacity="0.9"/>
+          {/* Right side wall (darker — less lit) */}
+          <polygon points="186,162 228,132 228,248 186,278" fill="url(#hSide)"/>
+          <line x1="228" y1="132" x2="228" y2="248" stroke="#2D7D46" strokeWidth="0.9" opacity="0.5"/>
 
-        {/* Roof (front) */}
-        <polygon points="46,172 120,106 194,172"
-          fill="#14241B" stroke={active ? "#4CAF72" : "#2D7D46"} strokeWidth="2"/>
-        {/* Roof (side) */}
-        <polygon points="194,172 224,150 198,106 120,106"
-          fill="#0d1c10" stroke="#2D7D46" strokeWidth="0.9" opacity="0.85"/>
+          {/* Front wall */}
+          <polygon points="52,162 186,162 186,278 52,278" fill="url(#hFront)"/>
+          {/* Glass shimmer over front */}
+          <polygon points="52,162 186,162 186,278 52,278" fill="url(#hWin)" opacity="0.32"/>
+          {/* Wall edges (glowing) */}
+          <line x1="52"  y1="162" x2="186" y2="162" stroke="#4CAF72" strokeWidth="1.8" opacity="0.80"/>
+          <line x1="52"  y1="278" x2="186" y2="278" stroke="#2D7D46" strokeWidth="1.0" opacity="0.45"/>
+          <line x1="52"  y1="162" x2="52"  y2="278" stroke="#4CAF72" strokeWidth="1.0" opacity="0.42"/>
+          <line x1="186" y1="162" x2="186" y2="278" stroke="#4CAF72" strokeWidth="1.4" opacity="0.60"/>
 
-        {/* Solar panels on roof */}
-        {[82, 108, 134, 160].map((x, i) => (
-          <g key={i}>
-            <rect x={x} y={i % 2 === 1 ? 126 : 132} width={22} height={15}
-              rx="2" fill="#12345a" stroke="#4CAF72" strokeWidth="1.1"/>
-            <line x1={x+11} y1={i%2===1?126:132} x2={x+11} y2={i%2===1?141:147}
-              stroke="#4CAF7270" strokeWidth="0.6"/>
-            <line x1={x} y1={i%2===1?133:139} x2={x+22} y2={i%2===1?133:139}
-              stroke="#4CAF7270" strokeWidth="0.6"/>
-          </g>
-        ))}
+          {/* Front gable roof */}
+          <polygon points="52,162 119,88 186,162" fill="url(#hRoofF)"/>
+          <line x1="52"  y1="162" x2="119" y2="88"  stroke="#4CAF72" strokeWidth="1.6" opacity="0.85"/>
+          <line x1="119" y1="88"  x2="186" y2="162" stroke="#4CAF72" strokeWidth="1.6" opacity="0.85"/>
+          {/* Roof sheen */}
+          <polygon points="68,156 119,88 142,118" fill="white" opacity="0.07"/>
 
-        {/* Windows */}
-        {[[72,183],[148,183]].map(([x,y],i) => (
-          <g key={i}>
-            <rect x={x} y={y} width={32} height={26} rx="3"
-              fill="#2D7D4622" stroke="#4CAF72" strokeWidth="1.3"/>
-            <line x1={x+16} y1={y} x2={x+16} y2={y+26} stroke="#4CAF7255" strokeWidth="0.8"/>
-            <line x1={x} y1={y+13} x2={x+32} y2={y+13} stroke="#4CAF7255" strokeWidth="0.8"/>
-            {active && <rect x={x+1} y={y+1} width={14} height={11} rx="1" fill="#4CAF72" opacity="0.13"/>}
-          </g>
-        ))}
+          {/* Right roof slope */}
+          <polygon points="186,162 228,132 163,60 119,88" fill="url(#hRoofR)"/>
+          {/* Ridge glow line */}
+          <line x1="119" y1="88" x2="163" y2="60" stroke="#4CAF72" strokeWidth="2.2" opacity="0.9"/>
+          <line x1="186" y1="162" x2="228" y2="132" stroke="#2D7D46" strokeWidth="1.0" opacity="0.55"/>
+          <line x1="163" y1="60"  x2="228" y2="132" stroke="#2D7D46" strokeWidth="1.0" opacity="0.50"/>
 
-        {/* Door */}
-        <rect x="108" y="220" width="36" height="38" rx="4"
-          fill="#1a2e1f" stroke="#4CAF72" strokeWidth="1.3"/>
-        <circle cx="138" cy="240" r="2.5" fill="#4CAF72" opacity="0.8"/>
+          {/* ── Solar panels on right roof slope (2 rows × 3 cols) ── */}
+          {/* Parallelogram panels following slope perspective
+              Along-eave vector: (42,-30) per col unit
+              Along-slope vector: (-67,-74) total — scaled to rows */}
+          {[
+            [189,156, 203,147, 191,133, 177,142],
+            [203,147, 217,138, 205,124, 191,133],
+            [217,138, 228,131, 216,117, 204,126],
+            [175,143, 189,134, 177,120, 163,129],
+            [189,134, 203,125, 191,111, 177,120],
+            [203,125, 217,116, 205,102, 191,111],
+          ].map(([x1,y1,x2,y2,x3,y3,x4,y4], i) => (
+            <g key={i}>
+              <polygon points={`${x1},${y1} ${x2},${y2} ${x3},${y3} ${x4},${y4}`}
+                fill="#0d2d4a" stroke="#4CAF72" strokeWidth="1.1"/>
+              {/* Panel sheen (top strip) */}
+              <polygon points={`${x1},${y1} ${x2},${y2} ${x2-1},${y2+2} ${x1-1},${y1+2}`}
+                fill="#4CAF72" opacity="0.18"/>
+            </g>
+          ))}
 
-        {/* Ground line */}
-        <rect x="50" y="257" width="152" height="5" rx="2.5" fill="#2D7D46" opacity="0.22"/>
+          {/* ── Glassmorphic windows (front face) ── */}
+          {[[66,183],[130,183]].map(([wx,wy],i) => (
+            <g key={i}>
+              <rect x={wx} y={wy} width="40" height="34" rx="4" fill="url(#hWin)"/>
+              <rect x={wx} y={wy} width="40" height="34" rx="4" stroke="#4CAF72" strokeWidth="1.5" fill="none"/>
+              {/* Frame cross */}
+              <line x1={wx+20} y1={wy}    x2={wx+20} y2={wy+34} stroke="#4CAF7258" strokeWidth="0.9"/>
+              <line x1={wx}    y1={wy+17} x2={wx+40} y2={wy+17} stroke="#4CAF7258" strokeWidth="0.9"/>
+              {/* Glass reflection diagonal */}
+              <line x1={wx+4}  y1={wy+2}  x2={wx+11} y2={wy+30} stroke="white" strokeWidth="1.6" opacity="0.12"/>
+            </g>
+          ))}
 
-        {/* WiFi / smart badge — top-left */}
+          {/* Side wall window */}
+          <polygon points="196,178 222,160 222,194 196,212" fill="url(#hWin)" stroke="#2D7D46" strokeWidth="1.1"/>
+          <line x1="196" y1="195" x2="222" y2="177" stroke="white" strokeWidth="1.2" opacity="0.08"/>
+
+          {/* Door */}
+          <rect x="104" y="228" width="46" height="50" rx="4" fill="#0e1e14" stroke="#4CAF72" strokeWidth="1.6"/>
+          <rect x="105" y="229" width="22" height="49" rx="2" fill="#4CAF72" opacity="0.04"/>
+          {/* Door glass panel */}
+          <rect x="108" y="234" width="15" height="22" rx="2" fill="url(#hWin)" stroke="#4CAF72" strokeWidth="0.9"/>
+          <line x1="110" y1="235" x2="114" y2="254" stroke="white" strokeWidth="1" opacity="0.14"/>
+          {/* Door handle */}
+          <circle cx="144" cy="255" r="3.5" fill="#4CAF72" opacity="0.92"/>
+
+          {/* Chimney (3D box) */}
+          <polygon points="154,96 168,96 168,130 154,130" fill="#152a1d" stroke="#4CAF72" strokeWidth="0.9"/>
+          <polygon points="168,96 178,90 178,124 168,130" fill="#0e1e14" stroke="#4CAF72" strokeWidth="0.7" opacity="0.9"/>
+          <polygon points="154,96 168,96 178,90 164,90"   fill="#2D7D46" opacity="0.55"/>
+
+          {/* Ground base line */}
+          <line x1="52"  y1="278" x2="186" y2="278" stroke="#4CAF72" strokeWidth="1" opacity="0.38"/>
+          <line x1="186" y1="278" x2="228" y2="248" stroke="#2D7D46" strokeWidth="0.8" opacity="0.38"/>
+        </g>
+
+        {/* ── Floating UI badges (outside glow group) ── */}
+
+        {/* WiFi badge — top-left */}
         <g className="calc-graphic-pulse">
-          <circle cx="46" cy="104" r="20" fill="#2D7D4618"/>
-          <circle cx="46" cy="104" r="12" fill="#2D7D4628"/>
-          <path d="M38,108 Q46,98 54,108" stroke="#4CAF72" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
-          <path d="M41,112 Q46,105 51,112" stroke="#4CAF72" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
-          <circle cx="46" cy="115" r="2.5" fill="#4CAF72"/>
+          <circle cx="28" cy="118" r="25" fill="#2D7D461a" stroke="#4CAF72" strokeWidth="1" strokeOpacity="0.38"/>
+          <circle cx="28" cy="118" r="16" fill="#2D7D4628"/>
+          <path d="M19,122 Q28,112 37,122" stroke="#4CAF72" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+          <path d="M22.5,126.5 Q28,120 33.5,126.5" stroke="#4CAF72" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+          <circle cx="28" cy="130" r="3.2" fill="#4CAF72"/>
         </g>
 
-        {/* Lightning badge — top-right */}
-        <g transform="translate(192,92)" className="calc-graphic-pulse-2">
-          <circle cx="0" cy="0" r="18" fill="#E8630A1a"/>
-          <circle cx="0" cy="0" r="10" fill="#E8630A28"/>
-          <path d="M3,-9 L-3,1 L2,1 L-3,11 L5,-1 L0,-1 Z" fill="#FF8C3A"/>
+        {/* ⚡ badge — top-right */}
+        <g transform="translate(236,86)" className="calc-graphic-pulse-2">
+          <circle cx="0" cy="0" r="24" fill="#E8630A1a" stroke="#E8630A" strokeWidth="1" strokeOpacity="0.35"/>
+          <circle cx="0" cy="0" r="15" fill="#E8630A28"/>
+          <path d="M4.5,-11 L-4.5,2 L3.5,2 L-4.5,14 L7,-2 L-1,-2 Z" fill="#FF8C3A"/>
         </g>
 
-        {/* Floating energy particles */}
-        <circle cx="118" cy="88" r="4"   fill="#4CAF72" opacity="0.9" className="calc-graphic-flow"/>
-        <circle cx="140" cy="78" r="3"   fill="#4CAF72" opacity="0.7" className="calc-graphic-flow-2"/>
-        <circle cx="100" cy="84" r="2.5" fill="#E8630A" opacity="0.8" className="calc-graphic-flow-3"/>
+        {/* Floating energy orbs */}
+        <circle cx="119" cy="66"  r="6"   fill="#4CAF72" opacity="0.9" className="calc-graphic-flow"/>
+        <circle cx="148" cy="54"  r="4.5" fill="#4CAF72" opacity="0.7" className="calc-graphic-flow-2"/>
+        <circle cx="94"  cy="60"  r="3.5" fill="#E8630A" opacity="0.8" className="calc-graphic-flow-3"/>
 
         {/* Label pill */}
-        <rect x="72" y="274" width="96" height="24" rx="12"
-          fill="#2D7D4615" stroke="#2D7D46" strokeWidth="1.2"/>
-        <text x="120" y="290" textAnchor="middle" fontSize="10.5" fontWeight="700"
-          fill="#4CAF72" fontFamily="DM Sans, sans-serif">🏠 Residential</text>
+        <rect x="82" y="328" rx="15" width="114" height="28" fill="#2D7D461a" stroke="#2D7D46" strokeWidth="1.3"/>
+        <text x="139" y="346" textAnchor="middle" fontSize="11" fontWeight="700"
+          fill="#4CAF72" fontFamily="DM Sans, sans-serif">🏠 Smart Home</text>
       </svg>
 
       <div style={{ textAlign: "center", marginTop: 6 }}>
-        <div style={{ fontSize: 12, color: "#4CAF72", fontWeight: 700, letterSpacing: "0.06em" }}>Smart Home</div>
-        <div style={{ fontSize: 11, color: "#5C6B61", marginTop: 2 }}>Solar Rooftop System</div>
+        <div style={{ fontSize: 12, color: "#4CAF72", fontWeight: 700, letterSpacing: "0.06em" }}>Residential Solar</div>
+        <div style={{ fontSize: 10.5, color: "#5C6B61", marginTop: 2 }}>Rooftop PV System</div>
       </div>
     </div>
   );
@@ -1228,128 +1307,189 @@ function SmartHomeGraphic({ active }) {
 
 function SmartFactoryGraphic({ active }) {
   return (
-    <div style={{ width: "100%", maxWidth: 230, margin: "0 auto" }}>
-      <svg viewBox="0 0 240 310" fill="none" xmlns="http://www.w3.org/2000/svg"
+    <div style={{ width: "100%", maxWidth: 270, margin: "0 auto" }}>
+      <svg viewBox="0 0 270 370" fill="none" xmlns="http://www.w3.org/2000/svg"
         className="calc-graphic-float-delay" style={{ width: "100%", height: "auto" }}>
         <defs>
-          <radialGradient id="factoryAura" cx="50%" cy="85%" r="55%">
-            <stop offset="0%" stopColor="#E8630A" stopOpacity="0.22"/>
+          {/* ── Glow filters ── */}
+          <filter id="fGlow" x="-35%" y="-35%" width="170%" height="170%">
+            <feDropShadow dx="0" dy="14" stdDeviation="18" floodColor="#E8630A" floodOpacity="0.44"/>
+            <feDropShadow dx="0" dy="0"  stdDeviation="8"  floodColor="#FF8C3A" floodOpacity="0.26"/>
+          </filter>
+          <filter id="fGlowOn" x="-35%" y="-35%" width="170%" height="170%">
+            <feDropShadow dx="0" dy="16" stdDeviation="22" floodColor="#FF8C3A" floodOpacity="0.62"/>
+            <feDropShadow dx="0" dy="0"  stdDeviation="12" floodColor="#FF8C3A" floodOpacity="0.44"/>
+          </filter>
+          {/* ── Face gradients ── */}
+          <linearGradient id="fFront" x1="0%" y1="0%" x2="2%" y2="100%">
+            <stop offset="0%"   stopColor="#1e2e12" stopOpacity="0.96"/>
+            <stop offset="100%" stopColor="#0d180a" stopOpacity="0.99"/>
+          </linearGradient>
+          <linearGradient id="fSide" x1="0%" y1="0%" x2="100%" y2="55%">
+            <stop offset="0%"   stopColor="#161f0d" stopOpacity="0.96"/>
+            <stop offset="100%" stopColor="#090f07" stopOpacity="0.99"/>
+          </linearGradient>
+          <linearGradient id="fRoof" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%"   stopColor="#1c2e10" stopOpacity="0.92"/>
+            <stop offset="100%" stopColor="#2a4a16" stopOpacity="0.86"/>
+          </linearGradient>
+          {/* ── Glassmorphic surfaces ── */}
+          <linearGradient id="fWin" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stopColor="#E8630A" stopOpacity="0.26"/>
+            <stop offset="35%"  stopColor="#ffffff" stopOpacity="0.08"/>
+            <stop offset="100%" stopColor="#E8630A" stopOpacity="0.16"/>
+          </linearGradient>
+          <linearGradient id="fWinGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stopColor="#4CAF72" stopOpacity="0.22"/>
+            <stop offset="100%" stopColor="#4CAF72" stopOpacity="0.10"/>
+          </linearGradient>
+          {/* ── Ground aura ── */}
+          <radialGradient id="fAura" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="#E8630A" stopOpacity="0.34"/>
             <stop offset="100%" stopColor="#E8630A" stopOpacity="0"/>
           </radialGradient>
         </defs>
 
-        {/* Background aura */}
-        <ellipse cx="120" cy="268" rx="108" ry="38" fill="url(#factoryAura)"/>
-        <ellipse cx="120" cy="278" rx="78" ry="9" fill="#E8630A" opacity="0.11"/>
+        {/* Ground glow */}
+        <ellipse cx="135" cy="310" rx="124" ry="34" fill="url(#fAura)"/>
+        <ellipse cx="135" cy="320" rx="92"  ry="11" fill="#E8630A" opacity="0.14"/>
 
-        {/* === FACTORY BUILDING === */}
-        {/* Main body */}
-        <rect x="22" y="168" width="188" height="90" rx="4"
-          fill="#0f1a0e" stroke="#E8630A" strokeWidth="1.6"
-          className={active ? "calc-graphic-glow-orange" : ""}/>
+        {/* ══ 3-FACE FACTORY ══ */}
+        {/* Building: front=(28,176)→(214,176)→(214,286)→(28,286)
+                     right=(214,176)→(252,150)→(252,260)→(214,286)
+                     roof-top face (flat)=(28,176)→(214,176)→(252,150)→(66,150)
+                     depth offset: (+38,-26)
+        */}
+        <g filter={active ? "url(#fGlowOn)" : "url(#fGlow)"}>
 
-        {/* Side depth */}
-        <polygon points="210,168 232,153 232,244 210,258"
-          fill="#0a1208" stroke="#E8630A" strokeWidth="0.9" opacity="0.85"/>
+          {/* ── ROOF TOP FACE (flat — visible from above-right) ── */}
+          <polygon points="28,176 214,176 252,150 66,150" fill="url(#fRoof)"/>
+          {/* Roof edges */}
+          <line x1="28"  y1="176" x2="214" y2="176" stroke="#E8630A" strokeWidth="2.0" opacity="0.82"/>
+          <line x1="28"  y1="176" x2="66"  y2="150" stroke="#E8630A" strokeWidth="1.2" opacity="0.58"/>
+          <line x1="66"  y1="150" x2="252" y2="150" stroke="#4CAF72" strokeWidth="0.8" opacity="0.42"/>
+          <line x1="214" y1="176" x2="252" y2="150" stroke="#E8630A" strokeWidth="1.1" opacity="0.65"/>
 
-        {/* Flat roof face */}
-        <rect x="20" y="158" width="192" height="14" rx="3"
-          fill="#14241B" stroke={active ? "#FF8C3A" : "#E8630A"} strokeWidth="1.6"/>
-        {/* Roof side */}
-        <polygon points="212,158 234,143 234,157 212,172"
-          fill="#0d1c10" stroke="#E8630A" strokeWidth="0.9" opacity="0.8"/>
+          {/* ── Solar panels on roof (5 cols × 3 rows of parallelograms) ── */}
+          {/* Panel(c,r): top-left = (38 + c*34 + r*13, 173 - r*9.5)
+              Corners: TL, TR=(+32,0), BR=(+45,-9.5), BL=(+13,-9.5) */}
+          {Array.from({length: 5}, (_, c) =>
+            Array.from({length: 3}, (_, r) => {
+              const x = 38 + c * 34 + r * 13;
+              const y = 173 - r * 9.5;
+              const pts = `${x},${y} ${x+32},${y} ${x+45},${y-9} ${x+13},${y-9}`;
+              return (
+                <g key={`sp${c}${r}`}>
+                  <polygon points={pts} fill="#0c2840" stroke="#4CAF72" strokeWidth="0.95"/>
+                  {/* Panel top-edge sheen */}
+                  <line x1={x} y1={y} x2={x+32} y2={y} stroke="#4CAF72" strokeWidth="0.8" opacity="0.55"/>
+                </g>
+              );
+            })
+          )}
 
-        {/* Solar array on flat roof — 2 rows */}
-        {[28, 56, 84, 112, 140, 168].map((x, i) => (
-          <g key={i}>
-            <rect x={x} y={133} width={24} height={14} rx="1.5"
-              fill="#12345a" stroke="#4CAF72" strokeWidth="1"/>
-            <line x1={x+12} y1={133} x2={x+12} y2={147}
-              stroke="#4CAF7265" strokeWidth="0.55"/>
-            <line x1={x} y1={140} x2={x+24} y2={140}
-              stroke="#4CAF7265" strokeWidth="0.55"/>
-          </g>
-        ))}
-        {[28, 56, 84, 112, 140].map((x, i) => (
-          <rect key={i} x={x} y={149} width={24} height={9} rx="1.5"
-            fill="#12345a" stroke="#4CAF72" strokeWidth="0.7" opacity="0.7"/>
-        ))}
+          {/* ── CHIMNEYS (3D boxes rising from roof) ── */}
+          {/* Left chimney */}
+          <polygon points="80,106 94,106 94,150 80,150" fill="#121f0c" stroke="#E8630A" strokeWidth="1.3"/>
+          <polygon points="94,106 106,98 106,142 94,150"  fill="#0b1508" stroke="#E8630A" strokeWidth="1.0" opacity="0.9"/>
+          <polygon points="80,106 94,106 106,98 92,98"    fill="#E8630A" opacity="0.38"/>
+          {/* Chimney cap ring */}
+          <rect x="78"  y="102" width="18" height="7" rx="2" fill="#121f0c" stroke="#E8630A" strokeWidth="1.1"/>
 
-        {/* Chimneys */}
-        <rect x="50" y="112" width="14" height="48" rx="3"
-          fill="#14241B" stroke="#E8630A" strokeWidth="1.2"/>
-        <rect x="47" y="109" width="20" height="7" rx="2"
-          fill="#0f1a0e" stroke="#E8630A" strokeWidth="1"/>
+          {/* Right chimney */}
+          <polygon points="168,112 180,112 180,150 168,150" fill="#121f0c" stroke="#E8630A" strokeWidth="1.3"/>
+          <polygon points="180,112 190,106 190,144 180,150"  fill="#0b1508" stroke="#E8630A" strokeWidth="1.0" opacity="0.9"/>
+          <polygon points="168,112 180,112 190,106 178,106"  fill="#E8630A" opacity="0.32"/>
+          <rect x="166" y="108" width="16" height="7" rx="2" fill="#121f0c" stroke="#E8630A" strokeWidth="1.1"/>
 
-        <rect x="172" y="118" width="12" height="42" rx="3"
-          fill="#14241B" stroke="#E8630A" strokeWidth="1.2"/>
-        <rect x="169" y="115" width="18" height="7" rx="2"
-          fill="#0f1a0e" stroke="#E8630A" strokeWidth="1"/>
+          {/* ── RIGHT SIDE WALL ── */}
+          <polygon points="214,176 252,150 252,260 214,286" fill="url(#fSide)"/>
+          <line x1="252" y1="150" x2="252" y2="260" stroke="#E8630A" strokeWidth="0.9" opacity="0.44"/>
+          <line x1="214" y1="286" x2="252" y2="260" stroke="#E8630A" strokeWidth="0.8" opacity="0.40"/>
 
-        {/* Window strips */}
-        <rect x="30" y="182" width="62" height="12" rx="2"
-          fill="#2D7D4618" stroke="#4CAF72" strokeWidth="1"/>
-        <line x1="61" y1="182" x2="61" y2="194" stroke="#4CAF7240" strokeWidth="0.8"/>
-        {active && <rect x="31" y="183" width="28" height="10" rx="1" fill="#4CAF72" opacity="0.1"/>}
+          {/* ── FRONT WALL ── */}
+          <polygon points="28,176 214,176 214,286 28,286" fill="url(#fFront)"/>
+          {/* Glass shimmer overlay */}
+          <polygon points="28,176 214,176 214,286 28,286" fill="url(#fWin)" opacity="0.28"/>
+          {/* Wall edges */}
+          <line x1="28"  y1="176" x2="28"  y2="286" stroke="#E8630A" strokeWidth="1.0" opacity="0.44"/>
+          <line x1="214" y1="176" x2="214" y2="286" stroke="#E8630A" strokeWidth="1.4" opacity="0.65"/>
+          <line x1="28"  y1="286" x2="214" y2="286" stroke="#E8630A" strokeWidth="1.0" opacity="0.42"/>
 
-        <rect x="138" y="182" width="62" height="12" rx="2"
-          fill="#E8630A18" stroke="#E8630A" strokeWidth="1"/>
-        <line x1="169" y1="182" x2="169" y2="194" stroke="#E8630A40" strokeWidth="0.8"/>
+          {/* ── Window strips (horizontal industrial style) ── */}
+          {/* Top strip (green-tinted — clean energy) */}
+          <rect x="40" y="194" width="156" height="14" rx="2" fill="url(#fWinGreen)" stroke="#4CAF72" strokeWidth="1.1"/>
+          <line x1="118" y1="194" x2="118" y2="208" stroke="#4CAF7248" strokeWidth="0.9"/>
+          <line x1="42"  y1="195" x2="52"  y2="207" stroke="white"    strokeWidth="1.2" opacity="0.09"/>
 
-        <rect x="30" y="204" width="62" height="10" rx="2"
-          fill="#2D7D4610" stroke="#2D7D46" strokeWidth="0.8"/>
-        <rect x="138" y="204" width="62" height="10" rx="2"
-          fill="#E8630A10" stroke="#E8630A" strokeWidth="0.8"/>
+          {/* Mid strips */}
+          <rect x="40"  y="218" width="68" height="11" rx="2" fill="url(#fWin)" stroke="#E8630A" strokeWidth="0.9"/>
+          <rect x="120" y="218" width="68" height="11" rx="2" fill="url(#fWin)" stroke="#E8630A" strokeWidth="0.9"/>
 
-        {/* Large industrial doors */}
-        <rect x="90" y="210" width="58" height="48" rx="3"
-          fill="#0a1208" stroke="#E8630A" strokeWidth="1.5"/>
-        <line x1="119" y1="210" x2="119" y2="258" stroke="#E8630A" strokeWidth="0.8" opacity="0.45"/>
-        <rect x="91" y="219" width="27" height="4" rx="2" fill="#E8630A" opacity="0.22"/>
-        <rect x="120" y="219" width="27" height="4" rx="2" fill="#E8630A" opacity="0.22"/>
+          {/* Side wall strip */}
+          <polygon points="220,184 248,167 248,182 220,199" fill="url(#fWin)" stroke="#E8630A" strokeWidth="0.9" opacity="0.85"/>
 
-        {/* Ground line */}
-        <rect x="16" y="257" width="196" height="5" rx="2.5" fill="#E8630A" opacity="0.18"/>
+          {/* ── Large industrial roller door ── */}
+          <rect x="76" y="238" width="86" height="48" rx="3" fill="#0b1808" stroke="#E8630A" strokeWidth="1.8"/>
+          {/* Roller door horizontal slats */}
+          {[8,16,24,32,40].map((off, i) => (
+            <line key={i} x1="77" y1={238+off} x2="161" y2={238+off} stroke="#E8630A" strokeWidth="0.65" opacity="0.28"/>
+          ))}
+          <line x1="119" y1="238" x2="119" y2="286" stroke="#E8630A" strokeWidth="0.9" opacity="0.38"/>
+          {/* Door handles */}
+          <rect x="108" y="259" width="9" height="4" rx="2" fill="#E8630A" opacity="0.72"/>
+          <rect x="123" y="259" width="9" height="4" rx="2" fill="#E8630A" opacity="0.72"/>
 
-        {/* Smart connectivity nodes — top right */}
+          {/* ── Small side door ── */}
+          <rect x="175" y="248" width="26" height="38" rx="2" fill="#0b1808" stroke="#E8630A" strokeWidth="1.2"/>
+          <circle cx="199" cy="268" r="2.5" fill="#E8630A" opacity="0.75"/>
+
+          {/* Ground lines */}
+          <line x1="28"  y1="286" x2="214" y2="286" stroke="#E8630A" strokeWidth="1.0" opacity="0.38"/>
+          <line x1="214" y1="286" x2="252" y2="260" stroke="#E8630A" strokeWidth="0.8" opacity="0.38"/>
+        </g>
+
+        {/* ── Floating UI ── */}
+
+        {/* IoT node network — top-right */}
         <g className="calc-graphic-pulse">
-          <circle cx="200" cy="98" r="7" fill="none" stroke="#E8630A" strokeWidth="1.5"/>
-          <circle cx="200" cy="98" r="3" fill="#E8630A" opacity="0.85"/>
+          <circle cx="238" cy="110" r="10" fill="none" stroke="#E8630A" strokeWidth="1.8"/>
+          <circle cx="238" cy="110" r="4.5" fill="#E8630A" opacity="0.92"/>
         </g>
         <g className="calc-graphic-pulse-2">
-          <circle cx="222" cy="80" r="5" fill="none" stroke="#FF8C3A" strokeWidth="1.2"/>
-          <circle cx="222" cy="80" r="2" fill="#FF8C3A" opacity="0.85"/>
+          <circle cx="258" cy="88" r="8" fill="none" stroke="#FF8C3A" strokeWidth="1.5"/>
+          <circle cx="258" cy="88" r="3.5" fill="#FF8C3A" opacity="0.88"/>
         </g>
         <g className="calc-graphic-pulse-3">
-          <circle cx="212" cy="116" r="6" fill="none" stroke="#E8630A" strokeWidth="1.2"/>
-          <circle cx="212" cy="116" r="2.5" fill="#E8630A" opacity="0.75"/>
+          <circle cx="252" cy="130" r="8" fill="none" stroke="#E8630A" strokeWidth="1.4"/>
+          <circle cx="252" cy="130" r="3" fill="#E8630A" opacity="0.82"/>
         </g>
-        <line x1="200" y1="98" x2="222" y2="80"  stroke="#E8630A" strokeWidth="0.8" opacity="0.35"/>
-        <line x1="200" y1="98" x2="212" y2="116" stroke="#E8630A" strokeWidth="0.8" opacity="0.35"/>
-        <line x1="222" y1="80" x2="212" y2="116" stroke="#E8630A" strokeWidth="0.5" opacity="0.25"/>
+        {/* Node connector lines */}
+        <line x1="238" y1="110" x2="258" y2="88"  stroke="#E8630A" strokeWidth="1.0" opacity="0.40"/>
+        <line x1="238" y1="110" x2="252" y2="130" stroke="#E8630A" strokeWidth="1.0" opacity="0.40"/>
+        <line x1="258" y1="88"  x2="252" y2="130" stroke="#E8630A" strokeWidth="0.7" opacity="0.26"/>
 
-        {/* AI badge — top left */}
+        {/* ⚡ AI badge — top-left */}
         <g className="calc-graphic-pulse-3">
-          <circle cx="26" cy="104" r="20" fill="#2D7D4618"/>
-          <circle cx="26" cy="104" r="12" fill="#2D7D4628"/>
-          <text x="26" y="110" textAnchor="middle" fontSize="14" fill="#4CAF72">⚡</text>
+          <circle cx="22" cy="118" r="25" fill="#2D7D461a" stroke="#4CAF72" strokeWidth="1" strokeOpacity="0.38"/>
+          <circle cx="22" cy="118" r="16" fill="#2D7D4628"/>
+          <text x="22" y="125" textAnchor="middle" fontSize="17" fill="#4CAF72">⚡</text>
         </g>
 
-        {/* Floating energy particles */}
-        <circle cx="57" cy="104" r="3.5" fill="#E8630A" opacity="0.85" className="calc-graphic-flow"/>
-        <circle cx="66" cy="94"  r="2.5" fill="#E8630A" opacity="0.65" className="calc-graphic-flow-2"/>
-        <circle cx="50" cy="97"  r="2"   fill="#FF8C3A" opacity="0.75" className="calc-graphic-flow-3"/>
+        {/* Floating energy orbs (from chimneys) */}
+        <circle cx="87"  cy="92"  r="5.5" fill="#E8630A" opacity="0.9" className="calc-graphic-flow"/>
+        <circle cx="100" cy="80"  r="4"   fill="#E8630A" opacity="0.7" className="calc-graphic-flow-2"/>
+        <circle cx="74"  cy="86"  r="3"   fill="#FF8C3A" opacity="0.8" className="calc-graphic-flow-3"/>
 
         {/* Label pill */}
-        <rect x="68" y="274" width="104" height="24" rx="12"
-          fill="#E8630A12" stroke="#E8630A" strokeWidth="1.2"/>
-        <text x="120" y="290" textAnchor="middle" fontSize="10.5" fontWeight="700"
-          fill="#FF8C3A" fontFamily="DM Sans, sans-serif">🏭 Industrial</text>
+        <rect x="72" y="330" rx="15" width="126" height="28" fill="#E8630A12" stroke="#E8630A" strokeWidth="1.3"/>
+        <text x="135" y="348" textAnchor="middle" fontSize="11" fontWeight="700"
+          fill="#FF8C3A" fontFamily="DM Sans, sans-serif">🏭 Smart Factory</text>
       </svg>
 
       <div style={{ textAlign: "center", marginTop: 6 }}>
-        <div style={{ fontSize: 12, color: "#FF8C3A", fontWeight: 700, letterSpacing: "0.06em" }}>Smart Factory</div>
-        <div style={{ fontSize: 11, color: "#5C6B61", marginTop: 2 }}>Industrial Solar EPC</div>
+        <div style={{ fontSize: 12, color: "#FF8C3A", fontWeight: 700, letterSpacing: "0.06em" }}>Industrial Solar</div>
+        <div style={{ fontSize: 10.5, color: "#5C6B61", marginTop: 2 }}>EPC Solar System</div>
       </div>
     </div>
   );
@@ -1415,7 +1555,7 @@ function Calculator_({ lang }) {
 
           {/* Left column — Smart Home graphic (hidden on mobile) */}
           {step !== 5 && (
-            <div className="calc-side-graphic" style={{ flex: "0 0 210px" }}>
+            <div className="calc-side-graphic" style={{ flex: "0 0 252px" }}>
               <SmartHomeGraphic active={type === "residential"} />
             </div>
           )}
@@ -1829,7 +1969,7 @@ function Calculator_({ lang }) {
 
           {/* Right column — Smart Factory graphic (hidden on mobile) */}
           {step !== 5 && (
-            <div className="calc-side-graphic" style={{ flex: "0 0 210px" }}>
+            <div className="calc-side-graphic" style={{ flex: "0 0 252px" }}>
               <SmartFactoryGraphic active={type === "industrial"} />
             </div>
           )}
