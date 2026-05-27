@@ -20,7 +20,7 @@ const content = {
     solutionsTitle: "บริการโซลาร์เซลล์ครบวงจร",
     solutionsDesc: "ดูแลครอบคลุมตั้งแต่การให้คำปรึกษาจนถึงการส่งมอบงาน ผ่านเครือข่ายพันธมิตรที่ได้มาตรฐานระดับสากล",
     calcTitle: "คำนวณความคุ้มค่าของโซลาร์เซลล์",
-    calcDesc: "อ้างอิงจากอัตราค่าไฟฟ้าในไทย 4.7 บาท/หน่วย",
+    calcDesc: "อ้างอิงอัตราค่าไฟ: บ้านพักอาศัย ฿4.2/หน่วย • ธุรกิจ/อุตสาหกรรม ฿4.7/หน่วย",
     btnCalc: "คำนวณจุดคุ้มทุน",
     nav: ["หน้าหลัก", "เครื่องคำนวณ", "พันธมิตร", "ติดต่อเรา"],
     resTitle: "สำหรับที่พักอาศัย",
@@ -62,7 +62,7 @@ const content = {
     solutionsTitle: "End-to-End Solar Solutions",
     solutionsDesc: "From consultation to commissioning, we handle every step with our vetted partner network.",
     calcTitle: "Know Your Solar Returns",
-    calcDesc: "Based on Thai energy rates of ฿4.7/kWh",
+    calcDesc: "Thai rates — Residential ฿4.2/kWh • Industrial ฿4.7/kWh",
     btnCalc: "Calculate ROI",
     nav: ["Home", "Calculator", "Partners", "Support"],
     resTitle: "Residential",
@@ -112,17 +112,25 @@ const C = {
   };
 
 /* ─── SOLAR CALC LOGIC ──────────────────────────────────────── */
-const TARIFF = 4.7; // THB/kWh Thai rate
+// อัตราค่าไฟแยกตามประเภทลูกค้า (THB/kWh)
+//   - Residential: ~4.2 บาท/หน่วย (เฉลี่ย MEA/PEA บ้านพักอาศัย)
+//   - Industrial:  ~4.7 บาท/หน่วย (เฉลี่ย TOU On-Peak + Demand Charge)
+const TARIFF_BY_TYPE = { residential: 4.2, industrial: 4.7 };
+const getTariff = (type) => TARIFF_BY_TYPE[type] ?? 4.4; // fallback กลางๆ
+
 const SOLAR_HOURS = 4.5; // peak sun hours/day Thailand
 const COST_PER_KWP = 35000; // THB
 const PANEL_EFFICIENCY = 0.20;
 
 function calcSolar({ bill, roofDir = "south", type, dayUsage = 50 }) {
+  // ── เรตค่าไฟตามประเภทลูกค้า ──
+  const tariff = getTariff(type);
+
   // ปรับ Solar Hours ตามทิศทางหลังคา (ไทยอยู่ซีกโลกเหนือ → หันใต้ดีที่สุด)
   const roofDirMultiplier = { south: 1.0, eastwest: 0.87, north: 0.75 };
   const effectiveSolarHours = SOLAR_HOURS * (roofDirMultiplier[roofDir] ?? 1.0);
 
-  const kwhPerMonth = bill / TARIFF;
+  const kwhPerMonth = bill / tariff;
   const kwhPerYear = kwhPerMonth * 12;
   const kwpNeeded = Math.ceil(kwhPerYear / (effectiveSolarHours * 365));
 
@@ -136,7 +144,7 @@ function calcSolar({ bill, roofDir = "south", type, dayUsage = 50 }) {
   // On-Grid ใช้ไฟกลางวันได้เต็มที่ กลางคืนต้องซื้อจากกริด
   // Hybrid ใช้ไฟทั้งวันได้ (กลางคืนใช้จากแบตเตอรี่)
   const utilization = needsBattery ? 0.92 : (dayUsage / 100) * 0.95 + 0.05;
-  const annualSavings = kwhPerYear * TARIFF * utilization;
+  const annualSavings = kwhPerYear * tariff * utilization;
 
   const roiYears = systemCost / annualSavings;
   const panels = Math.ceil(kwpNeeded / 0.4); // ~400W panels
@@ -154,7 +162,7 @@ function calcSolar({ bill, roofDir = "south", type, dayUsage = 50 }) {
     };
   });
 
-  return { kwpNeeded, systemCost, annualSavings, roiYears, panels, co2Saved, projections, needsBattery };
+  return { kwpNeeded, systemCost, annualSavings, roiYears, panels, co2Saved, projections, needsBattery, tariff };
 }
 
 // AI-style recommendation logic ตามพฤติกรรมการใช้ไฟ
