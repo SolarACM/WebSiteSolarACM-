@@ -1116,6 +1116,245 @@ function ExecutiveDashboard({ result, isTh }) {
   );
 }
 
+/* ─── CALCULATOR SIDE GRAPHICS ─────────────────────────────── */
+function SmartHomeGraphic({ active }) {
+  return (
+    <div style={{ width: "100%", maxWidth: 230, margin: "0 auto" }}>
+      <svg viewBox="0 0 240 310" fill="none" xmlns="http://www.w3.org/2000/svg"
+        className="calc-graphic-float" style={{ width: "100%", height: "auto" }}>
+        <defs>
+          <radialGradient id="homeAura" cx="50%" cy="85%" r="55%">
+            <stop offset="0%" stopColor="#2D7D46" stopOpacity="0.28"/>
+            <stop offset="100%" stopColor="#2D7D46" stopOpacity="0"/>
+          </radialGradient>
+        </defs>
+
+        {/* Background aura */}
+        <ellipse cx="120" cy="268" rx="105" ry="38" fill="url(#homeAura)"/>
+        <ellipse cx="120" cy="278" rx="72" ry="9" fill="#2D7D46" opacity="0.14"/>
+
+        {/* Left tree */}
+        <rect x="16" y="214" width="7" height="38" rx="3.5" fill="#1a4a28"/>
+        <circle cx="19.5" cy="200" r="22" fill="#2D7D46" opacity="0.75"/>
+        <circle cx="19.5" cy="191" r="15" fill="#4CAF72" opacity="0.55"/>
+
+        {/* Right tree (smaller) */}
+        <rect x="214" y="228" width="6" height="24" rx="3" fill="#1a4a28"/>
+        <circle cx="217" cy="218" r="15" fill="#2D7D46" opacity="0.65"/>
+        <circle cx="217" cy="211" r="10" fill="#4CAF72" opacity="0.5"/>
+
+        {/* === HOUSE BODY === */}
+        <rect x="60" y="170" width="132" height="88" rx="5"
+          fill="#0f1f14" stroke="#2D7D46" strokeWidth="1.6"
+          className={active ? "calc-graphic-glow" : ""}/>
+
+        {/* House side wall (3-D depth) */}
+        <polygon points="192,170 222,150 222,234 192,258"
+          fill="#0a1610" stroke="#2D7D46" strokeWidth="0.9" opacity="0.9"/>
+
+        {/* Roof (front) */}
+        <polygon points="46,172 120,106 194,172"
+          fill="#14241B" stroke={active ? "#4CAF72" : "#2D7D46"} strokeWidth="2"/>
+        {/* Roof (side) */}
+        <polygon points="194,172 224,150 198,106 120,106"
+          fill="#0d1c10" stroke="#2D7D46" strokeWidth="0.9" opacity="0.85"/>
+
+        {/* Solar panels on roof */}
+        {[82, 108, 134, 160].map((x, i) => (
+          <g key={i}>
+            <rect x={x} y={i % 2 === 1 ? 126 : 132} width={22} height={15}
+              rx="2" fill="#12345a" stroke="#4CAF72" strokeWidth="1.1"/>
+            <line x1={x+11} y1={i%2===1?126:132} x2={x+11} y2={i%2===1?141:147}
+              stroke="#4CAF7270" strokeWidth="0.6"/>
+            <line x1={x} y1={i%2===1?133:139} x2={x+22} y2={i%2===1?133:139}
+              stroke="#4CAF7270" strokeWidth="0.6"/>
+          </g>
+        ))}
+
+        {/* Windows */}
+        {[[72,183],[148,183]].map(([x,y],i) => (
+          <g key={i}>
+            <rect x={x} y={y} width={32} height={26} rx="3"
+              fill="#2D7D4622" stroke="#4CAF72" strokeWidth="1.3"/>
+            <line x1={x+16} y1={y} x2={x+16} y2={y+26} stroke="#4CAF7255" strokeWidth="0.8"/>
+            <line x1={x} y1={y+13} x2={x+32} y2={y+13} stroke="#4CAF7255" strokeWidth="0.8"/>
+            {active && <rect x={x+1} y={y+1} width={14} height={11} rx="1" fill="#4CAF72" opacity="0.13"/>}
+          </g>
+        ))}
+
+        {/* Door */}
+        <rect x="108" y="220" width="36" height="38" rx="4"
+          fill="#1a2e1f" stroke="#4CAF72" strokeWidth="1.3"/>
+        <circle cx="138" cy="240" r="2.5" fill="#4CAF72" opacity="0.8"/>
+
+        {/* Ground line */}
+        <rect x="50" y="257" width="152" height="5" rx="2.5" fill="#2D7D46" opacity="0.22"/>
+
+        {/* WiFi / smart badge — top-left */}
+        <g className="calc-graphic-pulse">
+          <circle cx="46" cy="104" r="20" fill="#2D7D4618"/>
+          <circle cx="46" cy="104" r="12" fill="#2D7D4628"/>
+          <path d="M38,108 Q46,98 54,108" stroke="#4CAF72" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
+          <path d="M41,112 Q46,105 51,112" stroke="#4CAF72" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
+          <circle cx="46" cy="115" r="2.5" fill="#4CAF72"/>
+        </g>
+
+        {/* Lightning badge — top-right */}
+        <g transform="translate(192,92)" className="calc-graphic-pulse-2">
+          <circle cx="0" cy="0" r="18" fill="#E8630A1a"/>
+          <circle cx="0" cy="0" r="10" fill="#E8630A28"/>
+          <path d="M3,-9 L-3,1 L2,1 L-3,11 L5,-1 L0,-1 Z" fill="#FF8C3A"/>
+        </g>
+
+        {/* Floating energy particles */}
+        <circle cx="118" cy="88" r="4"   fill="#4CAF72" opacity="0.9" className="calc-graphic-flow"/>
+        <circle cx="140" cy="78" r="3"   fill="#4CAF72" opacity="0.7" className="calc-graphic-flow-2"/>
+        <circle cx="100" cy="84" r="2.5" fill="#E8630A" opacity="0.8" className="calc-graphic-flow-3"/>
+
+        {/* Label pill */}
+        <rect x="72" y="274" width="96" height="24" rx="12"
+          fill="#2D7D4615" stroke="#2D7D46" strokeWidth="1.2"/>
+        <text x="120" y="290" textAnchor="middle" fontSize="10.5" fontWeight="700"
+          fill="#4CAF72" fontFamily="DM Sans, sans-serif">🏠 Residential</text>
+      </svg>
+
+      <div style={{ textAlign: "center", marginTop: 6 }}>
+        <div style={{ fontSize: 12, color: "#4CAF72", fontWeight: 700, letterSpacing: "0.06em" }}>Smart Home</div>
+        <div style={{ fontSize: 11, color: "#5C6B61", marginTop: 2 }}>Solar Rooftop System</div>
+      </div>
+    </div>
+  );
+}
+
+function SmartFactoryGraphic({ active }) {
+  return (
+    <div style={{ width: "100%", maxWidth: 230, margin: "0 auto" }}>
+      <svg viewBox="0 0 240 310" fill="none" xmlns="http://www.w3.org/2000/svg"
+        className="calc-graphic-float-delay" style={{ width: "100%", height: "auto" }}>
+        <defs>
+          <radialGradient id="factoryAura" cx="50%" cy="85%" r="55%">
+            <stop offset="0%" stopColor="#E8630A" stopOpacity="0.22"/>
+            <stop offset="100%" stopColor="#E8630A" stopOpacity="0"/>
+          </radialGradient>
+        </defs>
+
+        {/* Background aura */}
+        <ellipse cx="120" cy="268" rx="108" ry="38" fill="url(#factoryAura)"/>
+        <ellipse cx="120" cy="278" rx="78" ry="9" fill="#E8630A" opacity="0.11"/>
+
+        {/* === FACTORY BUILDING === */}
+        {/* Main body */}
+        <rect x="22" y="168" width="188" height="90" rx="4"
+          fill="#0f1a0e" stroke="#E8630A" strokeWidth="1.6"
+          className={active ? "calc-graphic-glow-orange" : ""}/>
+
+        {/* Side depth */}
+        <polygon points="210,168 232,153 232,244 210,258"
+          fill="#0a1208" stroke="#E8630A" strokeWidth="0.9" opacity="0.85"/>
+
+        {/* Flat roof face */}
+        <rect x="20" y="158" width="192" height="14" rx="3"
+          fill="#14241B" stroke={active ? "#FF8C3A" : "#E8630A"} strokeWidth="1.6"/>
+        {/* Roof side */}
+        <polygon points="212,158 234,143 234,157 212,172"
+          fill="#0d1c10" stroke="#E8630A" strokeWidth="0.9" opacity="0.8"/>
+
+        {/* Solar array on flat roof — 2 rows */}
+        {[28, 56, 84, 112, 140, 168].map((x, i) => (
+          <g key={i}>
+            <rect x={x} y={133} width={24} height={14} rx="1.5"
+              fill="#12345a" stroke="#4CAF72" strokeWidth="1"/>
+            <line x1={x+12} y1={133} x2={x+12} y2={147}
+              stroke="#4CAF7265" strokeWidth="0.55"/>
+            <line x1={x} y1={140} x2={x+24} y2={140}
+              stroke="#4CAF7265" strokeWidth="0.55"/>
+          </g>
+        ))}
+        {[28, 56, 84, 112, 140].map((x, i) => (
+          <rect key={i} x={x} y={149} width={24} height={9} rx="1.5"
+            fill="#12345a" stroke="#4CAF72" strokeWidth="0.7" opacity="0.7"/>
+        ))}
+
+        {/* Chimneys */}
+        <rect x="50" y="112" width="14" height="48" rx="3"
+          fill="#14241B" stroke="#E8630A" strokeWidth="1.2"/>
+        <rect x="47" y="109" width="20" height="7" rx="2"
+          fill="#0f1a0e" stroke="#E8630A" strokeWidth="1"/>
+
+        <rect x="172" y="118" width="12" height="42" rx="3"
+          fill="#14241B" stroke="#E8630A" strokeWidth="1.2"/>
+        <rect x="169" y="115" width="18" height="7" rx="2"
+          fill="#0f1a0e" stroke="#E8630A" strokeWidth="1"/>
+
+        {/* Window strips */}
+        <rect x="30" y="182" width="62" height="12" rx="2"
+          fill="#2D7D4618" stroke="#4CAF72" strokeWidth="1"/>
+        <line x1="61" y1="182" x2="61" y2="194" stroke="#4CAF7240" strokeWidth="0.8"/>
+        {active && <rect x="31" y="183" width="28" height="10" rx="1" fill="#4CAF72" opacity="0.1"/>}
+
+        <rect x="138" y="182" width="62" height="12" rx="2"
+          fill="#E8630A18" stroke="#E8630A" strokeWidth="1"/>
+        <line x1="169" y1="182" x2="169" y2="194" stroke="#E8630A40" strokeWidth="0.8"/>
+
+        <rect x="30" y="204" width="62" height="10" rx="2"
+          fill="#2D7D4610" stroke="#2D7D46" strokeWidth="0.8"/>
+        <rect x="138" y="204" width="62" height="10" rx="2"
+          fill="#E8630A10" stroke="#E8630A" strokeWidth="0.8"/>
+
+        {/* Large industrial doors */}
+        <rect x="90" y="210" width="58" height="48" rx="3"
+          fill="#0a1208" stroke="#E8630A" strokeWidth="1.5"/>
+        <line x1="119" y1="210" x2="119" y2="258" stroke="#E8630A" strokeWidth="0.8" opacity="0.45"/>
+        <rect x="91" y="219" width="27" height="4" rx="2" fill="#E8630A" opacity="0.22"/>
+        <rect x="120" y="219" width="27" height="4" rx="2" fill="#E8630A" opacity="0.22"/>
+
+        {/* Ground line */}
+        <rect x="16" y="257" width="196" height="5" rx="2.5" fill="#E8630A" opacity="0.18"/>
+
+        {/* Smart connectivity nodes — top right */}
+        <g className="calc-graphic-pulse">
+          <circle cx="200" cy="98" r="7" fill="none" stroke="#E8630A" strokeWidth="1.5"/>
+          <circle cx="200" cy="98" r="3" fill="#E8630A" opacity="0.85"/>
+        </g>
+        <g className="calc-graphic-pulse-2">
+          <circle cx="222" cy="80" r="5" fill="none" stroke="#FF8C3A" strokeWidth="1.2"/>
+          <circle cx="222" cy="80" r="2" fill="#FF8C3A" opacity="0.85"/>
+        </g>
+        <g className="calc-graphic-pulse-3">
+          <circle cx="212" cy="116" r="6" fill="none" stroke="#E8630A" strokeWidth="1.2"/>
+          <circle cx="212" cy="116" r="2.5" fill="#E8630A" opacity="0.75"/>
+        </g>
+        <line x1="200" y1="98" x2="222" y2="80"  stroke="#E8630A" strokeWidth="0.8" opacity="0.35"/>
+        <line x1="200" y1="98" x2="212" y2="116" stroke="#E8630A" strokeWidth="0.8" opacity="0.35"/>
+        <line x1="222" y1="80" x2="212" y2="116" stroke="#E8630A" strokeWidth="0.5" opacity="0.25"/>
+
+        {/* AI badge — top left */}
+        <g className="calc-graphic-pulse-3">
+          <circle cx="26" cy="104" r="20" fill="#2D7D4618"/>
+          <circle cx="26" cy="104" r="12" fill="#2D7D4628"/>
+          <text x="26" y="110" textAnchor="middle" fontSize="14" fill="#4CAF72">⚡</text>
+        </g>
+
+        {/* Floating energy particles */}
+        <circle cx="57" cy="104" r="3.5" fill="#E8630A" opacity="0.85" className="calc-graphic-flow"/>
+        <circle cx="66" cy="94"  r="2.5" fill="#E8630A" opacity="0.65" className="calc-graphic-flow-2"/>
+        <circle cx="50" cy="97"  r="2"   fill="#FF8C3A" opacity="0.75" className="calc-graphic-flow-3"/>
+
+        {/* Label pill */}
+        <rect x="68" y="274" width="104" height="24" rx="12"
+          fill="#E8630A12" stroke="#E8630A" strokeWidth="1.2"/>
+        <text x="120" y="290" textAnchor="middle" fontSize="10.5" fontWeight="700"
+          fill="#FF8C3A" fontFamily="DM Sans, sans-serif">🏭 Industrial</text>
+      </svg>
+
+      <div style={{ textAlign: "center", marginTop: 6 }}>
+        <div style={{ fontSize: 12, color: "#FF8C3A", fontWeight: 700, letterSpacing: "0.06em" }}>Smart Factory</div>
+        <div style={{ fontSize: 11, color: "#5C6B61", marginTop: 2 }}>Industrial Solar EPC</div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── ROI CALCULATOR ────────────────────────────────────────── */
 function Calculator_({ lang }) {
   const [step, setStep] = useState(1);
@@ -1171,29 +1410,42 @@ function Calculator_({ lang }) {
           <p style={{ color: C.textMuted, fontSize: 17, marginTop: 16 }}>{content[lang].calcDesc}</p>
         </div>
 
-        {/* Progress bar */}
-        <div className="calc-progress" style={{ display: "flex", justifyContent: "center", gap: 0, marginBottom: 48, flexWrap: "wrap" }}>
-          {[1, 2, 3, 4, 5].map((s, i) => (
-            <div key={s} style={{ display: "flex", alignItems: "center" }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: "50%",
-                background: step >= s ? `linear-gradient(135deg, ${C.green}, ${C.greenLight})` : C.darkCard,
-                border: `2px solid ${step >= s ? C.green : C.border}`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 14, fontWeight: 700, color: step >= s ? "white" : C.textMuted,
-                transition: "all 0.3s"
-              }}>{step > s ? <CheckCircle size={18} /> : s}</div>
-              {i < 4 && <div style={{ width: 56, height: 2, background: step > s ? C.green : C.border, transition: "background 0.3s" }} />}
-            </div>
-          ))}
-        </div>
+        {/* ── 3-column layout: [Home graphic] [Form] [Factory graphic] ── */}
+        <div className="calc-layout">
 
-        <div className="calc-card" style={{
-          maxWidth: step === 5 ? "100%" : 580,
-          margin: "0 auto",
-          background: C.darkCard, border: `1px solid ${C.border}`,
-          borderRadius: 20, padding: 40
-        }}>
+          {/* Left column — Smart Home graphic (hidden on mobile) */}
+          {step !== 5 && (
+            <div className="calc-side-graphic" style={{ flex: "0 0 210px" }}>
+              <SmartHomeGraphic active={type === "residential"} />
+            </div>
+          )}
+
+          {/* Center column — Progress bar + Calculator card */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+
+            {/* Progress bar */}
+            <div className="calc-progress" style={{ display: "flex", justifyContent: "center", gap: 0, marginBottom: 48, flexWrap: "wrap" }}>
+              {[1, 2, 3, 4, 5].map((s, i) => (
+                <div key={s} style={{ display: "flex", alignItems: "center" }}>
+                  <div style={{
+                    width: 36, height: 36, borderRadius: "50%",
+                    background: step >= s ? `linear-gradient(135deg, ${C.green}, ${C.greenLight})` : C.darkCard,
+                    border: `2px solid ${step >= s ? C.green : C.border}`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 14, fontWeight: 700, color: step >= s ? "white" : C.textMuted,
+                    transition: "all 0.3s"
+                  }}>{step > s ? <CheckCircle size={18} /> : s}</div>
+                  {i < 4 && <div style={{ width: 56, height: 2, background: step > s ? C.green : C.border, transition: "background 0.3s" }} />}
+                </div>
+              ))}
+            </div>
+
+            <div className="calc-card" style={{
+              maxWidth: step === 5 ? "100%" : 580,
+              margin: "0 auto",
+              background: C.darkCard, border: `1px solid ${C.border}`,
+              borderRadius: 20, padding: 40
+            }}>
           {/* Step 1 */}
           {step === 1 && (
             <div>
@@ -1572,7 +1824,17 @@ function Calculator_({ lang }) {
               </div>
             </div>
           )}
-        </div>
+          </div> {/* ── end calc-card ── */}
+          </div> {/* ── end center column ── */}
+
+          {/* Right column — Smart Factory graphic (hidden on mobile) */}
+          {step !== 5 && (
+            <div className="calc-side-graphic" style={{ flex: "0 0 210px" }}>
+              <SmartFactoryGraphic active={type === "industrial"} />
+            </div>
+          )}
+
+        </div> {/* ── end calc-layout ── */}
       </div>
     </section>
   );
