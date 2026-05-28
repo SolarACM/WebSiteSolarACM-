@@ -2189,37 +2189,98 @@ function Support() {
 }
 
 /* ─── PORTFOLIO TEASER ──────────────────────────────────────── */
+/* ── Portfolio project card (image + overlay, hover zoom) ── */
+function ProjectCard({ p, isTh }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        position: "relative", borderRadius: 18, overflow: "hidden", aspectRatio: "3 / 4",
+        cursor: "pointer", border: `1px solid ${C.border}`,
+        boxShadow: hover ? "0 26px 54px rgba(20,36,27,0.30)" : "0 10px 30px rgba(20,36,27,0.12)",
+        transform: hover ? "translateY(-6px)" : "translateY(0)",
+        transition: "transform 0.35s ease, box-shadow 0.35s ease",
+      }}
+    >
+      {/* รูปหน้างานจริง */}
+      <img src={p.img} alt={isTh ? p.nameTh : p.nameEn} loading="lazy"
+        style={{
+          position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
+          transform: hover ? "scale(1.08)" : "scale(1)", transition: "transform 0.6s ease",
+        }} />
+      {/* gradient overlay ให้ตัวอักษรอ่านง่าย */}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(8,16,12,0.94) 0%, rgba(8,16,12,0.55) 32%, rgba(8,16,12,0.05) 60%)" }} />
+      {/* ป้ายหมวดหมู่ มุมบนซ้าย */}
+      <div style={{
+        position: "absolute", top: 14, left: 14, background: p.color, color: "white",
+        fontSize: 11, fontWeight: 700, padding: "5px 12px", borderRadius: 20,
+        letterSpacing: "0.03em", boxShadow: "0 4px 14px rgba(0,0,0,0.28)",
+      }}>
+        {isTh ? p.catTh : p.catEn}
+      </div>
+      {/* ชื่อโครงการ + ขนาดระบบ ด้านล่าง */}
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, padding: "22px 18px" }}>
+        <div style={{ color: "white", fontWeight: 700, fontSize: 16, lineHeight: 1.35, marginBottom: 10, textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}>
+          {isTh ? p.nameTh : p.nameEn}
+        </div>
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: 6,
+          background: "rgba(255,255,255,0.12)", backdropFilter: "blur(6px)",
+          border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10,
+          padding: "5px 12px", color: "#FF8C3A", fontWeight: 800, fontSize: 14.5,
+          fontFeatureSettings: '"tnum" 1',
+        }}>
+          <Zap size={15} /> {p.size}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PortfolioTeaser({ lang }) {
-  const t = {
-    th: {
-      tag: "ผลงานของเรา",
-      title: "โครงการที่เราภาคภูมิใจ",
-      desc: "ผลงานครอบคลุมทุกประเภท ตั้งแต่บ้านพักอาศัยจนถึง Solar Farm ขนาด 1 MWp",
-      btn: "ดูผลงานทั้งหมด",
-      highlights: [
-        { type: "residential", label: "บ้านพักอาศัย", kw: "5–12 kWp", icon: Home, color: "#2D7D46" },
-        { type: "industrial", label: "ธุรกิจ/อุตสาหกรรม", kw: "50–200 kWp", icon: Building2, color: "#1a5e8a" },
-        { type: "bess", label: "ระบบกักเก็บพลังงาน", kw: "BESS + Solar", icon: Battery, color: "#7B3FA0" },
-        { type: "epc", label: "EPC / Solar Farm", kw: "500 kWp – 1 MWp", icon: Globe, color: "#E8630A" },
-      ],
-    },
-    en: {
-      tag: "Our Projects",
-      title: "Projects We're Proud Of",
-      desc: "Covering all types from residential to utility-scale Solar Farm at 1 MWp",
-      btn: "View All Projects",
-      highlights: [
-        { type: "residential", label: "Residential", kw: "5–12 kWp", icon: Home, color: "#2D7D46" },
-        { type: "industrial", label: "Business / Industrial", kw: "50–200 kWp", icon: Building2, color: "#1a5e8a" },
-        { type: "bess", label: "Energy Storage (BESS)", kw: "BESS + Solar", icon: Battery, color: "#7B3FA0" },
-        { type: "epc", label: "EPC / Solar Farm", kw: "500 kWp – 1 MWp", icon: Globe, color: "#E8630A" },
-      ],
-    },
+  const isTh = lang !== "en";
+  const tx = {
+    tag: isTh ? "ผลงานของเรา" : "Our Projects",
+    title: isTh ? "โครงการที่เราภาคภูมิใจ" : "Projects We're Proud Of",
+    desc: isTh
+      ? "ผลงานครอบคลุมทุกประเภท ตั้งแต่บ้านพักอาศัยจนถึง Solar Farm ขนาด 1 MWp"
+      : "Covering all types from residential to utility-scale Solar Farm at 1 MWp",
+    btn: isTh ? "ดูผลงานทั้งหมด" : "View All Projects",
   };
-  const tx = t[lang] || t.th;
+
+  // ─── Mock Data: แก้ชื่อ / ขนาด / พาธรูป ได้ง่ายตรงนี้ ───
+  const mockProjects = [
+    {
+      img: "/portfolio/project-10.jpg",
+      nameTh: "โรงงานผลิตอาหาร จ.นครปฐม", nameEn: "Food Manufacturing Plant, Nakhon Pathom",
+      size: "973 kWp", catTh: "อุตสาหกรรมอาหาร", catEn: "Food Industry", color: "#1a5e8a",
+    },
+    {
+      img: "/portfolio/project-09.jpg",
+      nameTh: "คลังสินค้าห้องเย็น จ.สมุทรสาคร", nameEn: "Cold Storage Warehouse, Samut Sakhon",
+      size: "857 kWp", catTh: "ห้องเย็น / โลจิสติกส์", catEn: "Cold Storage", color: "#2D7D46",
+    },
+    {
+      img: "/portfolio/project-03.jpg",
+      nameTh: "โรงงานอุตสาหกรรมการผลิต จ.สมุทรปราการ", nameEn: "Manufacturing Plant, Samut Prakan",
+      size: "929 kWp", catTh: "EPC ครบวงจร", catEn: "Turnkey EPC", color: "#E8630A",
+    },
+    {
+      img: "/portfolio/project-04.jpg",
+      nameTh: "โรงงานเฟอร์นิเจอร์ส่งออก จ.สมุทรสาคร", nameEn: "Export Furniture Factory, Samut Sakhon",
+      size: "525 kWp", catTh: "PPA Project", catEn: "PPA Project", color: "#7B3FA0",
+    },
+  ];
 
   return (
     <section style={{ padding: "100px 2rem", background: C.midDark }}>
+      <style>{`
+        .pf-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin-bottom:48px; }
+        @media (max-width:1024px){ .pf-grid{ grid-template-columns:repeat(2,1fr); gap:18px; } }
+        @media (max-width:600px){ .pf-grid{ grid-template-columns:1fr; } }
+      `}</style>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 52 }}>
           <div style={{ color: C.greenLight, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>{tx.tag}</div>
@@ -2231,22 +2292,9 @@ function PortfolioTeaser({ lang }) {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20, marginBottom: 40 }}>
-          {tx.highlights.map(({ label, kw, icon: Icon, color }) => (
-            <div key={label} style={{
-              background: C.darkCard, border: `1px solid ${C.border}`,
-              borderRadius: 14, padding: "24px 20px", textAlign: "center",
-              transition: "transform 0.25s, border-color 0.25s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = `${color}50`; e.currentTarget.style.transform = "translateY(-4px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = "translateY(0)"; }}
-            >
-              <div style={{ width: 52, height: 52, borderRadius: 12, background: `${color}18`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
-                <Icon size={26} color={color} />
-              </div>
-              <div style={{ color: C.text, fontWeight: 600, fontSize: 15, marginBottom: 6 }}>{label}</div>
-              <div style={{ color, fontSize: 13, fontWeight: 500 }}>{kw}</div>
-            </div>
+        <div className="pf-grid">
+          {mockProjects.map((p, i) => (
+            <ProjectCard key={i} p={p} isTh={isTh} />
           ))}
         </div>
 
