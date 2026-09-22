@@ -1,7 +1,8 @@
 import SolutionPage from "../_components/solution-page";
 
 const data = {
-  image: "/images/industrial/ind-1.jpg",
+  image: "/portfolio/project-05.jpg",
+  imagePosition: "center 44%",
   th: {
     kicker: "Commercial & Industrial",
     title: "โซลาร์สำหรับธุรกิจและโรงงาน ที่ต้องคุยด้วยข้อมูลการดำเนินงานจริง",

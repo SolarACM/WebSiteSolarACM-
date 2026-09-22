@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, ClipboardCheck, Network, Search, Wrench } from "lucide-react";
-import { PageShell } from "./site-shell";
+import { PageShell, VisualHero } from "./site-shell";
 
 export default function SolutionPage({ data }) {
   const [lang, setLang] = useState("th");
@@ -22,7 +22,23 @@ export default function SolutionPage({ data }) {
         @media(max-width:900px){.stage-grid{grid-template-columns:1fr 1fr}.stage:nth-child(3){border-left:0}.stage:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.16)}}
         @media(max-width:620px){.stage-grid{grid-template-columns:1fr}.stage+.stage,.stage:nth-child(3){border-left:0}.stage{border-bottom:1px solid rgba(255,255,255,.16)}.stage:last-child{border-bottom:0}}
       `}</style>
-      <section className="page-hero"><div className="site-container page-hero__grid"><div><span className="site-kicker">{text.kicker}</span><h1>{text.title}</h1><p>{text.lead}</p><div className="page-hero__actions"><Link href="/quote" className="site-btn site-btn--orange">{isTh?"ขอประเมินโครงการ":"Request project assessment"}<ArrowRight size={17}/></Link><Link href="/portfolio" className="site-btn site-btn--outline-dark">{isTh?"ดูผลงาน":"View portfolio"}</Link></div></div><div className="page-hero__media"><img src={data.image} alt={text.imageAlt}/><div className="page-hero__label"><strong>{text.imageLabel}</strong><span>{text.imageNote}</span></div></div></div></section>
+      <VisualHero
+        image={data.image}
+        imageAlt={text.imageAlt}
+        imagePosition={data.imagePosition}
+        kicker={text.kicker}
+        title={text.title}
+        lead={text.lead}
+      >
+        <div className="visual-hero__actions">
+          <Link href="/quote" className="site-btn site-btn--orange" scroll>{isTh?"ขอประเมินโครงการ":"Request project assessment"}<ArrowRight size={17}/></Link>
+          <Link href="/portfolio" className="site-btn site-btn--outline" scroll>{isTh?"ดูผลงาน":"View portfolio"}</Link>
+        </div>
+        <div className="visual-hero__caption">
+          <strong>{text.imageLabel}</strong>
+          <span>{text.imageNote}</span>
+        </div>
+      </VisualHero>
 
       <section className="site-section"><div className="site-container split-section"><div><span className="site-kicker">{isTh?"บทบาทของ Solar ACM":"Our role"}</span><h2 className="site-title">{text.roleTitle}</h2><p className="site-lead">{text.roleLead}</p><ul className="check-list">{text.rolePoints.map((point)=><li key={point}><Check size={18}/><span>{point}</span></li>)}</ul></div><div className="solution-role"><strong>{text.roleBoxTitle}</strong><p>{text.roleBox}</p></div></div></section>
 

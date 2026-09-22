@@ -1,95 +1,53 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Battery,
-  Building2,
-  Check,
-  ClipboardCheck,
-  Factory,
-  Home,
-  Network,
-  ShieldCheck,
-  Sparkles,
-  Sun,
-  Wrench,
-} from "lucide-react";
+import { ArrowRight, Battery, Building2, ClipboardCheck, Factory, Home, Network, Sparkles, Sun, Wrench } from "lucide-react";
 import { PageShell } from "./_components/site-shell";
 
 const copy = {
   th: {
     eyebrow: "ที่ปรึกษาโครงการพลังงานสะอาด",
-    title: "วางระบบพลังงานให้คุ้มค่า ตั้งแต่โจทย์แรกจนถึงการใช้งานจริง",
-    intro: "Solar ACM ช่วยวิเคราะห์ความต้องการ วางแนวทางระบบ และประสานเครือข่ายผู้เชี่ยวชาญ เพื่อให้บ้าน ธุรกิจ และโรงงานตัดสินใจเรื่องพลังงานได้ชัดเจนขึ้น",
-    primary: "ขอคำปรึกษาโครงการ",
-    secondary: "ดูผลงาน",
-    heroLabel: "โครงการโซลาร์ภาคอุตสาหกรรม",
-    heroNote: "ภาพจากข้อมูลผลงานที่ได้รับจากเครือข่ายโครงการ",
-    segmentKicker: "ใครที่เราดูแล",
-    segmentTitle: "โจทย์พลังงานต่างกัน ต้องเริ่มจากคำถามที่ต่างกัน",
-    segmentDesc: "เราแยกแนวทางตามพฤติกรรมการใช้ไฟ ขนาดพื้นที่ และเป้าหมายของแต่ละโครงการ ไม่ใช้คำตอบสำเร็จรูปเดียวกับทุกคน",
-    processKicker: "แนวทางการทำงาน",
-    processTitle: "Solar ACM ทำหน้าที่เชื่อมข้อมูล คน และการตัดสินใจ",
-    productKicker: "ผลิตภัณฑ์และโซลูชันเพิ่มเติม",
-    productTitle: "ดูแลระบบโซลาร์และความปลอดภัยของพื้นที่ใช้งาน",
-    productDesc: "นอกจากโครงการพลังงาน เรายังให้ข้อมูลและประสานงานผลิตภัณฑ์ที่เกี่ยวข้องกับการดูแลแผงและการเตรียมพร้อมรับเหตุอัคคีภัย",
-    portfolioKicker: "Selected portfolio",
-    portfolioTitle: "ภาพหน้างานจริงจากโครงการในประเทศไทย",
-    portfolioDesc: "ดูขนาดระบบ จังหวัด และรายละเอียดที่ได้รับการยืนยัน โดยไม่เปิดเผยข้อมูลลูกค้าที่เป็นความลับ",
-    partnersKicker: "Technology ecosystem",
-    partnersTitle: "เลือกเทคโนโลยีจากความเหมาะสมของโครงการ",
-    ctaTitle: "เริ่มจากบิลค่าไฟหนึ่งใบ แล้วค่อยตัดสินใจด้วยข้อมูล",
-    ctaDesc: "ส่งข้อมูลเบื้องต้นให้ทีมที่ปรึกษา เราจะติดต่อกลับเพื่อทำความเข้าใจโจทย์ก่อนเสนอแนวทาง",
+    title: "วางระบบพลังงานให้คุ้มค่า จากข้อมูลจริงของคุณ",
+    intro: "Solar ACM ช่วยวิเคราะห์ความต้องการ วางแนวทางระบบ และประสานผู้เชี่ยวชาญ เพื่อให้บ้าน ธุรกิจ และโรงงานตัดสินใจเรื่องพลังงานได้ชัดเจนขึ้น",
+    primary: "ปรึกษาโครงการ", secondary: "ดูผลงานจริง", services: "เลือกบริการที่สนใจ",
+    segmentKicker: "โซลูชันตามลักษณะการใช้งาน", segmentTitle: "โจทย์ต่างกัน ต้องเริ่มจากข้อมูลที่ต่างกัน", segmentDesc: "เราแยกแนวทางตามพฤติกรรมการใช้ไฟ ขนาดโครงการ และเป้าหมายของแต่ละพื้นที่ เพื่อให้คำแนะนำตรงกับการใช้งานจริง",
+    processKicker: "แนวทางการทำงาน", processTitle: "จากข้อมูลเบื้องต้น สู่โครงการที่ทุกฝ่ายเข้าใจตรงกัน",
+    productKicker: "ผลิตภัณฑ์และการดูแลระบบ", productTitle: "ดูแลประสิทธิภาพและความปลอดภัยของพื้นที่ใช้งาน", productDesc: "ข้อมูลผลิตภัณฑ์สำหรับงานดูแลแผงโซลาร์และการรับมือเหตุเพลิงระยะเริ่มต้น อ้างอิงเอกสารที่ได้รับจากผู้ผลิตและตัวแทน",
+    portfolioKicker: "ผลงานที่คัดเลือก", portfolioTitle: "โครงการจริงจากหลายพื้นที่ในประเทศไทย", portfolioDesc: "ดูข้อมูลขนาดระบบ จังหวัด และปีดำเนินการ โดยไม่เปิดเผยข้อมูลลูกค้าที่เป็นความลับ",
+    partnersKicker: "Technology ecosystem", partnersTitle: "เลือกเทคโนโลยีจากความเหมาะสมของแต่ละโครงการ",
+    ctaTitle: "เริ่มต้นจากบิลค่าไฟหนึ่งใบ", ctaDesc: "ส่งข้อมูลที่มีให้ทีมที่ปรึกษา เราจะช่วยจัดคำถามและวางขั้นตอนถัดไปให้ชัดเจน",
   },
   en: {
     eyebrow: "Clean-energy project consultancy",
-    title: "Plan energy systems for real value, from the first question to operation",
-    intro: "Solar ACM helps assess requirements, shape system direction, and coordinate specialist partners so homes, businesses, and factories can make clearer energy decisions.",
-    primary: "Discuss your project",
-    secondary: "View portfolio",
-    heroLabel: "Industrial solar project",
-    heroNote: "Image provided through the project network",
-    segmentKicker: "Who we support",
-    segmentTitle: "Different energy goals require different starting questions",
-    segmentDesc: "We shape each approach around load profile, site constraints, and project goals instead of applying one standard answer to every site.",
-    processKicker: "How we work",
-    processTitle: "Solar ACM connects information, specialists, and decisions",
-    productKicker: "Additional products & solutions",
-    productTitle: "Support solar operations and site safety",
-    productDesc: "Beyond energy projects, we provide product information and coordination for panel care and early-stage fire preparedness.",
-    portfolioKicker: "Selected portfolio",
-    portfolioTitle: "Real project imagery from sites in Thailand",
-    portfolioDesc: "Review verified system size, location, and project details while protecting confidential client information.",
-    partnersKicker: "Technology ecosystem",
-    partnersTitle: "Technology selected by project fit",
-    ctaTitle: "Start with one electricity bill, then decide with better information",
-    ctaDesc: "Send us the basics. Our consultants will contact you to understand the project before recommending a direction.",
+    title: "Plan energy systems around your real operating data",
+    intro: "Solar ACM assesses requirements, shapes system direction, and coordinates specialists so homes, businesses, and factories can make clearer energy decisions.",
+    primary: "Discuss your project", secondary: "View real projects", services: "Explore our services",
+    segmentKicker: "Solutions by use case", segmentTitle: "Different goals require different starting points", segmentDesc: "We shape each approach around load profile, project scale, and site objectives to keep recommendations relevant to actual operations.",
+    processKicker: "How we work", processTitle: "From initial information to a project everyone understands",
+    productKicker: "Products and operations", productTitle: "Support system performance and site safety", productDesc: "Product information for solar panel care and early-stage fire response, based on documents received from manufacturers and representatives.",
+    portfolioKicker: "Selected portfolio", portfolioTitle: "Real projects across Thailand", portfolioDesc: "Review system capacity, province, and completion year while protecting confidential client information.",
+    partnersKicker: "Technology ecosystem", partnersTitle: "Technology selected for each project's requirements",
+    ctaTitle: "Start with one electricity bill", ctaDesc: "Share what you have. Our consultants will help structure the questions and define the next practical step.",
   },
 };
 
 const segments = [
-  { icon: Home, href: "/residential", th: ["บ้านพักอาศัย", "ประเมินจากค่าไฟ พฤติกรรมการใช้ไฟ และข้อจำกัดของพื้นที่บ้าน"], en: ["Residential", "Assess bills, usage behavior, and site constraints before sizing a system."] },
-  { icon: Building2, href: "/industrial", th: ["ธุรกิจและโรงงาน", "วางแนวทางให้เหมาะกับโหลดกลางวัน งบลงทุน และแผนการดำเนินงาน"], en: ["Business & industry", "Align daytime load, investment plan, and operating requirements."] },
-  { icon: Factory, href: "/epc", th: ["โครงการขนาดใหญ่", "ประสานทีม EPC และอุปกรณ์ตามขนาดงาน พื้นที่ และมาตรฐานที่ต้องการ"], en: ["Large projects", "Coordinate EPC teams and equipment around scale, site, and required standards."] },
-  { icon: Battery, href: "/bess", th: ["ระบบกักเก็บพลังงาน", "ศึกษาความเหมาะสมของแบตเตอรี่จากรูปแบบการใช้ไฟและเป้าหมายของระบบ"], en: ["Energy storage", "Assess battery suitability from usage patterns and system objectives."] },
+  { icon: Home, href: "/residential", image: "/hero/residential-solar.webp", th: ["บ้านพักอาศัย", "ประเมินจากค่าไฟและพฤติกรรมการใช้ไฟของครอบครัว"], en: ["Residential", "Assess bills and household usage before sizing a system."] },
+  { icon: Building2, href: "/industrial", image: "/portfolio/project-05.jpg", th: ["ธุรกิจและโรงงาน", "วางแนวทางให้เหมาะกับโหลด งบลงทุน และการดำเนินงาน"], en: ["Business & industry", "Align load, investment, and operating requirements."] },
+  { icon: Battery, href: "/bess", image: "/hero/bess-industrial.webp", th: ["ระบบกักเก็บพลังงาน", "ศึกษาความเหมาะสมของ BESS จากเป้าหมายและรูปแบบโหลด"], en: ["Energy storage", "Assess BESS suitability from objectives and load profile."] },
+  { icon: Factory, href: "/epc", image: "/hero/energy-consulting.webp", th: ["ที่ปรึกษาและประสาน EPC", "จัดขอบเขตและประสานผู้เชี่ยวชาญให้เหมาะกับโครงการ"], en: ["Consulting & EPC coordination", "Structure scope and coordinate relevant specialists."] },
 ];
 
 const process = [
-  { icon: ClipboardCheck, th: ["01 · ทำความเข้าใจโจทย์", "อ่านบิลค่าไฟ ลักษณะการใช้ไฟ และเป้าหมายของโครงการ"], en: ["01 · Understand", "Review the bill, usage pattern, and project objectives."] },
-  { icon: Sun, th: ["02 · วางแนวทางระบบ", "เปรียบเทียบขนาดระบบ รูปแบบ On-Grid, Hybrid หรือ BESS ตามข้อมูลที่มี"], en: ["02 · Define direction", "Compare system size and On-Grid, Hybrid, or BESS options."] },
-  { icon: Network, th: ["03 · ประสานผู้เชี่ยวชาญ", "คัดและประสานเครือข่าย EPC หรือผู้เชี่ยวชาญที่เหมาะกับงาน"], en: ["03 · Coordinate", "Match the project with relevant EPC and specialist partners."] },
-  { icon: Wrench, th: ["04 · ติดตามจนส่งมอบ", "ช่วยประสานข้อมูล ขอบเขตงาน และการสื่อสารตลอดโครงการ"], en: ["04 · Follow through", "Coordinate information, scope, and communication through delivery."] },
+  { icon: ClipboardCheck, th: ["01", "ทำความเข้าใจโจทย์", "อ่านบิลค่าไฟ ลักษณะการใช้ไฟ และเป้าหมายโครงการ"], en: ["01", "Understand", "Review bills, usage, and project objectives."] },
+  { icon: Sun, th: ["02", "วางแนวทางระบบ", "เปรียบเทียบทางเลือกที่เหมาะสมจากข้อมูลที่มี"], en: ["02", "Define direction", "Compare suitable options from available data."] },
+  { icon: Network, th: ["03", "ประสานผู้เชี่ยวชาญ", "คัดและประสานเครือข่ายที่เหมาะกับขอบเขตงาน"], en: ["03", "Coordinate", "Match relevant specialists to the scope."] },
+  { icon: Wrench, th: ["04", "ติดตามโครงการ", "ประสานข้อมูล ขอบเขต และการสื่อสารจนถึงส่งมอบ"], en: ["04", "Follow through", "Coordinate scope and communication through delivery."] },
 ];
 
-const partners = [
-  ["Huawei", "/partners/huawei.svg"],
-  ["LONGi", "/partners/longi.svg"],
-  ["Deye", "/partners/deye.svg"],
-  ["Sungrow", "/partners/sungrow.svg"],
-  ["BYD", "/partners/byd.svg"],
-];
+const partners = [["Huawei", "/partners/huawei.svg"], ["LONGi", "/partners/longi.svg"], ["Deye", "/partners/deye.svg"], ["Sungrow", "/partners/sungrow.svg"], ["BYD", "/partners/byd.svg"]];
 
 export default function HomePage() {
   const [lang, setLang] = useState("th");
@@ -99,119 +57,36 @@ export default function HomePage() {
   return (
     <PageShell lang={lang} setLang={setLang}>
       <style>{`
-        .home-hero { background: var(--cream); padding: 84px 0 72px; }
-        .home-hero__grid { display:grid; grid-template-columns:1.03fr .97fr; gap:64px; align-items:center; }
-        .home-hero__grid > * { min-width:0; }
-        .home-hero h1 { margin:0; max-width:800px; font-size:clamp(2.7rem,5.6vw,5.2rem); line-height:1.06; font-weight:700; letter-spacing:0; }
-        .home-hero__intro { max-width:700px; margin:25px 0 31px; color:var(--muted); font-size:1.12rem; }
-        .home-hero__actions { display:flex; flex-wrap:wrap; gap:12px; }
-        .home-hero__media { position:relative; min-height:590px; overflow:hidden; border-radius:8px; background:#d9e3dc; box-shadow:var(--shadow); }
-        .home-hero__media img { width:100%; height:590px; object-fit:cover; }
-        .home-hero__media:after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 50%,rgba(8,29,21,.62)); }
-        .home-hero__caption { position:absolute; z-index:2; left:24px; right:24px; bottom:24px; color:white; }
-        .home-hero__caption strong { display:block; font-size:1.05rem; }
-        .home-hero__caption span { color:rgba(255,255,255,.72); font-size:13px; }
-        .role-note { margin-top:30px; padding:17px 18px; border-left:3px solid var(--orange); background:rgba(255,255,255,.7); color:#44544c; font-size:14px; }
-        .process-grid { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid rgba(255,255,255,.16); }
-        .process-item { padding:34px 28px 12px 0; }
-        .process-item + .process-item { padding-left:28px; border-left:1px solid rgba(255,255,255,.16); }
-        .process-item svg { margin-bottom:40px; color:#8cd4a7; }
-        .process-item h3 { margin:0 0 10px; font-size:1.08rem; }
-        .process-item p { margin:0; color:rgba(255,255,255,.62); font-size:14px; }
-        .product-feature-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-        .product-feature { position:relative; min-height:520px; overflow:hidden; border-radius:8px; background:#e3ebe5; text-decoration:none; }
-        .product-feature img { width:100%; height:520px; object-fit:cover; transition:transform .35s ease; }
-        .product-feature:hover img { transform:scale(1.025); }
-        .product-feature:after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 35%,rgba(7,27,19,.86)); }
-        .product-feature__copy { position:absolute; z-index:2; left:28px; right:28px; bottom:28px; color:white; }
-        .product-feature__copy span { display:inline-block; margin-bottom:8px; color:#b6e7c7; font-family:var(--font-display); font-size:12px; font-weight:700; text-transform:uppercase; }
-        .product-feature__copy h3 { margin:0 0 8px; font-size:1.65rem; }
-        .product-feature__copy p { max-width:520px; margin:0 0 18px; color:rgba(255,255,255,.72); }
-        .project-grid { display:grid; grid-template-columns:1.25fr .75fr .75fr; gap:18px; }
-        .project-card { position:relative; min-height:380px; overflow:hidden; border-radius:7px; color:white; text-decoration:none; }
-        .project-card img { width:100%; height:100%; min-height:380px; object-fit:cover; }
-        .project-card:after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 35%,rgba(5,25,17,.82)); }
-        .project-card__copy { position:absolute; z-index:2; left:22px; right:22px; bottom:20px; }
-        .project-card__copy span { font-size:12px; color:#b8e7c8; }
-        .project-card__copy h3 { margin:5px 0 0; font-size:1.12rem; }
-        .partner-row { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:40px; }
-        .partner-logo { height:104px; display:grid; place-items:center; padding:24px; border:1px solid var(--line); background:white; }
-        .partner-logo img { max-width:110px; max-height:44px; object-fit:contain; }
-        @media(max-width:1050px){ .home-hero__grid{grid-template-columns:1fr;} .home-hero__media{min-height:480px;} .home-hero__media img{height:480px;} .process-grid{grid-template-columns:1fr 1fr;} .process-item:nth-child(3){border-left:0;} .project-grid{grid-template-columns:1fr 1fr;} .project-card:first-child{grid-column:1/-1;} }
-        @media(max-width:760px){ .home-hero{padding:62px 0;} .home-hero h1{font-size:clamp(2.35rem,12vw,3.45rem);} .home-hero__actions .site-btn{width:100%;} .home-hero__media,.home-hero__media img{height:360px;min-height:360px;} .process-grid,.product-feature-grid,.project-grid,.partner-row{grid-template-columns:1fr;} .process-item,.process-item+.process-item{padding:26px 0;border-left:0;border-bottom:1px solid rgba(255,255,255,.16);} .product-feature,.product-feature img{min-height:430px;height:430px;} .project-card:first-child{grid-column:auto;} .partner-row{grid-template-columns:1fr 1fr;} }
+        .home-stage{min-height:min(720px,calc(100svh - 82px));position:relative;display:flex;align-items:center;isolation:isolate;overflow:hidden;background:var(--green-950);color:white}.home-stage__image{z-index:-3;object-fit:cover;object-position:center 38%}.home-stage__overlay{position:absolute;z-index:-2;inset:0;background:linear-gradient(90deg,rgba(2,29,19,.94) 0%,rgba(3,35,22,.84) 42%,rgba(3,29,19,.38) 70%,rgba(3,24,16,.3) 100%),linear-gradient(0deg,rgba(2,27,18,.74),transparent 44%)}
+        .home-stage__grid{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:74px;align-items:center;padding-block:80px}.home-stage__copy{max-width:720px}.home-stage h1{max-width:760px;margin:0;font-size:clamp(2.65rem,4.25vw,3.55rem);line-height:1.21;font-weight:800;letter-spacing:0;text-wrap:balance}.home-stage__intro{max-width:660px;margin:22px 0 30px;color:rgba(255,255,255,.78);font-size:1.04rem}.home-stage__actions{display:flex;flex-wrap:wrap;gap:11px}
+        .home-services{border-top:1px solid rgba(255,255,255,.34)}.home-services>span{display:block;padding:0 0 17px;color:var(--lime);font-size:11px;font-weight:800;text-transform:uppercase}.home-service{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:17px 2px;border-bottom:1px solid rgba(255,255,255,.28);color:white;font-weight:700;text-decoration:none;transition:padding .2s ease,color .2s ease}.home-service span{display:flex;align-items:center;gap:12px}.home-service:hover{padding-left:8px;color:var(--lime)}
+        .home-trust{position:absolute;left:0;right:0;bottom:0;border-top:1px solid rgba(255,255,255,.18);background:rgba(4,32,21,.55);backdrop-filter:blur(10px)}.home-trust__inner{display:flex;align-items:center;gap:30px;min-height:62px;color:rgba(255,255,255,.72);font-size:13px}.home-trust strong{color:white}.home-trust__dot{width:4px;height:4px;border-radius:50%;background:var(--lime)}
+        .solution-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.solution-tile{position:relative;min-height:370px;overflow:hidden;border-radius:7px;color:white;text-decoration:none;background:var(--green-900)}.solution-tile__image{object-fit:cover;transition:transform .45s ease}.solution-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,27,18,.04) 28%,rgba(3,27,18,.9) 100%)}.solution-tile:hover .solution-tile__image{transform:scale(1.025)}.solution-tile__copy{position:absolute;z-index:2;left:26px;right:26px;bottom:24px}.solution-tile__icon{width:38px;height:38px;display:grid;place-items:center;margin-bottom:17px;border-radius:5px;background:rgba(255,255,255,.93);color:var(--green-800)}.solution-tile h3{margin:0 0 6px;font-size:1.35rem}.solution-tile p{max-width:500px;margin:0;color:rgba(255,255,255,.72);font-size:14px}.solution-tile__link{display:inline-flex;align-items:center;gap:7px;margin-top:15px;color:var(--lime);font-size:13px;font-weight:800}
+        .process-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.18)}.process-item{padding:32px 27px 4px 0}.process-item+.process-item{padding-left:27px;border-left:1px solid rgba(255,255,255,.18)}.process-item__top{display:flex;align-items:center;justify-content:space-between;margin-bottom:34px;color:var(--lime);font-size:12px;font-weight:800}.process-item h3{margin:0 0 8px;font-size:1.05rem}.process-item p{margin:0;color:rgba(255,255,255,.64);font-size:13px}
+        .product-feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.product-feature{position:relative;min-height:470px;overflow:hidden;border-radius:7px;background:#dfe9e2;color:white;text-decoration:none}.product-feature__image{object-fit:cover;transition:transform .4s ease}.product-feature:hover .product-feature__image{transform:scale(1.025)}.product-feature::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,27,19,.02) 25%,rgba(5,27,19,.9) 100%)}.product-feature__copy{position:absolute;z-index:2;left:28px;right:28px;bottom:27px}.product-feature__copy span{color:var(--lime);font-size:11px;font-weight:800;text-transform:uppercase}.product-feature__copy h3{margin:8px 0 7px;font-size:1.45rem}.product-feature__copy p{max-width:520px;margin:0 0 17px;color:rgba(255,255,255,.72);font-size:14px}.product-feature__copy strong{display:flex;align-items:center;gap:7px;font-size:13px}
+        .project-grid{display:grid;grid-template-columns:1.16fr .92fr .92fr;gap:16px}.project-card{position:relative;min-height:390px;overflow:hidden;border-radius:7px;color:white;text-decoration:none;background:var(--green-900)}.project-card__image{object-fit:cover;transition:transform .4s ease}.project-card:hover .project-card__image{transform:scale(1.025)}.project-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 32%,rgba(4,28,19,.87))}.project-card__copy{position:absolute;z-index:2;left:22px;right:22px;bottom:20px}.project-card__copy span{color:var(--lime);font-size:11px;font-weight:800}.project-card__copy h3{margin:6px 0 0;font-size:1.1rem;line-height:1.45}
+        .partner-row{display:grid;grid-template-columns:repeat(5,1fr);margin-top:35px;border:1px solid var(--line);background:white}.partner-logo{height:105px;display:grid;place-items:center;padding:24px;border-right:1px solid var(--line)}.partner-logo:last-child{border-right:0}.partner-logo img{max-width:110px;max-height:43px;object-fit:contain}
+        @media(max-width:980px){.home-stage__grid{grid-template-columns:1fr;gap:48px}.home-services{max-width:620px}.home-trust{position:static}.process-grid{grid-template-columns:1fr 1fr}.process-item:nth-child(3){border-left:0}.project-grid{grid-template-columns:1fr 1fr}.project-card:first-child{grid-column:1/-1}}
+        @media(max-width:760px){.home-stage{min-height:auto;align-items:flex-end}.home-stage__grid{padding-block:86px 92px;gap:42px}.home-stage h1{font-size:clamp(2.3rem,10.5vw,3.05rem);line-height:1.24}.home-stage__intro{font-size:.96rem}.home-stage__actions .site-btn{width:100%}.home-stage__image{object-position:62% center}.home-trust{display:none}.solution-gallery,.product-feature-grid,.project-grid,.partner-row{grid-template-columns:1fr}.solution-tile{min-height:330px}.process-grid{grid-template-columns:1fr}.process-item,.process-item+.process-item{padding:26px 0;border-left:0;border-bottom:1px solid rgba(255,255,255,.18)}.product-feature{min-height:410px}.project-card,.project-card:first-child{min-height:330px;grid-column:auto}.partner-row{grid-template-columns:1fr 1fr}.partner-logo:nth-child(even){border-right:0}.partner-logo:last-child{grid-column:1/-1}}
       `}</style>
 
-      <section className="home-hero">
-        <div className="site-container home-hero__grid">
-          <div>
-            <span className="site-kicker"><Sparkles size={14} />{t.eyebrow}</span>
-            <h1>{t.title}</h1>
-            <p className="home-hero__intro">{t.intro}</p>
-            <div className="home-hero__actions">
-              <Link href="/quote" className="site-btn site-btn--orange">{t.primary}<ArrowRight size={17} /></Link>
-              <Link href="/portfolio" className="site-btn site-btn--outline-dark">{t.secondary}</Link>
-            </div>
-            <div className="role-note">{isTh
-              ? "บทบาทของเรา: ที่ปรึกษาและผู้ประสานโครงการ ช่วยคัดเลือกแนวทางและเครือข่ายผู้ดำเนินงานให้เหมาะกับแต่ละไซต์"
-              : "Our role: project consultant and coordinator, helping select suitable approaches and delivery partners for each site."}</div>
-          </div>
-          <div className="home-hero__media">
-            <img src="/portfolio/project-08.jpg" alt={isTh ? "ระบบโซลาร์บนหลังคาโรงงาน" : "Industrial rooftop solar system"} />
-            <div className="home-hero__caption"><strong>{t.heroLabel}</strong><span>{t.heroNote}</span></div>
-          </div>
-        </div>
+      <section className="home-stage">
+        <Image className="home-stage__image" src="/portfolio/project-03.jpg" alt={isTh ? "โครงการโซลาร์รูฟท็อปภาคอุตสาหกรรม" : "Industrial rooftop solar project"} fill priority sizes="100vw" />
+        <div className="home-stage__overlay" />
+        <div className="site-container home-stage__grid"><div className="home-stage__copy"><span className="site-kicker site-kicker--light"><Sparkles size={14} />{t.eyebrow}</span><h1>{t.title}</h1><p className="home-stage__intro">{t.intro}</p><div className="home-stage__actions"><Link href="/quote" className="site-btn site-btn--orange" scroll>{t.primary}<ArrowRight size={17} /></Link><Link href="/portfolio" className="site-btn site-btn--outline" scroll>{t.secondary}</Link></div></div><div className="home-services"><span>{t.services}</span>{segments.map(({ icon: Icon, href, th, en }) => <Link className="home-service" href={href} key={href} scroll><span><Icon size={19}/>{(isTh ? th : en)[0]}</span><ArrowRight size={17}/></Link>)}</div></div>
+        <div className="home-trust"><div className="site-container home-trust__inner"><strong>Solar ACM Systems Corporation</strong><span className="home-trust__dot"/><span>{isTh ? "ที่ปรึกษาและผู้ประสานโครงการพลังงานสะอาด" : "Clean-energy consultant and project coordinator"}</span></div></div>
       </section>
 
-      <section className="site-section" id="solutions">
-        <div className="site-container">
-          <div className="section-head">
-            <div className="section-head__copy"><span className="site-kicker">{t.segmentKicker}</span><h2 className="site-title">{t.segmentTitle}</h2><p className="site-lead">{t.segmentDesc}</p></div>
-          </div>
-          <div className="grid-4">
-            {segments.map(({ icon: Icon, href, th, en }) => {
-              const [title, desc] = isTh ? th : en;
-              return <article className="flat-card" key={href}><div className="flat-card__icon"><Icon size={21} /></div><h3>{title}</h3><p>{desc}</p><Link href={href} className="flat-card__link">{isTh ? "ดูแนวทาง" : "Explore"}<ArrowRight size={15} /></Link></article>;
-            })}
-          </div>
-        </div>
-      </section>
+      <section className="site-section" id="solutions"><div className="site-container"><div className="section-head"><div className="section-head__copy"><span className="site-kicker">{t.segmentKicker}</span><h2 className="site-title">{t.segmentTitle}</h2><p className="site-lead">{t.segmentDesc}</p></div></div><div className="solution-gallery">{segments.map(({ icon: Icon, href, image, th, en }) => { const [title, desc] = isTh ? th : en; return <Link className="solution-tile" href={href} key={href} scroll><Image className="solution-tile__image" src={image} alt="" fill sizes="(max-width: 760px) 100vw, 50vw"/><div className="solution-tile__copy"><div className="solution-tile__icon"><Icon size={19}/></div><h3>{title}</h3><p>{desc}</p><span className="solution-tile__link">{isTh ? "ดูรายละเอียด" : "Explore"}<ArrowRight size={14}/></span></div></Link>; })}</div></div></section>
 
-      <section className="site-section site-section--green">
-        <div className="site-container">
-          <div className="section-head"><div className="section-head__copy"><span className="site-kicker">{t.processKicker}</span><h2 className="site-title">{t.processTitle}</h2></div></div>
-          <div className="process-grid">
-            {process.map(({ icon: Icon, th, en }) => { const [title, desc] = isTh ? th : en; return <div className="process-item" key={title}><Icon size={25} /><h3>{title}</h3><p>{desc}</p></div>; })}
-          </div>
-        </div>
-      </section>
+      <section className="site-section site-section--green"><div className="site-container"><div className="section-head"><div className="section-head__copy"><span className="site-kicker">{t.processKicker}</span><h2 className="site-title">{t.processTitle}</h2></div></div><div className="process-grid">{process.map(({ icon: Icon, th, en }) => { const [number,title,desc] = isTh ? th : en; return <article className="process-item" key={number}><div className="process-item__top"><span>{number}</span><Icon size={21}/></div><h3>{title}</h3><p>{desc}</p></article>; })}</div></div></section>
 
-      <section className="site-section site-section--soft">
-        <div className="site-container">
-          <div className="section-head"><div className="section-head__copy"><span className="site-kicker">{t.productKicker}</span><h2 className="site-title">{t.productTitle}</h2><p className="site-lead">{t.productDesc}</p></div><Link href="/products" className="site-btn site-btn--outline-dark">{isTh ? "ดูผลิตภัณฑ์ทั้งหมด" : "View all products"}<ArrowRight size={16} /></Link></div>
-          <div className="product-feature-grid">
-            <Link className="product-feature" href="/products#kolchar"><img src="/products/kolchar-gf-series.jpg" alt={isTh ? "หุ่นยนต์ Kolchar ทำความสะอาดแผงโซลาร์" : "Kolchar solar panel cleaning robots"} /><div className="product-feature__copy"><span>Kolchar GF-Series</span><h3>{isTh ? "หุ่นยนต์ทำความสะอาดแผงแบบไร้น้ำ" : "Waterless solar panel cleaning robots"}</h3><p>{isTh ? "ออกแบบสำหรับงานทำความสะอาดแผงในโครงการขนาดใหญ่ พร้อมระบบติดตามและจัดการระยะไกล" : "Built for routine panel cleaning at large sites, with remote monitoring and management."}</p><strong>{isTh ? "ดูรายละเอียด →" : "Explore →"}</strong></div></Link>
-            <Link className="product-feature" href="/products#firesave"><img src="/products/firesave-fire.jpg" alt={isTh ? "ผลิตภัณฑ์ระงับอัคคีภัย FIRESAVE" : "FIRESAVE fire suppression products"} /><div className="product-feature__copy"><span>FIRESAVE</span><h3>{isTh ? "อุปกรณ์ระงับเหตุเพลิงระยะเริ่มต้น" : "Early-stage fire suppression products"}</h3><p>{isTh ? "แคปซูล สเปรย์ และซองดับเพลิง พร้อมข้อมูลการใช้งานและเอกสารผลทดสอบประกอบ" : "Throwing capsules, spray, and cooking-oil fire pouches with usage and test documentation."}</p><strong>{isTh ? "ดูรายละเอียด →" : "Explore →"}</strong></div></Link>
-          </div>
-        </div>
-      </section>
+      <section className="site-section site-section--soft"><div className="site-container"><div className="section-head"><div className="section-head__copy"><span className="site-kicker">{t.productKicker}</span><h2 className="site-title">{t.productTitle}</h2><p className="site-lead">{t.productDesc}</p></div><Link href="/products" className="site-btn site-btn--outline-dark" scroll>{isTh ? "ดูผลิตภัณฑ์ทั้งหมด" : "View all products"}<ArrowRight size={16}/></Link></div><div className="product-feature-grid"><Link className="product-feature" href="/products#kolchar"><Image className="product-feature__image" src="/products/kolchar-rooftop.jpg" alt={isTh ? "หุ่นยนต์ Kolchar บนแผงโซลาร์" : "Kolchar solar panel cleaning robot"} fill sizes="(max-width: 760px) 100vw, 50vw"/><div className="product-feature__copy"><span>Kolchar GF-Series</span><h3>{isTh ? "หุ่นยนต์ทำความสะอาดแผงแบบไร้น้ำ" : "Waterless solar panel cleaning robots"}</h3><p>{isTh ? "สำหรับงานดูแลแผงในโรงงานและโครงการขนาดใหญ่ พร้อมระบบติดตามการทำงานจากระยะไกล" : "For panel care at factories and large sites, with remote monitoring."}</p><strong>{isTh ? "ดูรายละเอียด" : "Explore"}<ArrowRight size={14}/></strong></div></Link><Link className="product-feature" href="/products#firesave"><Image className="product-feature__image" src="/products/firesave-fire.jpg" alt={isTh ? "ผลิตภัณฑ์ระงับอัคคีภัย FIRESAVE" : "FIRESAVE fire suppression products"} fill sizes="(max-width: 760px) 100vw, 50vw"/><div className="product-feature__copy"><span>FIRESAVE</span><h3>{isTh ? "ผลิตภัณฑ์ระงับเหตุเพลิงระยะเริ่มต้น" : "Early-stage fire suppression products"}</h3><p>{isTh ? "แคปซูล สเปรย์ และซองสำหรับสถานการณ์ต่างกัน พร้อมข้อมูลและเอกสารประกอบ" : "Capsules, spray, and pouches for different situations with supporting documents."}</p><strong>{isTh ? "ดูรายละเอียด" : "Explore"}<ArrowRight size={14}/></strong></div></Link></div></div></section>
 
-      <section className="site-section">
-        <div className="site-container">
-          <div className="section-head"><div className="section-head__copy"><span className="site-kicker">{t.portfolioKicker}</span><h2 className="site-title">{t.portfolioTitle}</h2><p className="site-lead">{t.portfolioDesc}</p></div><Link href="/portfolio" className="site-btn site-btn--outline-dark">{isTh ? "ดูผลงานทั้งหมด" : "View portfolio"}<ArrowRight size={16} /></Link></div>
-          <div className="project-grid">
-            {[["/portfolio/project-03.jpg", "928.8 kWp", "สมุทรปราการ"],["/portfolio/project-08.jpg", "959.2 kWp", "ระยอง"],["/portfolio/project-10.jpg", "973 kWp", "นครปฐม"]].map(([image,title,location]) => <Link className="project-card" href="/portfolio" key={image}><img src={image} alt={`${title} ${location}`} /><div className="project-card__copy"><span>{location}</span><h3>{title} · {isTh ? "ระบบโซลาร์รูฟท็อป" : "Rooftop solar"}</h3></div></Link>)}
-          </div>
-        </div>
-      </section>
+      <section className="site-section"><div className="site-container"><div className="section-head"><div className="section-head__copy"><span className="site-kicker">{t.portfolioKicker}</span><h2 className="site-title">{t.portfolioTitle}</h2><p className="site-lead">{t.portfolioDesc}</p></div><Link href="/portfolio" className="site-btn site-btn--outline-dark" scroll>{isTh ? "ดูผลงานทั้งหมด" : "View portfolio"}<ArrowRight size={16}/></Link></div><div className="project-grid">{[["/portfolio/project-03.jpg","928.8 kWp",isTh?"สมุทรปราการ":"Samut Prakan"],["/portfolio/project-04.jpg","525 kWp",isTh?"สมุทรสาคร":"Samut Sakhon"],["/portfolio/project-05.jpg","697.1 kWp",isTh?"สมุทรปราการ":"Samut Prakan"]].map(([image,title,location]) => <Link className="project-card" href="/portfolio" key={image} scroll><Image className="project-card__image" src={image} alt={`${title} ${location}`} fill sizes="(max-width: 760px) 100vw, 34vw"/><div className="project-card__copy"><span>{location}</span><h3>{title} · {isTh ? "โซลาร์รูฟท็อปภาคอุตสาหกรรม" : "Industrial rooftop solar"}</h3></div></Link>)}</div></div></section>
 
-      <section className="site-section site-section--soft">
-        <div className="site-container">
-          <span className="site-kicker">{t.partnersKicker}</span><h2 className="site-title">{t.partnersTitle}</h2>
-          <div className="partner-row">{partners.map(([name,image]) => <div className="partner-logo" key={name}><img src={image} alt={`${name} logo`} /></div>)}</div>
-        </div>
-      </section>
-
-      <section className="cta-band"><div className="site-container cta-band__inner"><div><h2>{t.ctaTitle}</h2><p>{t.ctaDesc}</p></div><div className="cta-band__actions"><Link href="/quote" className="site-btn site-btn--orange">{isTh ? "ขอคำปรึกษา" : "Request consultation"}<ArrowRight size={17} /></Link><Link href="/contact" className="site-btn site-btn--outline">{isTh ? "ติดต่อเรา" : "Contact us"}</Link></div></div></section>
+      <section className="site-section site-section--soft"><div className="site-container"><span className="site-kicker">{t.partnersKicker}</span><h2 className="site-title">{t.partnersTitle}</h2><div className="partner-row">{partners.map(([name,src])=><div className="partner-logo" key={name}><Image src={src} alt={name} width={120} height={48}/></div>)}</div></div></section>
+      <section className="cta-band"><div className="site-container cta-band__inner"><div><h2>{t.ctaTitle}</h2><p>{t.ctaDesc}</p></div><div className="cta-band__actions"><Link href="/quote" className="site-btn site-btn--orange" scroll>{isTh ? "ขอคำปรึกษา" : "Request consultation"}<ArrowRight size={17}/></Link><Link href="/contact" className="site-btn site-btn--outline" scroll>{isTh ? "ติดต่อเรา" : "Contact us"}</Link></div></div></section>
     </PageShell>
   );
 }

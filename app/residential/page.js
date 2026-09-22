@@ -1,7 +1,8 @@
 import SolutionPage from "../_components/solution-page";
 
 const data = {
-  image: "/images/residential/res-1.jpg",
+  image: "/hero/residential-solar.webp",
+  imagePosition: "center 52%",
   th: {
     kicker: "Residential Solar",
     title: "โซลาร์สำหรับบ้าน เริ่มจากพฤติกรรมการใช้ไฟของครอบครัว",

@@ -1,7 +1,8 @@
 import SolutionPage from "../_components/solution-page";
 
 const data = {
-  image: "/images/bess/bess-1.jpg",
+  image: "/hero/bess-industrial.webp",
+  imagePosition: "center 50%",
   th: {
     kicker: "Battery Energy Storage",
     title: "ระบบกักเก็บพลังงานควรเริ่มจากโจทย์ ไม่ใช่เริ่มจากขนาดแบตเตอรี่",

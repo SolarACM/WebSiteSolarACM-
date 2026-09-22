@@ -1,7 +1,8 @@
 import SolutionPage from "../_components/solution-page";
 
 const data = {
-  image: "/images/epc/epc-1.jpg",
+  image: "/hero/energy-consulting.webp",
+  imagePosition: "center 45%",
   th: {
     kicker: "EPC Coordination",
     title: "ประสานเครือข่าย EPC ให้เหมาะกับขนาดงาน พื้นที่ และขอบเขตโครงการ",

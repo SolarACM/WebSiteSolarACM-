@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -17,7 +18,7 @@ import {
   ShieldCheck,
   SprayCan,
 } from "lucide-react";
-import { PageShell } from "../_components/site-shell";
+import { PageShell, VisualHero } from "../_components/site-shell";
 
 const copy = {
   th: {
@@ -83,8 +84,6 @@ export default function ProductsPage() {
   return (
     <PageShell lang={lang} setLang={setLang}>
       <style>{`
-        .products-hero{padding:96px 0 78px;background:linear-gradient(120deg,#f7f6f0 0%,#eef4ef 100%)}
-        .products-hero__inner{max-width:930px}.products-hero h1{margin:0;font-size:clamp(2.6rem,5vw,4.8rem);line-height:1.09;letter-spacing:0}.products-hero p{max-width:780px;margin:24px 0 0;color:var(--muted);font-size:1.1rem}
         .product-anchor{display:flex;gap:10px;flex-wrap:wrap;margin-top:31px}.product-anchor a{padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:white;color:var(--green-700);font-weight:700;text-decoration:none}
         .kolchar-specs{display:grid;grid-template-columns:repeat(4,1fr);margin-top:34px;border:1px solid var(--line)}.kolchar-specs div{padding:21px;border-right:1px solid var(--line);background:white}.kolchar-specs div:last-child{border-right:0}.kolchar-specs strong{display:block;font-size:1.15rem}.kolchar-specs span{color:var(--muted);font-size:13px}
         .use-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:32px}.use-card{padding:24px;border:1px solid var(--line);background:white}.use-card svg{margin-bottom:24px;color:var(--green-600)}.use-card h3{margin:0 0 8px}.use-card p{margin:0;color:var(--muted);font-size:14px}
@@ -92,21 +91,16 @@ export default function ProductsPage() {
         .warning-box{display:flex;gap:15px;margin-top:28px;padding:22px;border-left:4px solid var(--orange);background:var(--orange-soft)}.warning-box svg{flex:0 0 auto;color:var(--orange)}.warning-box strong{display:block;margin-bottom:3px}.warning-box p{margin:0;color:#67564b;font-size:14px}
         .docs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:32px}.doc-card{display:flex;gap:15px;padding:22px;border:1px solid rgba(255,255,255,.16)}.doc-card svg{flex:0 0 auto;color:#8cd4a7}.doc-card h3{margin:0 0 6px;font-size:1rem}.doc-card p{margin:0;color:rgba(255,255,255,.63);font-size:13px}
         @media(max-width:960px){.kolchar-specs,.firesave-grid{grid-template-columns:1fr 1fr}.kolchar-specs div:nth-child(2){border-right:0}.use-grid{grid-template-columns:1fr}.firesave-card:last-child{grid-column:1/-1}}
-        @media(max-width:680px){.kolchar-specs,.firesave-grid,.docs-grid{grid-template-columns:1fr}.kolchar-specs div,.kolchar-specs div:nth-child(2){border-right:0;border-bottom:1px solid var(--line)}.firesave-card:last-child{grid-column:auto}.products-hero{padding:68px 0}.firesave-card__image{height:260px}}
+        @media(max-width:680px){.kolchar-specs,.firesave-grid,.docs-grid{grid-template-columns:1fr}.kolchar-specs div,.kolchar-specs div:nth-child(2){border-right:0;border-bottom:1px solid var(--line)}.firesave-card:last-child{grid-column:auto}.firesave-card__image{height:260px}}
       `}</style>
 
-      <section className="products-hero">
-        <div className="site-container products-hero__inner">
-          <span className="site-kicker">Products</span>
-          <h1>{t.title}</h1>
-          <p>{t.intro}</p>
-          <div className="product-anchor"><a href="#kolchar">Kolchar GF-Series</a><a href="#firesave">FIRESAVE</a></div>
-        </div>
-      </section>
+      <VisualHero image="/products/kolchar-rooftop.jpg" imagePosition="center 55%" imageAlt={isTh ? "ระบบหุ่นยนต์ทำความสะอาดแผงโซลาร์" : "Solar panel cleaning robot system"} kicker="Products" title={t.title} lead={t.intro}>
+        <div className="product-anchor"><a href="#kolchar">Kolchar GF-Series</a><a href="#firesave">FIRESAVE</a></div>
+      </VisualHero>
 
       <section className="site-section" id="kolchar">
         <div className="site-container split-section">
-          <div className="split-section__media"><img src="/products/kolchar-gf-series.jpg" alt={isTh ? "หุ่นยนต์ Kolchar GF-Series บนแผงโซลาร์" : "Kolchar GF-Series robots on solar panels"} /></div>
+          <div className="split-section__media"><Image src="/products/kolchar-gf-series.jpg" alt={isTh ? "หุ่นยนต์ Kolchar GF-Series บนแผงโซลาร์" : "Kolchar GF-Series robots on solar panels"} fill sizes="(max-width: 760px) 100vw, 50vw" /></div>
           <div><span className="site-kicker">Kolchar GF-Series</span><h2 className="site-title">{t.kolcharTitle}</h2><p className="site-lead">{t.kolcharLead}</p><ul className="check-list">{(isTh ? ["ระบบทำความสะอาดแบบไร้น้ำ", "เหมาะกับโรงงานและโครงการโซลาร์ขนาดใหญ่", "ติดตามสถานะผ่านระบบจัดการระยะไกล", "ตั้งค่าการทำงานและรับการแจ้งเตือนได้"] : ["Waterless cleaning system", "For factories and large solar sites", "Remote status monitoring", "Scheduling and operational alerts"]).map((item)=><li key={item}><Check size={18}/><span>{item}</span></li>)}</ul><Link href="/contact" className="site-btn">{isTh ? "ขอข้อมูลและสาธิต" : "Request information or a demo"}<ArrowRight size={16}/></Link></div>
         </div>
         <div className="site-container kolchar-specs">
@@ -130,7 +124,7 @@ export default function ProductsPage() {
         <div className="site-container">
           <div className="section-head"><div className="section-head__copy"><span className="site-kicker">FIRESAVE</span><h2 className="site-title">{t.fireTitle}</h2><p className="site-lead">{t.fireLead}</p></div><Link href="/contact" className="site-btn site-btn--outline-dark">{isTh ? "สอบถามผลิตภัณฑ์" : "Ask about products"}<ArrowRight size={16}/></Link></div>
           <div className="firesave-grid">
-            {firesaveProducts.map((product)=><article className="firesave-card" key={product.code}><div className="firesave-card__image"><img src={product.image} alt={isTh?product.titleTh:product.titleEn}/></div><div className="firesave-card__body"><span>{product.code}</span><h3>{isTh?product.titleTh:product.titleEn}</h3><p>{isTh?product.descTh:product.descEn}</p><ul className="spec-list">{(isTh?product.specsTh:product.specsEn).map((spec)=><li key={spec}><Check size={15}/><span>{spec}</span></li>)}</ul></div></article>)}
+            {firesaveProducts.map((product)=><article className="firesave-card" key={product.code}><div className="firesave-card__image"><Image src={product.image} alt={isTh?product.titleTh:product.titleEn} width={420} height={300}/></div><div className="firesave-card__body"><span>{product.code}</span><h3>{isTh?product.titleTh:product.titleEn}</h3><p>{isTh?product.descTh:product.descEn}</p><ul className="spec-list">{(isTh?product.specsTh:product.specsEn).map((spec)=><li key={spec}><Check size={15}/><span>{spec}</span></li>)}</ul></div></article>)}
           </div>
           <div className="warning-box"><AlertTriangle size={24}/><div><strong>{isTh ? "ข้อควรระวัง" : "Important safety note"}</strong><p>{isTh ? "ผลิตภัณฑ์เหล่านี้ใช้สำหรับระงับเหตุในระยะเริ่มต้นตามขอบเขตที่ระบุ หากไฟลุกลาม มีควันหนาแน่น หรือไม่สามารถเข้าถึงต้นเพลิงได้อย่างปลอดภัย ให้รีบออกจากพื้นที่และโทรแจ้งเหตุฉุกเฉิน 199 ไม่ควรเสี่ยงเข้าไปดับเพลิงด้วยตนเอง" : "These products are intended for early-stage incidents within their stated scope. If the fire spreads, smoke becomes dense, or the source cannot be reached safely, evacuate and call emergency services. Do not take personal risks."}</p></div></div>
         </div>

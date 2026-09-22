@@ -30,7 +30,7 @@ export const metadata = {
     title: "Solar ACM Systems | ที่ปรึกษาโครงการพลังงานสะอาด",
     description:
       "วางแผน ประสานงาน และคัดเลือกโซลูชันพลังงานให้เหมาะกับบ้าน ธุรกิจ และโรงงาน",
-    images: [{ url: "/portfolio/project-08.jpg", width: 1200, height: 630 }],
+    images: [{ url: "/portfolio/project-03.jpg", width: 1600, height: 900 }],
   },
   icons: { icon: "/Logo SolarACM.png" },
 };
@@ -39,7 +39,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#123328",
+  themeColor: "#0d8948",
 };
 
 export default function RootLayout({ children }) {
