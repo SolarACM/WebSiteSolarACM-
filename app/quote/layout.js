@@ -1,8 +1,8 @@
 // SEO metadata สำหรับหน้า /quote
 export const metadata = {
-  title: "ขอใบเสนอราคาโซลาร์เซลล์ฟรี | Solar ACM Systems",
+  title: "ขอคำปรึกษาโครงการพลังงานและผลิตภัณฑ์ | Solar ACM",
   description:
-    "ขอใบเสนอราคาติดตั้งโซลาร์เซลล์ฟรี รับใบเสนอราคาภายใน 24 ชั่วโมง สำหรับบ้าน ธุรกิจ อุตสาหกรรม BESS และเครือข่าย EPC โดยทีมที่ปรึกษามืออาชีพ",
+    "ส่งข้อมูลเพื่อขอคำปรึกษาเรื่องโซลาร์ BESS การประสานงาน EPC หุ่นยนต์ทำความสะอาดแผง Kolchar และผลิตภัณฑ์ FIRESAVE",
   keywords: [
     "ขอใบเสนอราคาโซลาร์",
     "ติดตั้งโซลาร์เซลล์ราคา",
@@ -12,16 +12,16 @@ export const metadata = {
     "Free Solar Quote",
   ],
   openGraph: {
-    title: "ขอใบเสนอราคาโซลาร์เซลล์ฟรี | Solar ACM Systems",
+    title: "ขอคำปรึกษาโครงการพลังงานและผลิตภัณฑ์ | Solar ACM",
     description:
-      "รับใบเสนอราคาฟรีภายใน 24 ชั่วโมง พร้อมคำแนะนำจากผู้เชี่ยวชาญ ไม่มีค่าใช้จ่ายและไม่มีข้อผูกมัด",
+      "เริ่มต้นจากข้อมูลที่คุณมี เพื่อให้ทีม Solar ACM ติดต่อกลับและประเมินคำขอเบื้องต้น",
     url: "https://web-site-solar-acm.vercel.app/quote",
     images: [
       {
         url: "/Logo SolarACM.png",
         width: 1200,
         height: 630,
-        alt: "Request Free Solar Quote Thailand",
+        alt: "Solar ACM consultation request",
       },
     ],
   },

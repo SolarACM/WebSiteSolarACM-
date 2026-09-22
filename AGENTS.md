@@ -11,16 +11,20 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - GitHub: WebSiteSolarACM-
 
 ## Design Tokens
-- Green primary: #2D7D46 / light #4CAF72 / pale #E8F5EE
-- Orange accent: #E8630A / light #FF8C3A / pale #FFF0E6
-- Background: #F9FCF9 (dark), #FFFFFF (cards), #F0F4F1 (midDark)
-- Text: #14241B / muted #5C6B61
-- Fonts: 'DM Sans' (body) + 'Playfair Display' (headings)
+- Green: #0D281F, #123328, #174634, #236344, #2F7D50
+- Orange accent: #E86824 / pale #FFF0E7
+- Background: #FFFEFA (paper), #F7F6F0 (cream), #FFFFFF (cards)
+- Text: #16251F / muted #627169
+- Fonts: Anuphan (Thai/body) + Sora (display/Latin) via next/font
+- Shared corporate UI is in `app/globals.css` and `app/_components/site-shell.js`
 
 ## โครงสร้างหน้า
 - / — homepage
 - /residential, /industrial, /bess, /epc — 4 หน้าบริการ
 - /portfolio — หน้าผลงาน (Grid + Filter + Lightbox)
+- /products — Kolchar GF-Series และ FIRESAVE จากเอกสารผลิตภัณฑ์ที่ได้รับ
+- /about — บทบาทและหลักการทำงานของ Solar ACM
+- /contact — ช่องทางติดต่อและข้อมูลที่ใช้เริ่มประเมิน
 - /quote — Lead capture form (มี file upload บิลค่าไฟ)
 - /quote/thank-you — หน้าขอบคุณ
 - /sitemap.xml + /robots.txt (auto จาก sitemap.js)
@@ -35,6 +39,12 @@ This version has breaking changes — APIs, conventions, and file structure may 
   - รูปภาพวางไว้ที่ public/portfolio/project-XX.jpg
   - Section "ผลงานของเรา" เพิ่มใน Homepage
   - ลิงก์ "ผลงาน" เพิ่มใน Nav
+- Phase 4: Corporate redesign + verified product information
+  - Shared header/footer, bilingual desktop/mobile navigation
+  - Kolchar และ FIRESAVE ใช้รูปและข้อมูลที่สกัดจาก PDF ที่ผู้ใช้ส่งให้
+  - ไม่เผยแพร่ราคาสินค้า และไม่อ้างสถานะตัวแทน/ผู้ผลิต/บทบาท EPC หากไม่มีเอกสารยืนยัน
+  - Portfolio แสดงเฉพาะข้อมูลโครงการเชิงข้อเท็จจริงที่มีอยู่; ชื่อ EPC และบทบาท Solar ACM รอการยืนยัน
+  - Git tag `backup-before-redesign` คือจุดย้อนกลับก่อน redesign
 
 ## Integration
 - Google Sheet ID: 1o5QcJN4orz1VjAa9tBQVAoVRlvH4oj4nLjJvrWeRbSM
@@ -49,6 +59,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Email: mon-attention@hotmail.com
 
 ## Convention
-- ทุกหน้าใช้ "use client" + inline styles
+- หน้าที่มี language state ใช้ `"use client"`; ใช้ shared classes ใน `app/globals.css` เป็นหลัก
+- หน้า solution ใช้ `app/_components/solution-page.js`
+- Header, footer และ floating LINE ใช้ `app/_components/site-shell.js`
 - ปุ่ม "ขอใบเสนอราคา" ทุกที่ → /quote
-- ปุ่ม LINE Chat ใน FloatingSupport widget เก็บไว้เป็น secondary contact
+- ปุ่ม LINE Chat ใช้ `FloatingLine` เป็น secondary contact
+- หลีกเลี่ยง claims เรื่อง savings, payback, certification, project totals และ response time หากไม่มีหลักฐาน

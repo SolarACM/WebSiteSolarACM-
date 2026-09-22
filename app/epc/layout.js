@@ -1,8 +1,8 @@
 // ไฟล์นี้ใส่ใน app/epc/layout.js
 export const metadata = {
-  title: "เครือข่ายผู้รับเหมา EPC โซลาร์ที่ผ่านการคัดสรร",
+  title: "การประสานเครือข่าย EPC โครงการโซลาร์",
   description:
-    "เข้าถึงเครือข่ายผู้รับเหมา EPC โซลาร์เซลล์ที่ผ่านการคัดเกรดมาตรฐาน ตรวจสอบใบอนุญาต ผลงาน 20+ โครงการ ประกันภัยครบ รีวิว 4.0+ ดาว รับใบเสนอราคาจาก 3-5 ผู้รับเหมาเพื่อเปรียบเทียบ",
+    "Solar ACM ช่วยจัดข้อมูลและประสานเครือข่าย EPC ที่เหมาะกับขนาดงาน พื้นที่ และขอบเขตโครงการ โดยแยกบทบาทอย่างชัดเจน",
   keywords: [
     "EPC Contractor",
     "EPC Solar",
@@ -16,11 +16,11 @@ export const metadata = {
   openGraph: {
     title: "เครือข่ายผู้รับเหมา EPC | Solar ACM Systems",
     description:
-      "เครือข่ายผู้รับเหมาที่ผ่านการคัดสรร ตรวจสอบครบทุกด้าน รับใบเสนอราคาเปรียบเทียบ 3-5 ราย",
+      "ช่วยจัดข้อมูลและประสานเครือข่าย EPC ตามขอบเขตและความต้องการของโครงการ",
     url: "https://web-site-solar-acm.vercel.app/epc",
     images: [
       {
-        url: "/Logo SolarACM.png",
+        url: "/images/epc/epc-1.jpg",
         width: 1200,
         height: 630,
         alt: "EPC Solar Contractor Network Thailand",

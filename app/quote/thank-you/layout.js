@@ -1,8 +1,8 @@
 // หน้า Thank You ไม่ต้องให้ Google index — เป็นหน้าหลัง submission เท่านั้น
 export const metadata = {
-  title: "ขอบคุณสำหรับการขอใบเสนอราคา | Solar ACM Systems",
+  title: "ได้รับข้อมูลแล้ว | Solar ACM",
   description:
-    "เราได้รับข้อมูลของคุณเรียบร้อยแล้ว ทีมที่ปรึกษาจะติดต่อกลับภายใน 24 ชั่วโมง",
+    "Solar ACM ได้รับข้อมูลของคุณแล้ว และจะตรวจสอบเพื่อประสานงานในขั้นตอนถัดไป",
   robots: {
     index: false,
     follow: true,

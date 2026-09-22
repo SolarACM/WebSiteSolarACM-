@@ -1,8 +1,8 @@
 // ไฟล์นี้ใส่ใน app/residential/layout.js
 export const metadata = {
-  title: "โซลาร์เซลล์บ้าน ติดตั้งโซลาร์รูฟท็อป ประหยัดค่าไฟ 70%",
+  title: "ที่ปรึกษาโซลาร์สำหรับบ้านพักอาศัย",
   description:
-    "เปลี่ยนหลังคาบ้านให้เป็นโรงไฟฟ้าส่วนตัว ติดตั้งโซลาร์เซลล์บ้านโดยทีมมืออาชีพ ใช้แผง Tier 1 Longi/Risen และ Inverter Huawei/Deye ลดค่าไฟ 50-70% คืนทุน 4-6 ปี รับประกัน 30 ปี",
+    "ประเมินระบบโซลาร์สำหรับบ้านจากบิลค่าไฟ พฤติกรรมการใช้ไฟ และข้อจำกัดของพื้นที่ พร้อมประสานผู้เชี่ยวชาญที่เหมาะกับหน้างาน",
   keywords: [
     "โซลาร์เซลล์บ้าน",
     "ติดตั้งโซลาร์บ้าน",
@@ -16,11 +16,11 @@ export const metadata = {
   openGraph: {
     title: "โซลาร์เซลล์บ้าน | Solar ACM Systems",
     description:
-      "เปลี่ยนหลังคาบ้านให้เป็นโรงไฟฟ้าส่วนตัว ประหยัดค่าไฟ 70% คืนทุน 4-6 ปี",
+      "ประเมินแนวทางระบบโซลาร์จากข้อมูลการใช้ไฟและสภาพพื้นที่จริง",
     url: "https://web-site-solar-acm.vercel.app/residential",
     images: [
       {
-        url: "/Logo SolarACM.png",
+        url: "/images/residential/res-1.jpg",
         width: 1200,
         height: 630,
         alt: "Residential Solar Installation Thailand",
