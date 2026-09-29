@@ -1,8 +1,6 @@
-// ─── ข้อมูลผลงาน Spring Marketing Networking ─────────────────────
-// คัดเฉพาะโครงการที่ติดตั้งภายใต้เครือข่ายของเรา
-// ไม่เปิดเผยชื่อลูกค้า/ผู้รับเหมา — บอกเฉพาะประเภทธุรกิจ จังหวัด และขนาด
+// Project and executing EPC data is mapped from the supplied Spring project records.
 
-export const projects = [
+const projectRecords = [
   {
     id: 1,
     title: "โรงงานอุตสาหกรรม จ.สระบุรี",
@@ -124,6 +122,54 @@ export const projects = [
     highlights: ["Food Processing", "95+ ปีประสบการณ์", "973 kWp"],
   },
 ];
+
+const epcById = {
+  1: "ITL Engineering and Solution Co., Ltd.",
+  2: "ITL Engineering and Solution Co., Ltd.",
+  3: "ITL Engineering and Solution Co., Ltd.",
+  4: "ITL Engineering and Solution Co., Ltd.",
+  5: "ITL Engineering and Solution Co., Ltd.",
+  6: "MCTRIC Public Company Limited",
+  7: "MCTRIC Public Company Limited",
+  8: "MCTRIC Public Company Limited",
+  9: "MCTRIC Public Company Limited",
+  10: "MCTRIC Public Company Limited",
+};
+
+const englishById = {
+  1: ["Industrial facility in Saraburi", "Saraburi"],
+  2: ["Industrial facility in Chonburi", "Chonburi"],
+  3: ["Manufacturing facility in Samut Prakan", "Samut Prakan"],
+  4: ["Furniture manufacturing facility in Samut Sakhon", "Samut Sakhon"],
+  5: ["Masterbatch manufacturing facility in Samut Prakan", "Samut Prakan"],
+  6: ["Industrial warehouse in Central Thailand", "Central Thailand"],
+  7: ["Wax and craft manufacturing facility in Nonthaburi", "Nonthaburi"],
+  8: ["Steel tube manufacturing facility in Rayong", "Rayong"],
+  9: ["Cold storage facility in Samut Sakhon", "Samut Sakhon"],
+  10: ["Food processing facility in Nakhon Pathom", "Nakhon Pathom"],
+};
+
+const categoriesById = {
+  1: ["โรงงานอุตสาหกรรม", "Industrial"],
+  2: ["โรงงานอุตสาหกรรม", "Industrial"],
+  3: ["อุตสาหกรรมการผลิต", "Manufacturing"],
+  4: ["เฟอร์นิเจอร์", "Furniture"],
+  5: ["พลาสติก / เคมี", "Plastics / Chemical"],
+  6: ["คลังสินค้า / โลจิสติกส์", "Warehouse / Logistics"],
+  7: ["อุตสาหกรรมการผลิต", "Manufacturing"],
+  8: ["อุตสาหกรรมโลหะ", "Metal industry"],
+  9: ["ห้องเย็น / โลจิสติกส์", "Cold storage / Logistics"],
+  10: ["อุตสาหกรรมอาหาร", "Food industry"],
+};
+
+export const projects = projectRecords.map((project) => ({
+  ...project,
+  epc: epcById[project.id],
+  titleEn: englishById[project.id][0],
+  provinceEn: englishById[project.id][1],
+  categoryEn: categoriesById[project.id][1],
+  categoryTh: categoriesById[project.id][0],
+}));
 
 export const typeLabels = {
   residential: "บ้านพักอาศัย",

@@ -1,0 +1,21 @@
+.portfolio-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.portfolio-card { min-width: 0; padding: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: white; text-align: left; cursor: pointer; }
+.portfolio-card__image { position: relative; height: 315px; overflow: hidden; background: #dfe8e1; }
+.portfolio-card__image img { object-fit: cover; transition: transform .3s ease; }
+.portfolio-card:hover img { transform: scale(1.025); }
+.portfolio-card__tag { position: absolute; left: 16px; top: 16px; max-width: calc(100% - 32px); padding: 6px 10px; border-radius: 4px; background: rgba(13,40,31,.9); color: white; font-size: 12px; font-weight: 700; }
+.portfolio-card__body { padding: 22px; }
+.portfolio-card h2 { margin: 0 0 14px; font-size: 20px; line-height: 1.35; }
+.portfolio-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; color: var(--muted); font-size: 13px; }
+.portfolio-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.portfolio-card__epc { margin: 18px 0 0; border-top: 1px solid var(--line); padding-top: 14px; font-size: 13px; line-height: 1.5; }
+.portfolio-card__role { margin: 5px 0 0; font-size: 13px; color: var(--muted); }
+.portfolio-modal { position: fixed; z-index: 200; inset: 0; display: grid; place-items: center; padding: 24px; background: rgba(5,22,15,.82); }
+.portfolio-modal__dialog { position: relative; width: min(960px,100%); max-height: 90svh; overflow: auto; border-radius: 8px; background: white; }
+.portfolio-modal__close { position: absolute; z-index: 2; right: 14px; top: 14px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(13,40,31,.9); color: white; cursor: pointer; }
+.portfolio-modal__media { position: relative; height: min(54vw,530px); min-height: 220px; background: #dfe8e1; }
+.portfolio-modal__media img { object-fit: cover; }
+.portfolio-modal__body { padding: 28px; }
+.portfolio-modal h2 { margin: 0 0 16px; font-size: 27px; }
+.portfolio-modal p { margin: 18px 0 0; }
+@media (max-width: 760px) { .portfolio-grid { grid-template-columns: 1fr; } .portfolio-card__image { height: 260px; } .portfolio-modal { padding: 10px; } .portfolio-modal__body { padding: 20px; } }
