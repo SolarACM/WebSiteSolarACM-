@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, ClipboardCheck, Network, Search, Wrench } from "lucide-react";
 import { PageShell, VisualHero } from "./site-shell";
@@ -41,6 +42,8 @@ export default function SolutionPage({ data }) {
       </VisualHero>
 
       <section className="site-section"><div className="site-container split-section"><div><span className="site-kicker">{isTh?"บทบาทของ Solar ACM":"Our role"}</span><h2 className="site-title">{text.roleTitle}</h2><p className="site-lead">{text.roleLead}</p><ul className="check-list">{text.rolePoints.map((point)=><li key={point}><Check size={18}/><span>{point}</span></li>)}</ul></div><div className="solution-role"><strong>{text.roleBoxTitle}</strong><p>{text.roleBox}</p></div></div></section>
+
+      {text.insight && <section className="site-section solution-insight"><div className="site-container split-section"><div className="solution-insight__media"><Image src={data.insightImage} alt={text.insightAlt} fill sizes="(max-width: 760px) 100vw, 50vw" /></div><div><span className="site-kicker">{text.insightLabel}</span><h2 className="site-title">{text.insightTitle}</h2><p className="site-lead">{text.insight}</p><ul className="check-list">{text.insightPoints.map((point) => <li key={point}><Check size={18}/><span>{point}</span></li>)}</ul></div></div></section>}
 
       <section className="site-section site-section--soft"><div className="site-container"><div className="section-head"><div className="section-head__copy"><span className="site-kicker">{isTh?"สิ่งที่ต้องพิจารณา":"What to consider"}</span><h2 className="site-title">{text.featuresTitle}</h2></div></div><div className="grid-3">{text.features.map((item,index)=><article className="flat-card feature-card" key={item[0]}><div className="feature-number">0{index+1}</div><h3>{item[0]}</h3><p>{item[1]}</p></article>)}</div></div></section>
 

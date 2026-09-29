@@ -11,10 +11,10 @@ out/
 # Test output
 test-results/
 playwright-report/
+.playwright-cli/
 coverage/
 
 # Logs and operating-system files
 *.log
 .DS_Store
 Thumbs.db
-

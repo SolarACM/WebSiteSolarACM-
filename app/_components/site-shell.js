@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Globe2, Mail, Menu, MessageCircle, Phone, X } from "lucide-react";
+import { ArrowRight, Mail, Menu, MessageCircle, Phone, X } from "lucide-react";
 
 const CONTACT = {
   phoneDisplay: "095-309-5196",
@@ -53,9 +53,21 @@ function RouteScrollManager() {
 
 export function SiteHeader({ lang = "th", setLang }) {
   const [open, setOpen] = useState(false);
+  const menuButtonRef = useRef(null);
   const pathname = usePathname();
-  const switchLanguage = () => {
-    const next = lang === "th" ? "en" : "th";
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+  const switchLanguage = (next) => {
+    if (next === lang) return;
     document.documentElement.lang = next;
     setLang?.(next);
     try {
@@ -69,7 +81,7 @@ export function SiteHeader({ lang = "th", setLang }) {
   return (
     <header className="site-header">
       <div className="site-container site-header__inner">
-        <Link href="/" className="site-brand" aria-label="Solar ACM homepage" scroll>
+        <Link href="/" className="site-brand" aria-label={lang === "th" ? "หน้าแรก Solar ACM" : "Solar ACM homepage"} scroll>
           <span className="site-brand__mark">
             <Image src="/Logo SolarACM.png" alt="" width={48} height={48} priority />
           </span>
@@ -79,7 +91,7 @@ export function SiteHeader({ lang = "th", setLang }) {
           </span>
         </Link>
 
-        <nav className="site-nav" aria-label="Main navigation">
+        <nav className="site-nav" aria-label={lang === "th" ? "เมนูหลัก" : "Main navigation"}>
           {navigation[lang].map(([href, label]) => (
             <Link className={pathname === href ? "is-active" : ""} href={href} key={href} scroll>
               {label}
@@ -88,17 +100,19 @@ export function SiteHeader({ lang = "th", setLang }) {
         </nav>
 
         <div className="site-header__actions">
-          <button className="lang-switch" onClick={switchLanguage} aria-label="Switch language">
-            <Globe2 size={15} /> {lang === "th" ? "EN" : "TH"}
-          </button>
+          <div className="lang-switch" role="group" aria-label={lang === "th" ? "เลือกภาษา" : "Select language"}>
+            <button type="button" onClick={() => switchLanguage("th")} className={lang === "th" ? "is-active" : ""} aria-pressed={lang === "th"}>TH</button>
+            <button type="button" onClick={() => switchLanguage("en")} className={lang === "en" ? "is-active" : ""} aria-pressed={lang === "en"}>EN</button>
+          </div>
           <Link href="/quote" className="site-btn site-btn--light header-quote" scroll>
             {quoteLabel}<ArrowRight size={15} />
           </Link>
           <button
             className="menu-button"
+            ref={menuButtonRef}
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
-            aria-label={open ? "Close navigation" : "Open navigation"}
+            aria-label={open ? (lang === "th" ? "ปิดเมนู" : "Close navigation") : (lang === "th" ? "เปิดเมนู" : "Open navigation")}
           >
             {open ? <X size={21} /> : <Menu size={21} />}
           </button>
@@ -106,7 +120,7 @@ export function SiteHeader({ lang = "th", setLang }) {
       </div>
 
       {open && (
-        <nav className="mobile-nav" aria-label="Mobile navigation">
+        <nav className="mobile-nav" aria-label={lang === "th" ? "เมนูมือถือ" : "Mobile navigation"}>
           {navigation[lang].map(([href, label]) => (
             <Link href={href} key={href} scroll onClick={() => setOpen(false)}>{label}<ArrowRight size={15} /></Link>
           ))}
@@ -128,6 +142,7 @@ export function VisualHero({ image, imageAlt = "", kicker, title, lead, children
         alt={imageAlt}
         fill
         priority
+        loading="eager"
         sizes="100vw"
         style={{ objectPosition: imagePosition }}
       />
@@ -195,14 +210,14 @@ export function SiteFooter({ lang = "th" }) {
   );
 }
 
-export function FloatingLine() {
+export function FloatingLine({ lang = "th" }) {
   return (
     <a
       className="floating-line"
       href={`https://line.me/ti/p/~${CONTACT.line}`}
       target="_blank"
       rel="noreferrer"
-      aria-label="Contact Solar ACM on LINE"
+      aria-label={lang === "th" ? "ติดต่อ Solar ACM ทาง LINE" : "Contact Solar ACM on LINE"}
       title="LINE: Monarrattana"
     >
       <MessageCircle size={23} />
@@ -211,6 +226,7 @@ export function FloatingLine() {
 }
 
 export function PageShell({ children, lang, setLang }) {
+  const pathname = usePathname();
   useEffect(() => {
     let saved = null;
     try {
@@ -223,7 +239,35 @@ export function PageShell({ children, lang, setLang }) {
 
   useEffect(() => {
     document.documentElement.lang = lang;
-  }, [lang]);
+    const titles = {
+      "/": ["Solar ACM Systems | ที่ปรึกษาพลังงานสะอาด", "Solar ACM Systems | Clean energy consultancy"],
+      "/residential": ["โซลาร์บ้านพักอาศัย", "Residential solar"],
+      "/industrial": ["โซลาร์ธุรกิจและโรงงาน", "Commercial and industrial solar"],
+      "/bess": ["ระบบกักเก็บพลังงาน BESS", "Battery energy storage"],
+      "/epc": ["ประสานงานโครงการ EPC", "EPC project coordination"],
+      "/products": ["ผลิตภัณฑ์ Kolchar และ FIRESAVE", "Kolchar and FIRESAVE products"],
+      "/portfolio": ["ผลงานโครงการ", "Project portfolio"],
+      "/about": ["เกี่ยวกับ Solar ACM", "About Solar ACM"],
+      "/contact": ["ติดต่อ Solar ACM", "Contact Solar ACM"],
+      "/quote": ["ขอประเมินโครงการ", "Request a project assessment"],
+    };
+    const descriptions = [
+      "ที่ปรึกษาโครงการพลังงานสะอาดสำหรับบ้าน ธุรกิจ และโรงงาน พร้อมผลิตภัณฑ์ดูแลระบบโซลาร์",
+      "Clean energy consultancy for homes, businesses, and industry, with solar operations products.",
+    ];
+    const routeTitle = titles[pathname] ?? titles["/"];
+    const desiredTitle = pathname === "/" ? routeTitle[lang === "th" ? 0 : 1] : `${routeTitle[lang === "th" ? 0 : 1]} | Solar ACM Systems`;
+    const desiredDescription = descriptions[lang === "th" ? 0 : 1];
+    const applyMetadata = () => {
+      if (document.title !== desiredTitle) document.title = desiredTitle;
+      const description = document.querySelector('meta[name="description"]');
+      if (description && description.content !== desiredDescription) description.content = desiredDescription;
+    };
+    applyMetadata();
+    const observer = new MutationObserver(applyMetadata);
+    observer.observe(document.head, { childList: true, subtree: true, characterData: true, attributes: true });
+    return () => observer.disconnect();
+  }, [lang, pathname]);
 
   return (
     <>
@@ -231,7 +275,7 @@ export function PageShell({ children, lang, setLang }) {
       <SiteHeader lang={lang} setLang={setLang} />
       <main>{children}</main>
       <SiteFooter lang={lang} />
-      <FloatingLine />
+      <FloatingLine lang={lang} />
     </>
   );
 }

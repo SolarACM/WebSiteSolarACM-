@@ -1,7 +1,11 @@
 <!-- BEGIN:nextjs-agent-rules -->
+
 # This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
 <!-- END:nextjs-agent-rules -->
 # Solar ACM Systems - Project Context
 
@@ -43,8 +47,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
   - Shared header/footer, bilingual desktop/mobile navigation
   - Kolchar และ FIRESAVE ใช้รูปและข้อมูลที่สกัดจาก PDF ที่ผู้ใช้ส่งให้
   - ไม่เผยแพร่ราคาสินค้า และไม่อ้างสถานะตัวแทน/ผู้ผลิต/บทบาท EPC หากไม่มีเอกสารยืนยัน
-  - Portfolio แสดงเฉพาะข้อมูลโครงการเชิงข้อเท็จจริงที่มีอยู่; ชื่อ EPC และบทบาท Solar ACM รอการยืนยัน
+  - Portfolio แสดงชื่อ executing EPC จาก `D:\Sprig energy 168\app\data\projects.js` แยกจากขอบเขตบริการของ Solar ACM; บทบาทรายโครงการยังไม่ยืนยัน
   - Git tag `backup-before-redesign` คือจุดย้อนกลับก่อน redesign
+- UI and content repair (2026-09-29): restore tag `backup-before-ui-repair-2026-09-29`; Products uses 10 FIRESAVE models and Kolchar assets, portfolio displays EPC, bilingual display and responsive QA updated.
 
 ## Integration
 - Google Sheet ID: 1o5QcJN4orz1VjAa9tBQVAoVRlvH4oj4nLjJvrWeRbSM
