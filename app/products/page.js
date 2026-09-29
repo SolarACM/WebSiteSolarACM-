@@ -3,140 +3,134 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  AlertTriangle,
-  ArrowRight,
-  BatteryCharging,
-  Check,
-  CloudCog,
-  Droplets,
-  Factory,
-  FileCheck2,
-  Flame,
-  Gauge,
-  Leaf,
-  ShieldCheck,
-  SprayCan,
-} from "lucide-react";
+import { ArrowDown, ArrowRight, Check, Download, ExternalLink, ShieldAlert } from "lucide-react";
 import { PageShell, VisualHero } from "../_components/site-shell";
+import { fireProducts, fireShopDetails } from "./firesave-data";
+import "./products.css";
 
-const copy = {
+const filters = [
+  ["all", "ทั้งหมด", "All"],
+  ["portable", "แบบพกพา", "Portable"],
+  ["cylinder", "ถังดับเพลิง", "Cylinders"],
+  ["specialist", "หัวเชื้อและงานเฉพาะ", "Specialist agents"],
+  ["accessory", "อุปกรณ์เสริม", "Accessories"],
+];
+
+const content = {
   th: {
-    title: "ผลิตภัณฑ์สำหรับดูแลระบบโซลาร์และความปลอดภัยของพื้นที่",
-    intro: "ข้อมูลในหน้านี้อ้างอิงจากเอกสารผลิตภัณฑ์ที่ Solar ACM ได้รับ เราให้ข้อมูลและประสานงานสินค้า โดยไม่ได้อ้างว่าเป็นผู้ผลิต",
-    kolcharTitle: "ทำความสะอาดแผงโซลาร์แบบไร้น้ำ สำหรับโครงการขนาดใหญ่",
-    kolcharLead: "Kolchar GF-Series ออกแบบมาเพื่อทำความสะอาดแผงโซลาร์เป็นกิจวัตร โดยลดการใช้น้ำและช่วยให้ทีมดูแลระบบติดตามการทำงานจากระยะไกล",
-    fireTitle: "รู้จักผลิตภัณฑ์ FIRESAVE ก่อนเลือกใช้",
-    fireLead: "ผลิตภัณฑ์แต่ละประเภทเหมาะกับสถานการณ์ต่างกัน ควรเลือกตามชนิดเพลิง พื้นที่ใช้งาน และคำแนะนำบนฉลากผลิตภัณฑ์",
-    docsTitle: "เอกสารประกอบที่ได้รับ",
-    docsLead: "ข้อความด้านมาตรฐานบนเว็บไซต์สรุปจากเอกสารที่แนบมา ไม่ได้ใช้แทนใบรับรองฉบับเต็มหรือคำแนะนำจากผู้เชี่ยวชาญด้านอัคคีภัย",
+    hero: "เทคโนโลยีดูแลโซลาร์และอุปกรณ์ความปลอดภัย",
+    intro: "เลือกผลิตภัณฑ์จากลักษณะพื้นที่และการใช้งานจริง พร้อมข้อมูลรายรุ่นที่ตรวจสอบจากเอกสารที่ได้รับ",
+    kolchar: "Kolchar GF-Series",
+    kolcharTitle: "ทำความสะอาดแผงแบบไร้น้ำ สำหรับไซต์ที่ต้องดูแลอย่างต่อเนื่อง",
+    kolcharLead: "หุ่นยนต์ Kolchar จาก Solar ACM Systems Corporation ประเทศแคนาดา ใช้แปรงและระบบขับเคลื่อนอัตโนมัติ ประเมินการติดตั้งตามขนาดแผง ระยะระหว่างแถว และสภาพหน้างาน",
+    kolcharPoints: ["เหมาะสำหรับโรงงานและ Solar Farm ที่มีแผงจำนวนมาก", "ใช้พลังงานจากแผงที่ติดตั้งบนตัวหุ่นยนต์ และทำความสะอาดโดยไม่ใช้น้ำ", "ติดตามสถานะและแจ้งเตือนผ่านระบบจัดการระยะไกล", "ต้องตรวจความเข้ากันได้กับแผง การยึดติด ทางเดิน และโครงสร้างก่อนเลือกขนาดรุ่น"],
+    kolcharDemo: "ชมการทำงานของ Kolchar",
+    kolcharDemoKicker: "การทำงานจริง",
+    kolcharDemoText: "คลิปแสดงการเคลื่อนที่และแปรงทำความสะอาดบนแถวแผงจริง เพื่อช่วยประเมินรูปแบบการใช้งานก่อนสำรวจพื้นที่",
+    kolcharSpecs: "ข้อมูลรุ่นจากเอกสาร",
+    kolcharNote: "ความเร็ว 8–15 เมตร/นาทีระบุในโปรไฟล์ Solar ACM; ความเร็วจริงขึ้นกับรุ่นและสภาพพื้นที่ ต้องยืนยันในข้อเสนอรายโครงการ",
+    consultKolchar: "ขอประเมินพื้นที่ / สาธิต",
+    brochure: "ดาวน์โหลดโบรชัวร์",
+    fireIntro: "FIRESAVE สำหรับแผนรับมือเหตุเพลิงระยะเริ่มต้น",
+    fireLead: "มีทั้งอุปกรณ์พกพา ถังน้ำยา หัวเชื้อ และอุปกรณ์เสริม แต่ละรุ่นมีขอบเขตการใช้งานและข้อควรระวังต่างกัน ควรให้ผู้รับผิดชอบความปลอดภัยประเมินร่วมด้วย",
+    demoTitle: "ชมการสาธิตผลิตภัณฑ์",
+    demoKicker: "วิดีโอสาธิต FIRESAVE",
+    demoLead: "คลิปช่วยให้เห็นรูปแบบการใช้งานจริง เป็นการสาธิต ไม่ใช่การรับรองผลในทุกสถานการณ์",
+    capsuleDemo: "การสาธิตแคปซูล FS-TH",
+    sprayDemo: "การสาธิตสเปรย์ FS-S500 PLUS+",
+    capsuleDemoText: "แสดงการขว้างแคปซูลให้ภาชนะแตกเพื่อกระจายสารที่ต้นเพลิง",
+    sprayDemoText: "แสดงการปลดสลักและฉีดพ่นไปยังต้นเพลิงระยะเริ่มต้น",
+    catalogue: "เลือกผลิตภัณฑ์ตามหน้างาน",
+    catalogueKicker: "FIRESAVE ทั้ง 10 รายการ",
+    catalogueLead: "ดูสถานการณ์ที่เหมาะสม ความต่าง สเปก และข้อควรระวังของแต่ละรุ่น",
+    use: "เหมาะกับ", difference: "จุดต่าง", specs: "ข้อมูลรุ่น", caution: "ข้อควรระวัง",
+    ask: "สอบถามสินค้า",
+    guide: "เลือกอย่างไรให้เหมาะกับความเสี่ยง",
+    guideKicker: "แนวทางเลือกผลิตภัณฑ์",
+    guideCards: [["พื้นที่ทั่วไป", "เริ่มจากชนิดเพลิงและตำแหน่งเสี่ยง แคปซูลกับสเปรย์เป็นอุปกรณ์เสริมที่ใช้ต่างวิธีกัน"], ["ครัวและน้ำมัน", "FS-CO ใช้กับน้ำมันประกอบอาหารตามปริมาตรที่ผู้ผลิตกำหนด ห้ามใช้น้ำกับเพลิงน้ำมัน"], ["โรงงานและทีมปฏิบัติการ", "ถังและหัวเชื้อต้องเลือกตามประเภทเพลิง อุปกรณ์จ่ายสาร อัตราผสม และแผนความปลอดภัย"]],
+    docs: "เอกสารและหลักฐานประกอบ",
+    docsKicker: "เอกสารประกอบ",
+    docsLead: "ข้อมูลสรุปจากเอกสารที่ได้รับ ไม่แทนใบรับรองฉบับเต็มหรือการประเมินของผู้เชี่ยวชาญ และไม่ย้ายผลทดสอบของรุ่นหนึ่งไปอ้างกับรุ่นอื่น",
+    evidence: [["เอกสารผู้ผลิตและตัวแทน", "ใช้ระบุขนาด อายุการใช้งาน และเงื่อนไขเก็บรักษาของสินค้าแต่ละรุ่น"], ["ISO ของโรงงานในเอกสาร", "มีเอกสาร ISO 9001:2015, 14001:2015 และ 45001:2018 ของโรงงานที่ระบุ ไม่ใช่ใบรับรองของทุกผลิตภัณฑ์"], ["รายงานทดสอบเฉพาะรุ่น", "เอกสาร SGS, JFRL และผลทดสอบเพลิงมีขอบเขตตามตัวอย่างและรุ่นที่ระบุในรายงาน"]],
+    safety: "สำหรับแผง PV อินเวอร์เตอร์ ตู้ไฟที่ยังมีกระแส และแบตเตอรี่ลิเทียม ต้องยืนยันความเหมาะสมกับผู้ผลิตและผู้เชี่ยวชาญก่อน เอกสารที่ตรวจยังไม่รองรับการกล่าวว่า FIRESAVE ทุกรุ่นใช้ได้กับทุกความเสี่ยงของระบบโซลาร์",
+    finalTitle: "ต้องการสเปก ใบเสนอราคา หรือการสาธิต?",
+    finalLead: "แจ้งรุ่นที่สนใจและลักษณะพื้นที่ ทีมงานจะประสานเอกสารและแนวทางที่เหมาะสม",
+    contact: "ติดต่อทีมงาน",
   },
   en: {
-    title: "Products for solar operations and site safety",
-    intro: "Information on this page is based on product documents received by Solar ACM. We provide information and coordination and do not claim to be the manufacturer.",
-    kolcharTitle: "Waterless solar panel cleaning for large-scale sites",
-    kolcharLead: "Kolchar GF-Series is designed for routine panel cleaning, reducing water use while enabling remote monitoring and management.",
-    fireTitle: "Understand FIRESAVE products before use",
-    fireLead: "Each product is intended for a different situation. Selection should consider fire type, location, and instructions on the product label.",
-    docsTitle: "Documents received",
-    docsLead: "Standards information on this page summarizes attached documents and does not replace full certificates or professional fire-safety guidance.",
+    hero: "Solar operations technology and site safety products",
+    intro: "Select products around your site and use case, with model-specific information grounded in supplied documents.",
+    kolchar: "Kolchar GF-Series",
+    kolcharTitle: "Waterless panel cleaning for sites requiring regular care",
+    kolcharLead: "Kolchar robots from Solar ACM Systems Corporation, Canada, use brushes and automated movement. Model fit depends on panel dimensions, row layout, and site conditions.",
+    kolcharPoints: ["For factories and solar farms with large panel arrays", "Self-powered by an onboard solar panel and cleans without water", "Remote status monitoring and alerts through the management system", "Panel compatibility, mounting, paths, and structure must be checked before selecting a model"],
+    kolcharDemo: "See Kolchar in operation",
+    kolcharDemoKicker: "Kolchar in action",
+    kolcharDemoText: "The video shows travel and brushing on panel rows to help assess operation before a site survey.",
+    kolcharSpecs: "Documented model information",
+    kolcharNote: "The 8–15 m/min cleaning speed is stated in the Solar ACM company profile. Actual speed depends on model and site conditions and must be confirmed in the project proposal.",
+    consultKolchar: "Request site assessment / demo",
+    brochure: "Download brochure",
+    fireIntro: "FIRESAVE for early-stage fire response plans",
+    fireLead: "Portable units, cylinders, concentrates, and accessories have different uses and precautions. Involve the responsible safety team in selection.",
+    demoTitle: "Product demonstrations",
+    demoKicker: "FIRESAVE demos",
+    demoLead: "These clips show how the products are used. They are demonstrations, not a guarantee of results in every situation.",
+    capsuleDemo: "FS-TH capsule demonstration",
+    sprayDemo: "FS-S500 PLUS+ spray demonstration",
+    capsuleDemoText: "Shows the capsule breaking on impact to disperse agent at the fire base.",
+    sprayDemoText: "Shows unlocking and directing the spray at an early-stage fire.",
+    catalogue: "Choose by site and use case",
+    catalogueKicker: "10 FIRESAVE products",
+    catalogueLead: "Compare suitability, differences, specifications, and precautions by model.",
+    use: "Suitable for", difference: "Difference", specs: "Model details", caution: "Precaution",
+    ask: "Ask about this model",
+    guide: "Selection guidance",
+    guideKicker: "Selection guide",
+    guideCards: [["General spaces", "Start with fire class and risk location. Capsules and sprays are supplemental products used differently."], ["Kitchens and cooking oil", "FS-CO is for cooking oil within the stated volume. Never apply water to an oil fire."], ["Factories and response teams", "Select cylinders and concentrates for the fire class, delivery equipment, dilution, and site safety plan."]],
+    docs: "Documents and evidence",
+    docsKicker: "Documentation",
+    docsLead: "Summaries follow supplied documents and do not replace full certificates or professional assessment. Model-specific test results are not extended to other products.",
+    evidence: [["Supplier documentation", "Used for model dimensions, service life, and storage conditions."], ["Factory ISO documentation", "The set includes ISO 9001:2015, 14001:2015, and 45001:2018 for the named factory, not certification of every product."], ["Model-specific test reports", "SGS, JFRL, and fire-test documents have the scope stated for their samples and models."]],
+    safety: "For PV panels, inverters, energized cabinets, and lithium batteries, confirm suitability with the manufacturer and a qualified specialist. Reviewed documents do not establish that every FIRESAVE model covers every solar-system hazard.",
+    finalTitle: "Need specifications, a quotation, or a demonstration?",
+    finalLead: "Tell us the model and site type so our team can coordinate the relevant documents and next steps.",
+    contact: "Contact the team",
   },
 };
 
-const firesaveProducts = [
-  {
-    image: "/products/firesave-capsule.jpg",
-    code: "FS-TH",
-    titleTh: "แคปซูลดับเพลิงชนิดขว้าง",
-    titleEn: "Throwing-type fire extinguisher",
-    descTh: "สำหรับขว้างไปยังต้นเพลิงระยะเริ่มต้น ตัวแคปซูลแตกและกระจายสารดับเพลิงเมื่อกระแทก",
-    descEn: "Designed to be thrown at an early-stage fire, releasing the extinguishing agent on impact.",
-    specsTh: ["เพลิงประเภท A, B, C", "สารดับเพลิง 650 ± 10 มล.", "น้ำหนักรวม 790 ± 15 กรัม", "อายุการใช้งาน 5 ปี", "เก็บรักษา -10 ถึง +60°C"],
-    specsEn: ["Fire classes A, B, C", "Agent volume 650 ± 10 ml", "Total weight 790 ± 15 g", "5-year service life", "Storage -10 to +60°C"],
-  },
-  {
-    image: "/products/firesave-spray.jpg",
-    code: "FS-S500 PLUS+",
-    titleTh: "สเปรย์ดับเพลิงแบบพกพา",
-    titleEn: "Portable fire-extinguishing spray",
-    descTh: "อุปกรณ์สำหรับจู่โจมเพลิงในช่วงเริ่มต้น ใช้โดยเขย่ากระป๋อง ดึงสลัก และฉีดพ่นไปยังกองเพลิง",
-    descEn: "An early-stage fire product used by shaking the can, pulling the pin, and directing the spray at the fire.",
-    specsTh: ["เพลิงประเภท A, B, C, K", "สารดับเพลิง 500 ± 5 มล.", "น้ำหนักรวม 690 ± 15 กรัม", "อายุการใช้งาน 3 ปี", "เก็บรักษา 0 ถึง +65°C"],
-    specsEn: ["Fire classes A, B, C, K", "Agent volume 500 ± 5 ml", "Total weight 690 ± 15 g", "3-year service life", "Storage 0 to +65°C"],
-  },
-  {
-    image: "/products/firesave-pouch.jpg",
-    code: "Cooking oil fire pouch",
-    titleTh: "ซองดับเพลิงสำหรับน้ำมันประกอบอาหาร",
-    titleEn: "Cooking-oil fire pouch",
-    descTh: "หย่อนซองลงในภาชนะที่เกิดเพลิงจากน้ำมันประกอบอาหาร โดยเอกสารระบุว่าหนึ่งซองเหมาะกับปริมาตรน้ำมันไม่เกิน 1 ลิตร",
-    descEn: "Placed into a container with a cooking-oil fire. The document states one pouch is intended for up to 1 litre of oil.",
-    specsTh: ["ใช้กับเพลิงจากน้ำมันประกอบอาหาร", "หนึ่งซองต่อน้ำมันไม่เกิน 1 ลิตร", "ห้ามใช้น้ำกับเพลิงจากน้ำมัน", "ปฏิบัติตามฉลากทุกครั้ง"],
-    specsEn: ["For cooking-oil fires", "One pouch for up to 1 litre of oil", "Do not use water on oil fires", "Always follow the product label"],
-  },
-];
+function Demo({ src, poster, title, description }) {
+  return <article className="product-demo"><video controls playsInline preload="none" loading="lazy" poster={poster} aria-label={title}><source src={src} type="video/mp4" /></video><div><h3>{title}</h3><p>{description}</p></div></article>;
+}
 
 export default function ProductsPage() {
   const [lang, setLang] = useState("th");
+  const [filter, setFilter] = useState("all");
+  const t = content[lang];
   const isTh = lang === "th";
-  const t = copy[lang];
+  const visibleProducts = fireProducts.filter((product) => filter === "all" || product.group === filter);
 
-  return (
-    <PageShell lang={lang} setLang={setLang}>
-      <style>{`
-        .product-anchor{display:flex;gap:10px;flex-wrap:wrap;margin-top:31px}.product-anchor a{padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:white;color:var(--green-700);font-weight:700;text-decoration:none}
-        .kolchar-specs{display:grid;grid-template-columns:repeat(4,1fr);margin-top:34px;border:1px solid var(--line)}.kolchar-specs div{padding:21px;border-right:1px solid var(--line);background:white}.kolchar-specs div:last-child{border-right:0}.kolchar-specs strong{display:block;font-size:1.15rem}.kolchar-specs span{color:var(--muted);font-size:13px}
-        .use-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:32px}.use-card{padding:24px;border:1px solid var(--line);background:white}.use-card svg{margin-bottom:24px;color:var(--green-600)}.use-card h3{margin:0 0 8px}.use-card p{margin:0;color:var(--muted);font-size:14px}
-        .firesave-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.firesave-card{display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--line);border-radius:7px;background:white}.firesave-card__image{height:300px;display:grid;place-items:center;padding:32px;background:#f7f5ef}.firesave-card__image img{width:100%;height:100%;object-fit:contain}.firesave-card__body{display:flex;flex:1;flex-direction:column;padding:26px}.firesave-card__body>span{color:var(--orange);font-family:var(--font-display);font-size:11px;font-weight:700;text-transform:uppercase}.firesave-card h3{margin:8px 0 9px;font-size:1.22rem}.firesave-card p{margin:0;color:var(--muted);font-size:14px}.spec-list{display:grid;gap:8px;margin:22px 0 0;padding:0;list-style:none}.spec-list li{display:flex;align-items:flex-start;gap:8px;font-size:13px}.spec-list svg{flex:0 0 auto;margin-top:3px;color:var(--green-600)}
-        .warning-box{display:flex;gap:15px;margin-top:28px;padding:22px;border-left:4px solid var(--orange);background:var(--orange-soft)}.warning-box svg{flex:0 0 auto;color:var(--orange)}.warning-box strong{display:block;margin-bottom:3px}.warning-box p{margin:0;color:#67564b;font-size:14px}
-        .docs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:32px}.doc-card{display:flex;gap:15px;padding:22px;border:1px solid rgba(255,255,255,.16)}.doc-card svg{flex:0 0 auto;color:#8cd4a7}.doc-card h3{margin:0 0 6px;font-size:1rem}.doc-card p{margin:0;color:rgba(255,255,255,.63);font-size:13px}
-        @media(max-width:960px){.kolchar-specs,.firesave-grid{grid-template-columns:1fr 1fr}.kolchar-specs div:nth-child(2){border-right:0}.use-grid{grid-template-columns:1fr}.firesave-card:last-child{grid-column:1/-1}}
-        @media(max-width:680px){.kolchar-specs,.firesave-grid,.docs-grid{grid-template-columns:1fr}.kolchar-specs div,.kolchar-specs div:nth-child(2){border-right:0;border-bottom:1px solid var(--line)}.firesave-card:last-child{grid-column:auto}.firesave-card__image{height:260px}}
-      `}</style>
+  return <PageShell lang={lang} setLang={setLang}>
+    <VisualHero image="/products/kolchar-rooftop.jpg" imagePosition="center 55%" imageAlt={isTh ? "หุ่นยนต์บนแผงโซลาร์" : "Robot on solar panels"} kicker="Kolchar / FIRESAVE" title={t.hero} lead={t.intro} />
 
-      <VisualHero image="/products/kolchar-rooftop.jpg" imagePosition="center 55%" imageAlt={isTh ? "ระบบหุ่นยนต์ทำความสะอาดแผงโซลาร์" : "Solar panel cleaning robot system"} kicker="Products" title={t.title} lead={t.intro}>
-        <div className="product-anchor"><a href="#kolchar">Kolchar GF-Series</a><a href="#firesave">FIRESAVE</a></div>
-      </VisualHero>
+    <nav className="product-quick-nav" aria-label={isTh ? "ไปยังผลิตภัณฑ์" : "Jump to products"}><div className="site-container"><a href="#kolchar">Kolchar <ArrowDown size={15} /></a><a href="#firesave">FIRESAVE <ArrowDown size={15} /></a></div></nav>
 
-      <section className="site-section" id="kolchar">
-        <div className="site-container split-section">
-          <div className="split-section__media"><Image src="/products/kolchar-gf-series.jpg" alt={isTh ? "หุ่นยนต์ Kolchar GF-Series บนแผงโซลาร์" : "Kolchar GF-Series robots on solar panels"} fill sizes="(max-width: 760px) 100vw, 50vw" /></div>
-          <div><span className="site-kicker">Kolchar GF-Series</span><h2 className="site-title">{t.kolcharTitle}</h2><p className="site-lead">{t.kolcharLead}</p><ul className="check-list">{(isTh ? ["ระบบทำความสะอาดแบบไร้น้ำ", "เหมาะกับโรงงานและโครงการโซลาร์ขนาดใหญ่", "ติดตามสถานะผ่านระบบจัดการระยะไกล", "ตั้งค่าการทำงานและรับการแจ้งเตือนได้"] : ["Waterless cleaning system", "For factories and large solar sites", "Remote status monitoring", "Scheduling and operational alerts"]).map((item)=><li key={item}><Check size={18}/><span>{item}</span></li>)}</ul><Link href="/contact" className="site-btn">{isTh ? "ขอข้อมูลและสาธิต" : "Request information or a demo"}<ArrowRight size={16}/></Link></div>
-        </div>
-        <div className="site-container kolchar-specs">
-          <div><strong>GF-Series</strong><span>{isTh ? "กลุ่มผลิตภัณฑ์" : "Product series"}</span></div>
-          <div><strong>Waterless</strong><span>{isTh ? "ไม่ใช้น้ำในการทำความสะอาด" : "No water used for cleaning"}</span></div>
-          <div><strong>3 m/min</strong><span>{isTh ? "ความเร็วทำความสะอาดตามเอกสาร" : "Documented cleaning speed"}</span></div>
-          <div><strong>Remote</strong><span>{isTh ? "ติดตามและจัดการจากระยะไกล" : "Remote monitoring and control"}</span></div>
-        </div>
-      </section>
+    <section className="site-section product-kolchar" id="kolchar"><div className="site-container product-kolchar__grid"><div className="product-kolchar__image"><Image src="/products/kolchar-gf-series.jpg" alt={isTh ? "หุ่นยนต์ Kolchar GF-Series เคลื่อนบนแผง" : "Kolchar GF-Series robot moving across panels"} fill sizes="(max-width: 800px) 100vw, 50vw" /></div><div><span className="site-kicker">{t.kolchar}</span><h2 className="site-title">{t.kolcharTitle}</h2><p className="site-lead">{t.kolcharLead}</p><ul className="check-list">{t.kolcharPoints.map((item)=><li key={item}><Check size={18}/><span>{item}</span></li>)}</ul><div className="product-actions"><Link href="/contact" className="site-btn site-btn--orange">{t.consultKolchar}<ArrowRight size={16}/></Link><a href="/products/kolchar-brochure.pdf" className="site-btn site-btn--outline-dark" download><Download size={16}/>{t.brochure}</a></div></div></div></section>
 
-      <section className="site-section site-section--soft">
-        <div className="site-container">
-          <span className="site-kicker">Operational value</span><h2 className="site-title">{isTh ? "ออกแบบเพื่อการดูแลแผงอย่างต่อเนื่อง" : "Designed for consistent panel care"}</h2>
-          <div className="use-grid">
-            {[[Droplets,isTh?"ลดการใช้น้ำ":"Reduce water use",isTh?"เหมาะกับพื้นที่ที่การใช้น้ำมีข้อจำกัด หรืออยากลดขั้นตอนจัดการน้ำ":"Suitable where water access is limited or water handling should be reduced"],[CloudCog,isTh?"จัดการระยะไกล":"Remote management",isTh?"ติดตามสถานะและข้อมูลการทำงานผ่านระบบจัดการ":"Monitor status and operating information through the management system"],[Gauge,isTh?"ช่วยดูแลประสิทธิภาพ":"Support performance",isTh?"การทำความสะอาดเป็นกิจวัตรช่วยลดการสะสมของฝุ่นบนผิวแผง":"Routine cleaning helps reduce dust accumulation on panel surfaces"]].map(([Icon,title,desc])=><div className="use-card" key={title}><Icon size={24}/><h3>{title}</h3><p>{desc}</p></div>)}
-          </div>
-        </div>
-      </section>
+    <section className="site-section site-section--soft"><div className="site-container"><div className="section-head"><div><span className="site-kicker">{t.kolcharDemoKicker}</span><h2 className="site-title">{t.kolcharDemo}</h2><p className="site-lead">{t.kolcharDemoText}</p></div></div><Demo src="/products/kolchar-demo.mp4" poster="/products/kolchar-demo-poster.jpg" title="Kolchar GF-Series" description={t.kolcharDemoText} /></div></section>
 
-      <section className="site-section" id="firesave">
-        <div className="site-container">
-          <div className="section-head"><div className="section-head__copy"><span className="site-kicker">FIRESAVE</span><h2 className="site-title">{t.fireTitle}</h2><p className="site-lead">{t.fireLead}</p></div><Link href="/contact" className="site-btn site-btn--outline-dark">{isTh ? "สอบถามผลิตภัณฑ์" : "Ask about products"}<ArrowRight size={16}/></Link></div>
-          <div className="firesave-grid">
-            {firesaveProducts.map((product)=><article className="firesave-card" key={product.code}><div className="firesave-card__image"><Image src={product.image} alt={isTh?product.titleTh:product.titleEn} width={420} height={300}/></div><div className="firesave-card__body"><span>{product.code}</span><h3>{isTh?product.titleTh:product.titleEn}</h3><p>{isTh?product.descTh:product.descEn}</p><ul className="spec-list">{(isTh?product.specsTh:product.specsEn).map((spec)=><li key={spec}><Check size={15}/><span>{spec}</span></li>)}</ul></div></article>)}
-          </div>
-          <div className="warning-box"><AlertTriangle size={24}/><div><strong>{isTh ? "ข้อควรระวัง" : "Important safety note"}</strong><p>{isTh ? "ผลิตภัณฑ์เหล่านี้ใช้สำหรับระงับเหตุในระยะเริ่มต้นตามขอบเขตที่ระบุ หากไฟลุกลาม มีควันหนาแน่น หรือไม่สามารถเข้าถึงต้นเพลิงได้อย่างปลอดภัย ให้รีบออกจากพื้นที่และโทรแจ้งเหตุฉุกเฉิน 199 ไม่ควรเสี่ยงเข้าไปดับเพลิงด้วยตนเอง" : "These products are intended for early-stage incidents within their stated scope. If the fire spreads, smoke becomes dense, or the source cannot be reached safely, evacuate and call emergency services. Do not take personal risks."}</p></div></div>
-        </div>
-      </section>
+    <section className="site-section"><div className="site-container"><span className="site-kicker">GF-Series</span><h2 className="site-title">{t.kolcharSpecs}</h2><div className="product-spec-strip">{[["8–15 m/min",isTh ? "ความเร็วตามโปรไฟล์บริษัท" : "Speed in company profile"],["2 / 3.5 / 5 m",isTh ? "ขนาดตามโปรไฟล์บริษัท" : "Sizes in company profile"],["RMS",isTh ? "ติดตามสถานะและแจ้งเตือน" : "Monitoring and alerts"]].map(([value,label])=><div key={value}><strong>{value}</strong><span>{label}</span></div>)}</div><p className="product-note">{t.kolcharNote}</p></div></section>
 
-      <section className="site-section site-section--green">
-        <div className="site-container"><span className="site-kicker">Documentation</span><h2 className="site-title">{t.docsTitle}</h2><p className="site-lead">{t.docsLead}</p><div className="docs-grid">
-          {[[FileCheck2,"ISO management systems",isTh?"เอกสารชุดที่ได้รับมีใบรับรอง ISO 9001:2015, ISO 14001:2015 และ ISO 45001:2018 ของโรงงานที่ระบุในเอกสาร":"The supplied document set includes ISO 9001:2015, ISO 14001:2015, and ISO 45001:2018 certificates for the factory named in the documents"],[Leaf,"JFRL composition analysis",isTh?"มี Certificate of Analysis จาก Japan Food Research Laboratories สำหรับส่วนประกอบของสารดับเพลิง":"Includes a Certificate of Analysis from Japan Food Research Laboratories for the extinguishing agent composition"],[ShieldCheck,"SGS RoHS test report",isTh?"มีรายงาน SGS สำหรับแคปซูลชนิดขว้างตาม RoHS Directive ที่ระบุในเอกสาร":"Includes an SGS report for the throwing-type product under the RoHS Directive stated in the documents"],[Flame,"Fire test documents",isTh?"มีเอกสารผลทดสอบที่อ้างถึงเพลิงประเภท A, B, C และผลทดสอบเฉพาะผลิตภัณฑ์บางรุ่น":"Includes fire-test documents referencing classes A, B, C and model-specific test results"]].map(([Icon,title,desc])=><article className="doc-card" key={title}><Icon size={23}/><div><h3>{title}</h3><p>{desc}</p></div></article>)}
-        </div></div>
-      </section>
+    <section className="site-section product-fire-intro" id="firesave"><div className="site-container product-fire-intro__grid"><div><span className="site-kicker site-kicker--light">FIRESAVE</span><h2 className="site-title">{t.fireIntro}</h2><p className="site-lead">{t.fireLead}</p><Link href="/contact" className="site-btn site-btn--orange">{t.contact}<ArrowRight size={16}/></Link></div><div className="product-fire-intro__media"><Image src="/firesave/capsule.png" alt={isTh ? "แคปซูล FIRESAVE FS-TH" : "FIRESAVE FS-TH capsule"} fill sizes="(max-width: 800px) 100vw, 35vw" /></div></div></section>
 
-      <section className="cta-band"><div className="site-container cta-band__inner"><div><h2>{isTh ? "ต้องการข้อมูลสเปก เอกสาร หรือการสาธิต?" : "Need specifications, documents, or a demonstration?"}</h2><p>{isTh ? "ติดต่อ Solar ACM เพื่อประสานข้อมูลผลิตภัณฑ์ที่เหมาะกับพื้นที่ของคุณ" : "Contact Solar ACM to coordinate product information for your site."}</p></div><div className="cta-band__actions"><Link href="/contact" className="site-btn site-btn--orange">{isTh ? "ติดต่อทีมงาน" : "Contact the team"}<ArrowRight size={16}/></Link></div></div></section>
-    </PageShell>
-  );
+    <section className="site-section site-section--soft"><div className="site-container"><div className="section-head"><div><span className="site-kicker">{t.demoKicker}</span><h2 className="site-title">{t.demoTitle}</h2><p className="site-lead">{t.demoLead}</p></div></div><div className="product-demo-grid"><Demo src="/firesave/capsule-field-demo.mp4" poster="/firesave/capsule-field-demo-poster.jpg" title={t.capsuleDemo} description={t.capsuleDemoText} /><Demo src="/firesave/spray-demo.mp4" poster="/firesave/spray-demo-poster.jpg" title={t.sprayDemo} description={t.sprayDemoText} /></div></div></section>
+
+    <section className="site-section" id="catalogue"><div className="site-container"><div className="section-head"><div><span className="site-kicker">{t.catalogueKicker}</span><h2 className="site-title">{t.catalogue}</h2><p className="site-lead">{t.catalogueLead}</p></div></div><div className="product-filters" role="group" aria-label={isTh ? "กรองประเภทสินค้า" : "Filter products"}>{filters.map(([id,th,en])=><button key={id} type="button" className={filter===id?"is-active":""} aria-pressed={filter===id} onClick={()=>setFilter(id)}>{isTh?th:en}</button>)}</div><div className="product-catalogue">{visibleProducts.map((product)=>{const detail=fireShopDetails[product.id]?.[lang];const [name,summary]=product[lang];return <article className="product-card" key={product.id}><div className="product-card__media"><Image src={product.image} alt={`${product.id} ${name}`} fill sizes="(max-width: 760px) 100vw, 50vw" /></div><div className="product-card__body"><span className="product-card__code">{product.id} · {detail.tag}</span><h3>{name}</h3><p className="product-card__summary">{summary}</p><div className="product-card__details"><div><h4>{t.use}</h4><ul>{detail.use.map((item)=><li key={item}>{item}</li>)}</ul></div><div><h4>{t.difference}</h4><ul>{detail.difference.map((item)=><li key={item}>{item}</li>)}</ul></div></div><h4>{t.specs}</h4><ul className="product-card__specs">{detail.specs.map((item)=><li key={item}>{item}</li>)}</ul><p className="product-card__caution"><ShieldAlert size={17}/><span><strong>{t.caution}:</strong> {detail.caution}</span></p><Link href="/contact" className="product-card__cta">{t.ask}<ArrowRight size={16}/></Link></div></article>})}</div></div></section>
+
+    <section className="site-section site-section--soft"><div className="site-container"><span className="site-kicker">{t.guideKicker}</span><h2 className="site-title">{t.guide}</h2><div className="product-guide">{t.guideCards.map(([title,description],index)=><article key={title}><span>0{index+1}</span><h3>{title}</h3><p>{description}</p></article>)}</div></div></section>
+
+    <section className="site-section site-section--green" id="documentation"><div className="site-container"><span className="site-kicker">{t.docsKicker}</span><h2 className="site-title">{t.docs}</h2><p className="site-lead">{t.docsLead}</p><div className="product-evidence">{t.evidence.map(([title,description])=><article key={title}><h3>{title}</h3><p>{description}</p></article>)}</div><p className="product-safety"><ShieldAlert size={20}/><span>{t.safety}</span></p></div></section>
+
+    <section className="cta-band"><div className="site-container cta-band__inner"><div><h2>{t.finalTitle}</h2><p>{t.finalLead}</p></div><div className="cta-band__actions"><Link href="/contact" className="site-btn site-btn--orange">{t.contact}<ExternalLink size={16}/></Link></div></div></section>
+  </PageShell>;
 }
