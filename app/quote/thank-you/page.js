@@ -29,7 +29,7 @@ export default function ThankYouPage() {
         <div className="site-container">
           <div className="thanks__panel">
             <div className="thanks__icon"><Check size={36} strokeWidth={2.4} /></div>
-            <span className="site-kicker">Request received</span>
+            <span className="site-kicker">{isTh ? "ได้รับข้อมูลแล้ว" : "Request received"}</span>
             <h1>{isTh ? "ได้รับข้อมูลของคุณแล้ว" : "We have received your request"}</h1>
             <p className="thanks__lead">
               {isTh

@@ -32,7 +32,6 @@ export const metadata = {
       "วางแผน ประสานงาน และคัดเลือกโซลูชันพลังงานให้เหมาะกับบ้าน ธุรกิจ และโรงงาน",
     images: [{ url: "/portfolio/project-03.jpg", width: 1600, height: 900 }],
   },
-  icons: { icon: "/Logo SolarACM.png" },
 };
 
 export const viewport = {

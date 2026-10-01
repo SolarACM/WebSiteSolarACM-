@@ -83,7 +83,7 @@ export function SiteHeader({ lang = "th", setLang }) {
       <div className="site-container site-header__inner">
         <Link href="/" className="site-brand" aria-label={lang === "th" ? "หน้าแรก Solar ACM" : "Solar ACM homepage"} scroll>
           <span className="site-brand__mark">
-            <Image src="/Logo SolarACM.png" alt="" width={48} height={48} priority />
+            <Image src="/Logo SolarACM.png" alt="" width={64} height={64} priority />
           </span>
           <span className="site-brand__copy">
             <strong>Solar ACM</strong>
@@ -166,7 +166,7 @@ export function SiteFooter({ lang = "th" }) {
       <div className="site-container site-footer__grid">
         <div>
           <Link href="/" className="site-brand" scroll>
-            <span className="site-brand__mark"><Image src="/Logo SolarACM.png" alt="" width={48} height={48} /></span>
+            <span className="site-brand__mark"><Image src="/Logo SolarACM.png" alt="" width={64} height={64} /></span>
             <span className="site-brand__copy"><strong>Solar ACM</strong><small>Systems Corporation</small></span>
           </Link>
           <p>{isTh
@@ -176,10 +176,10 @@ export function SiteFooter({ lang = "th" }) {
         <div>
           <h3>{isTh ? "โซลูชัน" : "Solutions"}</h3>
           <div className="site-footer__links">
-            <Link href="/residential" scroll>Residential Solar</Link>
-            <Link href="/industrial" scroll>Commercial & Industrial</Link>
-            <Link href="/bess" scroll>Battery Energy Storage</Link>
-            <Link href="/epc" scroll>EPC Coordination</Link>
+            <Link href="/residential" scroll>{isTh ? "โซลาร์บ้านพักอาศัย" : "Residential Solar"}</Link>
+            <Link href="/industrial" scroll>{isTh ? "โซลาร์ธุรกิจและโรงงาน" : "Commercial & Industrial"}</Link>
+            <Link href="/bess" scroll>{isTh ? "ระบบกักเก็บพลังงาน" : "Battery Energy Storage"}</Link>
+            <Link href="/epc" scroll>{isTh ? "ประสานงานโครงการ EPC" : "EPC Coordination"}</Link>
           </div>
         </div>
         <div>
@@ -250,6 +250,7 @@ export function PageShell({ children, lang, setLang }) {
       "/about": ["เกี่ยวกับ Solar ACM", "About Solar ACM"],
       "/contact": ["ติดต่อ Solar ACM", "Contact Solar ACM"],
       "/quote": ["ขอประเมินโครงการ", "Request a project assessment"],
+      "/quote/thank-you": ["ได้รับข้อมูลแล้ว", "Request received"],
     };
     const descriptions = [
       "ที่ปรึกษาโครงการพลังงานสะอาดสำหรับบ้าน ธุรกิจ และโรงงาน พร้อมผลิตภัณฑ์ดูแลระบบโซลาร์",
